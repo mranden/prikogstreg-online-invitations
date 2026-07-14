@@ -54,7 +54,7 @@ $requires_name = ! empty( $wishlist['requires_name'] );
 					<button type="button" class="button" data-pks-oi-wishlist-reserve data-quantity="1"><?php esc_html_e( 'Reserve', 'prikogstreg-online-invitations' ); ?></button>
 				<?php endif; ?>
 				<?php if ( (int) ( $item['my_reserved_quantity'] ?? 0 ) > 0 ) : ?>
-					<button type="button" class="button" data-pks-oi-wishlist-release><?php esc_html_e( 'Release my reservation', 'prikogstreg-online-invitations' ); ?></button>
+					<button type="button" class="button" data-pks-oi-wishlist-release"><?php esc_html_e( 'Release my reservation', 'prikogstreg-online-invitations' ); ?></button>
 				<?php endif; ?>
 			</li>
 		<?php endforeach; ?>

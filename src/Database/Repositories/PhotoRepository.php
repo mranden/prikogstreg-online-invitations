@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Database\Repositories;
 
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoModerationStatus;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
 final class PhotoRepository extends AbstractRepository {
@@ -106,6 +107,44 @@ final class PhotoRepository extends AbstractRepository {
 	}
 
 	/**
+	 * @return array{items:list<array<string,mixed>>,total:int,page:int,per_page:int}
+	 */
+	public function list_paginated_for_project(
+		int $project_id,
+		string $status,
+		int $page = 1,
+		int $per_page = 20
+	): array {
+		$page     = max( 1, $page );
+		$per_page = max( 1, min( 50, $per_page ) );
+		$offset   = ( $page - 1 ) * $per_page;
+		$table    = $this->tables->photos();
+
+		$count_sql = $this->wpdb->prepare(
+			'SELECT COUNT(*) FROM ' . $table . ' WHERE project_id = %d AND deleted_at_utc IS NULL AND moderation_status = %s',
+			$project_id,
+			$status
+		);
+		$total = (int) $this->wpdb->get_var( $count_sql );
+
+		$list_sql = $this->wpdb->prepare(
+			'SELECT * FROM ' . $table . ' WHERE project_id = %d AND deleted_at_utc IS NULL AND moderation_status = %s ORDER BY created_at_utc DESC LIMIT %d OFFSET %d',
+			$project_id,
+			$status,
+			$per_page,
+			$offset
+		);
+		$rows = $this->wpdb->get_results( $list_sql, ARRAY_A );
+
+		return [
+			'items'    => is_array( $rows ) ? $rows : [],
+			'total'    => $total,
+			'page'     => $page,
+			'per_page' => $per_page,
+		];
+	}
+
+	/**
 	 * @param array<string, mixed> $data
 	 */
 	public function update( int $photo_id, array $data ): bool {
@@ -189,5 +228,94 @@ final class PhotoRepository extends AbstractRepository {
 			[ 'guest_id' => $guest_id ],
 			[ '%d' ]
 		);
+	}
+
+	/**
+	 * @param list<int> $project_ids
+	 * @return array<int, array{pending:int,approved:int,rejected:int,total:int}>
+	 */
+	public function batch_moderation_counts( array $project_ids ): array {
+		$project_ids = array_values( array_filter( array_map( 'intval', $project_ids ) ) );
+		$empty       = [];
+		foreach ( $project_ids as $project_id ) {
+			$empty[ $project_id ] = [
+				'pending'  => 0,
+				'approved' => 0,
+				'rejected' => 0,
+				'total'    => 0,
+			];
+		}
+
+		if ( [] === $project_ids ) {
+			return $empty;
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $project_ids ), '%d' ) );
+		$sql          = $this->wpdb->prepare(
+			'SELECT project_id, moderation_status FROM ' . $this->tables->photos()
+			. " WHERE project_id IN ({$placeholders}) AND deleted_at_utc IS NULL",
+			...$project_ids
+		);
+		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			return $empty;
+		}
+
+		foreach ( $rows as $row ) {
+			$project_id = (int) ( $row['project_id'] ?? 0 );
+			$status     = (string) ( $row['moderation_status'] ?? '' );
+			if ( ! isset( $empty[ $project_id ] ) ) {
+				continue;
+			}
+
+			if ( isset( $empty[ $project_id ][ $status ] ) ) {
+				++$empty[ $project_id ][ $status ];
+			}
+			++$empty[ $project_id ]['total'];
+		}
+
+		return $empty;
+	}
+
+	public function count_admin_pending(): int {
+		$sql = $this->wpdb->prepare(
+			'SELECT COUNT(*) FROM ' . $this->tables->photos()
+			. ' WHERE deleted_at_utc IS NULL AND moderation_status = %s',
+			PhotoModerationStatus::PENDING
+		);
+
+		return (int) $this->wpdb->get_var( $sql );
+	}
+
+	/**
+	 * @return array{items:list<array<string,mixed>>,total:int,page:int,per_page:int}
+	 */
+	public function list_admin_pending( int $page = 1, int $per_page = 20 ): array {
+		$page     = max( 1, $page );
+		$per_page = max( 1, min( 50, $per_page ) );
+		$offset   = ( $page - 1 ) * $per_page;
+		$table    = $this->tables->photos();
+
+		$count_sql = $this->wpdb->prepare(
+			'SELECT COUNT(*) FROM ' . $table . ' WHERE deleted_at_utc IS NULL AND moderation_status = %s',
+			PhotoModerationStatus::PENDING
+		);
+		$total = (int) $this->wpdb->get_var( $count_sql );
+
+		$list_sql = $this->wpdb->prepare(
+			'SELECT photo_id, project_id, guest_id, original_filename, moderation_status, created_at_utc FROM ' . $table
+			. ' WHERE deleted_at_utc IS NULL AND moderation_status = %s ORDER BY created_at_utc ASC LIMIT %d OFFSET %d',
+			PhotoModerationStatus::PENDING,
+			$per_page,
+			$offset
+		);
+		$rows = $this->wpdb->get_results( $list_sql, ARRAY_A );
+
+		return [
+			'items'    => is_array( $rows ) ? $rows : [],
+			'total'    => $total,
+			'page'     => $page,
+			'per_page' => $per_page,
+		];
 	}
 }

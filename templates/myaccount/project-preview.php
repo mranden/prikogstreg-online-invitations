@@ -18,6 +18,7 @@ use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
 
 $public_url     = (string) ( $public_url ?? '' );
 $is_public_live = ! empty( $is_public_live );
+$preview_uses_template_fallback = ! empty( $preview_uses_template_fallback );
 $design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN );
 ?>
 <?php pks_oi_project_open(); ?>
@@ -72,6 +73,11 @@ $design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN )
 			);
 			?>
 		<?php else : ?>
+			<?php if ( $preview_uses_template_fallback ) : ?>
+				<p class="pks-oi-field__hint" role="status">
+					<?php esc_html_e( 'No custom design was saved with your order. This preview uses the default template.', 'prikogstreg-online-invitations' ); ?>
+				</p>
+			<?php endif; ?>
 			<div class="pks-oi-preview__html" data-track-opens="<?php echo $track_opens ? '1' : '0'; ?>">
 				<?php echo $preview_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>

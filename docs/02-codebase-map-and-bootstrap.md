@@ -60,7 +60,7 @@ Registered in order:
 
 | Package | Responsibility |
 |---------|----------------|
-| `Admin/` | Support screen, delivery failures, project CPT admin |
+| `Admin/` | Top-level wp-admin menu, list table, detail tabs, photo moderation, settings, CPT support meta box |
 | `Api/` | Authenticated project REST (`ProjectRestController`) |
 | `Bootstrap/` | Activation, requirements |
 | `Builder/` | Adapter resolution (`BuilderService`) |
@@ -86,7 +86,27 @@ Registered in order:
 | `myaccount/` | Project sections (overview, design, guests, publish, …) |
 | `public/` | `invitation.php`, `envelope.php`, `poster.php`, RSVP, wishlist, photos |
 | `emails/` | Wrapper + transactional bodies |
-| `admin/` | Support UI |
+| `admin/` | Invitations list/detail, photo moderation queue, settings, CPT support partials |
+
+### Admin bootstrap (`ProjectSupportRegistrar`)
+
+Wired from `Plugin::register_features()` after order/project creation:
+
+| Component | Role |
+|-----------|------|
+| `Admin\Menu\AdminMenu` | Top-level **Online Invitations** menu (`pks-online-invitations`) with Invitations, Photos, Settings submenus |
+| `Admin\Invitations\InvitationsPage` | List + detail routing |
+| `Admin\Invitations\InvitationListTable` | `WP_List_Table` for purchased projects |
+| `Admin\Invitations\InvitationDetailPage` | Tabbed support detail (overview, invitation, event, guests, photos, delivery, diagnostics, tools) |
+| `Admin\Invitations\InvitationPreviewController` | Nonced `admin-post.php` draft/published preview (`X-Robots-Tag: noindex`) |
+| `Admin\Invitations\InvitationAdminActions` | POST safe support edits (event, guest, photo moderation) |
+| `Admin\AdminSupportService` | Domain-backed admin mutations + `ProjectLifecycleAudit` |
+| `Admin\Photos\PhotosAdminPage` | Cross-project pending photo queue |
+| `Admin\Settings\SettingsPage` | Operational settings (no secrets) |
+| `Admin\Capabilities` | Role/cap registration (idempotent on boot) |
+| `Admin\AdminAssets` | Enqueues `assets/build/css|js/admin.*` only on Online Invitations screens + CPT support |
+
+Legacy WooCommerce submenu slug `pks-oi-invitations` redirects to `pks-online-invitations`.
 
 Resolution: child theme → parent theme → plugin (`TemplateLoader`).
 

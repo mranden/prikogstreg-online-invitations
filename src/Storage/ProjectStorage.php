@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Storage;
 
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectDesignSource;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageChecksumException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageConflictException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
@@ -336,6 +337,7 @@ final class ProjectStorage {
 
 		$state_payload = [
 			'schema_version'     => (string) ( $canonical_state['schema_version'] ?? $project_context['builder_schema_version'] ),
+			'design_source'      => (string) ( $canonical_state['design_source'] ?? ProjectDesignSource::CUSTOMER ),
 			'field'              => is_array( $canonical_state['field'] ?? null ) ? $canonical_state['field'] : [],
 			'size'               => (string) ( $canonical_state['size'] ?? $canonical_state['pa_bpp_size'] ?? '' ),
 			'format'             => (string) ( $canonical_state['format'] ?? $canonical_state['pa_bpp_format'] ?? '' ),

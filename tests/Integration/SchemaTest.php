@@ -24,7 +24,16 @@ final class SchemaTest extends TestCase {
 	}
 
 	public function test_current_version_matches_constant(): void {
-		$this->assertSame( 2, Schema::CURRENT_VERSION );
+		$this->assertSame( 4, Schema::CURRENT_VERSION );
+	}
+
+	public function test_projects_table_includes_photo_share_columns(): void {
+		$definitions = Schema::get_definitions( 'wp_', 'DEFAULT CHARSET=utf8mb4' );
+
+		$this->assertStringContainsString( 'photo_share_token_hash char(64) NULL', $definitions[0] );
+		$this->assertStringContainsString( 'photo_access_code_hash varchar(255) NULL', $definitions[0] );
+		$this->assertStringContainsString( 'photo_auto_approve_enabled tinyint(1) NOT NULL DEFAULT 1', $definitions[0] );
+		$this->assertStringContainsString( 'photo_gallery_public_enabled tinyint(1) NOT NULL DEFAULT 1', $definitions[0] );
 	}
 
 	public function test_projects_table_includes_envelope_image_id_column(): void {

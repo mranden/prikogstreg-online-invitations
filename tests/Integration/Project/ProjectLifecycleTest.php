@@ -167,14 +167,47 @@ final class ProjectLifecycleTest extends TestCase {
 		$this->assertSame( 'published_html_unsafe', $result['error'] ?? null );
 	}
 
-	public function test_publish_fails_on_partial_storage_error(): void {
+	public function test_publish_falls_back_to_editable_pages_when_adapter_html_empty(): void {
 		$project = $this->seed_publishable_project();
-		$this->adapter->with_render_public_html( "\xC3\x28" );
+		$this->adapter->with_render_public_html( '<div class="bpp-public-invitation" data-bpp-schema-version="1"></div>' );
+
+		$result = $this->publish_service->publish( $project );
+
+		$this->assertTrue( $result['success'] ?? false );
+	}
+
+	public function test_publish_rejects_empty_published_html_when_no_page_content(): void {
+		$project = $this->seed_publishable_project();
+		$empty_wrapper = '<div class="bpp-public-invitation" data-bpp-schema-version="1"></div>';
+		$this->adapter->with_render_public_html( $empty_wrapper );
+		$this->adapter->with_load_state(
+			[
+				'schema_version' => '1',
+				'page'           => [ $empty_wrapper ],
+				'field'          => [],
+			]
+		);
+
+		$storage = ( new StorageRegistry( $this->storage_root ) )->project_storage();
+		$storage->save_state(
+			[
+				'project_id'             => (int) $project['project_id'],
+				'storage_uuid'           => (string) $project['storage_uuid'],
+				'builder_schema_version' => '1',
+				'product_id'             => (int) $project['product_id'],
+				'template_id'            => (string) $project['template_id'],
+				'expected_state_version' => (int) $project['state_version'],
+				'state_json'             => '{"schema_version":"1","pages":[{"index":1}]}',
+				'pages'                  => [
+					[ 'index' => 1, 'html' => $empty_wrapper ],
+				],
+			]
+		);
 
 		$result = $this->publish_service->publish( $project );
 
 		$this->assertFalse( $result['success'] ?? true );
-		$this->assertNotEmpty( $result['error'] ?? '' );
+		$this->assertSame( 'empty_published_html', $result['error'] ?? null );
 	}
 
 	public function test_preview_does_not_track_opens(): void {

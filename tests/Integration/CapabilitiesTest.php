@@ -54,7 +54,12 @@ final class CapabilitiesTest extends TestCase {
 
 		$this->assertContains( Capabilities::SUPPORT, $admin_caps );
 		$this->assertContains( Capabilities::MANAGE_OWN, $admin_caps );
+		$this->assertContains( Capabilities::VIEW, $admin_caps );
+		$this->assertContains( Capabilities::MANAGE, $admin_caps );
 		$this->assertContains( Capabilities::SUPPORT, $shop_caps );
+		$this->assertContains( Capabilities::VIEW, $shop_caps );
+		$this->assertContains( Capabilities::EDIT, $shop_caps );
+		$this->assertContains( Capabilities::MODERATE_PHOTOS, $shop_caps );
 		$this->assertNotContains( Capabilities::MANAGE_OWN, $shop_caps );
 		$this->assertContains( Capabilities::MANAGE_OWN, $customer_caps );
 	}

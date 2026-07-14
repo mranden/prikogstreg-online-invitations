@@ -6,6 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\Bootstrap;
 
 use PrikOgStreg\OnlineInvitations\MyAccount\Endpoints;
 use PrikOgStreg\OnlineInvitations\Public\Endpoints as PublicEndpoints;
+use PrikOgStreg\OnlineInvitations\Public\PhotoShareEndpoints;
 use PrikOgStreg\OnlineInvitations\Admin\Capabilities;
 use PrikOgStreg\OnlineInvitations\Admin\ProjectPostType;
 use PrikOgStreg\OnlineInvitations\Database\Migrator;
@@ -39,6 +40,7 @@ final class Activation {
 
 		Endpoints::maybe_flush_rewrites();
 		PublicEndpoints::maybe_flush_rewrites();
+		PhotoShareEndpoints::maybe_flush_rewrites();
 
 		if ( ! post_type_exists( ProjectPostType::POST_TYPE ) ) {
 			( new ProjectPostType() )->register_post_type();

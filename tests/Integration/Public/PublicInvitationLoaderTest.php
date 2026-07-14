@@ -80,6 +80,56 @@ final class PublicInvitationLoaderTest extends TestCase {
 		$this->assertContains( $result['error'] ?? '', [ 'manifest_missing', 'missing_pages' ] );
 	}
 
+	public function test_empty_published_page_returns_controlled_error(): void {
+		$uuid    = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+		$storage = ( new StorageRegistry( $this->storage_root ) )->project_storage();
+
+		$storage->save_state(
+			[
+				'project_id'             => 5002,
+				'storage_uuid'           => $uuid,
+				'builder_schema_version' => '1',
+				'product_id'             => 10,
+				'template_id'            => '10',
+				'expected_state_version' => 0,
+				'state_json'             => '{"schema_version":"1"}',
+				'pages'                  => [
+					[ 'index' => 1, 'html' => '<section>ignored for this test</section>' ],
+				],
+			]
+		);
+
+		$storage->publish_snapshot(
+			[
+				'project_id'             => 5002,
+				'storage_uuid'           => $uuid,
+				'builder_schema_version' => '1',
+				'product_id'             => 10,
+				'template_id'            => '10',
+				'expected_state_version' => 1,
+				'published_version'      => 1,
+				'pages'                  => [
+					[
+						'index' => 1,
+						'html'  => '<div class="bpp-public-invitation" data-bpp-schema-version="1"></div>',
+					],
+				],
+			]
+		);
+
+		$project = [
+			'project_id'         => 5002,
+			'storage_uuid'       => $uuid,
+			'publication_status' => PublicationStatus::PUBLISHED,
+			'status'             => ProjectStatus::ACTIVE,
+			'product_id'         => 10,
+		];
+
+		$result = $this->loader->load_published_content( $project );
+		$this->assertFalse( $result['success'] ?? true );
+		$this->assertSame( 'empty_published_html', $result['error'] ?? null );
+	}
+
 	private function delete_tree( string $root ): void {
 		if ( ! is_dir( $root ) ) {
 			return;

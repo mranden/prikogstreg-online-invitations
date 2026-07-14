@@ -4,10 +4,19 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Admin;
 
+use PrikOgStreg\OnlineInvitations\Admin\Invitations\InvitationAdminQuery;
+
 /**
  * Enqueues admin CSS/JS for invitation support screens.
  */
 final class AdminAssets {
+
+	/** @var list<string> */
+	private const SCREEN_HOOKS = [
+		'toplevel_page_pks-online-invitations',
+		'online-invitations_page_pks-online-invitations-photos',
+		'online-invitations_page_pks-online-invitations-settings',
+	];
 
 	public function register(): void {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
@@ -16,15 +25,9 @@ final class AdminAssets {
 	public function enqueue( string $hook ): void {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_project_cpt = is_object( $screen ) && ProjectPostType::POST_TYPE === ( $screen->post_type ?? '' );
-		$is_projects_admin = 'woocommerce_page_' . ProjectAdminListViewModel::PAGE_SLUG === $hook;
+		$is_projects_admin = in_array( $hook, self::SCREEN_HOOKS, true );
 
 		if ( ! $is_project_cpt && ! $is_projects_admin ) {
-			if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
-				return;
-			}
-		}
-
-		if ( ! $is_projects_admin && ! $is_project_cpt ) {
 			return;
 		}
 

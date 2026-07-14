@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\Public;
 
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistReservationService;
 use PrikOgStreg\OnlineInvitations\Storage\EnvelopeManifest;
@@ -28,7 +29,8 @@ final class PublicController {
 		private ProjectStorage $storage,
 		private FileStreamResponse $streams,
 		private EnvelopeImageResolver $envelope_images,
-		private PosterDisplayAssets $poster_assets
+		private PosterDisplayAssets $poster_assets,
+		private PhotoShareTokenService $photo_share_tokens
 	) {}
 
 	public function register(): void {
@@ -161,6 +163,10 @@ final class PublicController {
 
 		$content = $this->loader->load_published_content( $resolution->project() );
 		if ( empty( $content['success'] ) || ! isset( $content['content'] ) || ! $content['content'] instanceof PublicInvitationContent ) {
+			$error = (string) ( $content['error'] ?? '' );
+			if ( 'empty_published_html' === $error ) {
+				$this->render_empty_poster_unavailable( $resolution );
+			}
 			$this->render_unavailable();
 		}
 
@@ -247,6 +253,52 @@ final class PublicController {
 			'public/unavailable',
 			[
 				'message' => __( 'This invitation is not available.', 'prikogstreg-online-invitations' ),
+			]
+		);
+		exit;
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 */
+	private function render_empty_poster_unavailable( TokenResolution $resolution ): void {
+		$project = $resolution->project();
+		$user_id = function_exists( 'get_current_user_id' ) ? (int) get_current_user_id() : 0;
+
+		$is_owner_or_staff = $user_id > 0 && (
+			$user_id === (int) ( $project['user_id'] ?? 0 )
+			|| ( function_exists( 'current_user_can' ) && current_user_can( 'pks_oi_support_projects' ) )
+		);
+
+		if ( function_exists( 'error_log' ) ) {
+			error_log(
+				sprintf(
+					'pks_oi empty published poster project_id=%d owner_view=%s',
+					(int) ( $project['project_id'] ?? 0 ),
+					$is_owner_or_staff ? 'yes' : 'no'
+				)
+			);
+		}
+
+		$this->send_privacy_headers();
+		status_header( 404 );
+
+		if ( $is_owner_or_staff ) {
+			$message = __(
+				'The invitation design could not be displayed. Open My Account, review your design, and republish the project.',
+				'prikogstreg-online-invitations'
+			);
+		} else {
+			$message = __(
+				'This invitation is temporarily unavailable. Please try again later or contact the organiser.',
+				'prikogstreg-online-invitations'
+			);
+		}
+
+		$this->templates->render(
+			'public/unavailable',
+			[
+				'message' => $message,
 			]
 		);
 		exit;
@@ -341,26 +393,18 @@ final class PublicController {
 		$project = $resolution->project();
 		if ( ! PublicEntitlement::is_publicly_available( $project ) || empty( $project['guest_photos_enabled'] ) ) {
 			return [
-				'intent_url'    => '',
-				'upload_url'    => '',
-				'rest_nonce'    => '',
-				'requires_name' => false,
-				'max_files'     => 10,
+				'share_url' => '',
 			];
 		}
 
-		$base = '';
-		if ( '' !== $raw_token && function_exists( 'rest_url' ) ) {
-			$encoded = rawurlencode( $raw_token );
-			$base    = rest_url( 'prikogstreg-online-invitations/v1/public/' . $encoded . '/photos' );
+		$raw_share = $this->photo_share_tokens->resolve_raw_token( $project );
+		if ( null === $raw_share ) {
+			$ensured   = $this->photo_share_tokens->ensure_token( $project );
+			$raw_share = (string) ( $ensured['token'] ?? '' );
 		}
 
 		return [
-			'intent_url'    => '' !== $base ? $base . '/intent' : '',
-			'upload_url'    => '' !== $base ? $base . '/upload' : '',
-			'rest_nonce'    => function_exists( 'wp_create_nonce' ) ? wp_create_nonce( 'wp_rest' ) : '',
-			'requires_name' => $resolution->is_generic(),
-			'max_files'     => 10,
+			'share_url' => '' !== $raw_share ? PhotoShareTokenService::public_url( $raw_share ) : '',
 		];
 	}
 }

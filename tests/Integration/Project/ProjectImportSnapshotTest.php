@@ -9,9 +9,12 @@ use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\RepositoryRegistry;
 use PrikOgStreg\OnlineInvitations\Domain\Delivery\DeliveryQueueService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\EnvelopeSnapshot;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectDesignSource;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectFactory;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Scheduling\WelcomeScheduler;
 use PrikOgStreg\OnlineInvitations\Storage\EnvelopeManifest;
@@ -195,7 +198,7 @@ final class ProjectImportSnapshotTest extends TestCase {
 		$this->assertSame( 'floral', $envelope->background_preset );
 	}
 
-	public function test_empty_page_payload_records_retryable_failure(): void {
+	public function test_empty_page_payload_imports_template_fallback(): void {
 		$this->adapter->with_load_state(
 			[
 				'field'          => [ 'uuid-1' => [ 'text' => 'Hello' ] ],
@@ -211,8 +214,31 @@ final class ProjectImportSnapshotTest extends TestCase {
 		$project    = $this->repositories->projects()->find_by_id( $project_id );
 
 		$this->assertIsArray( $project );
-		$this->assertSame( 'missing_page_payload', $project['last_error_code'] ?? '' );
-		$this->assertSame( ProjectStatus::DRAFT, $project['status'] ?? '' );
+		$this->assertSame( '', (string) ( $project['last_error_code'] ?? '' ) );
+		$this->assertSame( ProjectStatus::ACTIVE, $project['status'] ?? '' );
+		$this->assertTrue( ProjectEntitlement::is_project_usable( $project ) );
+
+		$storage    = ( new StorageRegistry( $this->storage_root ) )->project_storage();
+		$state_json = $storage->read_current_state( (string) $project['storage_uuid'] );
+		$state      = json_decode( $state_json, true );
+		$this->assertIsArray( $state );
+		$this->assertSame( ProjectDesignSource::TEMPLATE_FALLBACK, $state['design_source'] ?? '' );
+
+		$builder = new BuilderService();
+		$builder->resolve();
+
+		$preview_service = new ProjectPreviewService(
+			$builder,
+			new ProjectStateService(
+				$builder,
+				$storage,
+				$this->repositories->projects(),
+				$this->repositories->events()
+			)
+		);
+
+		$preview = $preview_service->render_preview( $project );
+		$this->assertStringContainsString( 'Preview page', $preview['html'] );
 	}
 
 	public function test_checksum_mismatch_records_retryable_failure(): void {
@@ -307,7 +333,7 @@ final class ProjectImportSnapshotTest extends TestCase {
 		);
 	}
 
-	public function test_malformed_payload_from_adapter_records_failure_without_duplicate_projects(): void {
+	public function test_malformed_payload_from_adapter_imports_template_fallback_without_duplicate_projects(): void {
 		$this->adapter->with_load_state( new class() {
 			public function get_error_code(): string {
 				return 'malformed_payload';
@@ -315,13 +341,17 @@ final class ProjectImportSnapshotTest extends TestCase {
 		} );
 
 		$order = $this->make_order( 'processing' );
-		$item  = $order->get_items( 'line_item' )[501 ];
+		$item  = $order->get_items( 'line_item' )[501];
 
 		$first  = $this->service->create_from_order_item( $order, $item );
 		$second = $this->service->create_from_order_item( $order, $item );
 
 		$this->assertSame( $first, $second );
 		$this->assertSame( 1, $this->wpdb->table_count( 'wp_pks_oi_projects' ) );
+
+		$project = $this->repositories->projects()->find_by_id( $first );
+		$this->assertIsArray( $project );
+		$this->assertTrue( ProjectEntitlement::is_project_usable( $project ) );
 	}
 
 	/**

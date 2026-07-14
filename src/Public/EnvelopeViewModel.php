@@ -22,6 +22,7 @@ final class EnvelopeViewModel {
 	 * @param array<string, mixed>                              $rsvp_form
 	 * @param array<string, mixed>                              $wishlist
 	 * @param array<string, mixed>                              $photos
+	 * @param array<string, mixed>                              $event_details
 	 */
 	public function __construct(
 		public readonly string $envelope_preset,
@@ -41,7 +42,9 @@ final class EnvelopeViewModel {
 		public readonly array $rsvp_form,
 		public readonly array $wishlist,
 		public readonly array $photos,
-		public readonly string $invitation_token
+		public readonly array $event_details,
+		public readonly string $invitation_token,
+		public readonly string $session_storage_key
 	) {}
 
 	public function has_multiple_pages(): bool {
@@ -106,7 +109,18 @@ final class EnvelopeViewModel {
 			$label = __( 'You are invited', 'prikogstreg-online-invitations' );
 		}
 
+		$event_details = PublicEventDetails::from_project( $project );
+		$rsvp_form     = RsvpFormViewModel::from_resolution( $resolution )->config;
+
 		$sections = [];
+		if ( ! empty( $event_details['has_content'] ) ) {
+			$sections[] = [
+				'key'     => 'event',
+				'label'   => __( 'Event details', 'prikogstreg-online-invitations' ),
+				'enabled' => true,
+			];
+		}
+
 		$sections[] = [
 			'key'     => 'rsvp',
 			'label'   => __( 'RSVP', 'prikogstreg-online-invitations' ),
@@ -129,10 +143,14 @@ final class EnvelopeViewModel {
 			];
 		}
 
-		$rsvp_form = RsvpFormViewModel::from_resolution( $resolution )->config;
 		if ( '' !== $raw_token && function_exists( 'rest_url' ) ) {
 			$rsvp_form['rest_url']   = rest_url( 'prikogstreg-online-invitations/v1/public/' . rawurlencode( $raw_token ) . '/rsvp' );
 			$rsvp_form['rest_nonce'] = function_exists( 'wp_create_nonce' ) ? wp_create_nonce( 'wp_rest' ) : '';
+		}
+
+		$session_key = '';
+		if ( '' !== $raw_token ) {
+			$session_key = 'pks-oi-open-' . substr( hash( 'sha256', $raw_token ), 0, 16 );
 		}
 
 		return new self(
@@ -153,7 +171,9 @@ final class EnvelopeViewModel {
 			$rsvp_form,
 			$wishlist,
 			$photos,
-			$raw_token
+			$event_details,
+			$raw_token,
+			$session_key
 		);
 	}
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Database\Repositories;
 
+use PrikOgStreg\OnlineInvitations\Admin\Invitations\InvitationAdminQuery;
 use PrikOgStreg\OnlineInvitations\Admin\ProjectAdminFilter;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoModerationStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
@@ -38,6 +40,13 @@ final class ProjectRepository extends AbstractRepository {
 		'rsvp_deadline_utc',
 		'reminder_offset_days',
 		'guest_photos_enabled',
+		'photo_share_token_hash',
+		'photo_share_token_version',
+		'photo_access_code_hash',
+		'photo_access_code_version',
+		'photo_auto_approve_enabled',
+		'photo_gallery_public_enabled',
+		'photo_upload_closes_at_utc',
 		'internal_wishlist_enabled',
 		'show_reserver_identity',
 		'attendee_count_enabled',
@@ -73,8 +82,12 @@ final class ProjectRepository extends AbstractRepository {
 		'product_id'               => '%d',
 		'envelope_image_id'        => '%d',
 		'reminder_offset_days'     => '%d',
-		'guest_photos_enabled'     => '%d',
-		'internal_wishlist_enabled' => '%d',
+		'guest_photos_enabled'          => '%d',
+		'photo_share_token_version'     => '%d',
+		'photo_access_code_version'     => '%d',
+		'photo_auto_approve_enabled'      => '%d',
+		'photo_gallery_public_enabled'    => '%d',
+		'internal_wishlist_enabled'     => '%d',
 		'show_reserver_identity'   => '%d',
 		'attendee_count_enabled'   => '%d',
 		'comment_enabled'          => '%d',
@@ -161,6 +174,32 @@ final class ProjectRepository extends AbstractRepository {
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
+	}
+
+	/**
+	 * @return array<string, mixed>|null
+	 */
+	public function find_by_photo_share_token_hash( string $token_hash ): ?array {
+		$sql = $this->wpdb->prepare(
+			'SELECT * FROM ' . $this->tables->projects() . ' WHERE photo_share_token_hash = %s LIMIT 1',
+			$token_hash
+		);
+
+		$row = $this->wpdb->get_row( $sql, ARRAY_A );
+
+		return is_array( $row ) ? $row : null;
+	}
+
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	public function list_with_photos_enabled_missing_share_token(): array {
+		$sql = 'SELECT * FROM ' . $this->tables->projects()
+			. ' WHERE guest_photos_enabled = 1 AND (photo_share_token_hash IS NULL OR photo_share_token_hash = \'\') AND deleted_at_utc IS NULL';
+
+		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
+
+		return is_array( $rows ) ? $rows : [];
 	}
 
 	public function delete_by_id( int $project_id ): bool {
@@ -251,16 +290,47 @@ final class ProjectRepository extends AbstractRepository {
 	 * }
 	 */
 	public function list_admin_summaries( string $filter, int $page = 1, int $per_page = 20 ): array {
-		$filter   = ProjectAdminFilter::sanitize( $filter );
-		$page     = max( 1, $page );
-		$per_page = max( 1, min( 100, $per_page ) );
-		$offset   = ( $page - 1 ) * $per_page;
-		$where    = $this->admin_filter_where_clause( $filter );
+		return $this->list_admin_query(
+			[
+				'filter'   => $filter,
+				'page'     => $page,
+				'per_page' => $per_page,
+			]
+		);
+	}
 
-		$sql = 'SELECT project_id, user_id, order_id, order_item_id, product_id, event_title, status, publication_status, event_start_utc, created_at_utc, updated_at_utc, last_error_code
-			FROM ' . $this->tables->projects() . '
-			WHERE deleted_at_utc IS NULL' . $where . '
-			ORDER BY updated_at_utc DESC
+	/**
+	 * Admin list with search, filters and sorting.
+	 *
+	 * @param array<string, mixed> $args
+	 * @return array{
+	 *     items:list<array<string,mixed>>,
+	 *     total:int,
+	 *     page:int,
+	 *     per_page:int,
+	 *     filter:string
+	 * }
+	 */
+	public function list_admin_query( array $args ): array {
+		$filter   = ProjectAdminFilter::sanitize( (string) ( $args['filter'] ?? ProjectAdminFilter::ALL ) );
+		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
+		$per_page = max( 1, min( 100, (int) ( $args['per_page'] ?? 20 ) ) );
+		$offset   = ( $page - 1 ) * $per_page;
+
+		$where_parts = [ 'deleted_at_utc IS NULL' ];
+		$filter_part = $this->admin_filter_condition( $filter );
+		if ( null !== $filter_part ) {
+			$where_parts[] = $filter_part;
+		}
+		$where_parts = array_merge( $where_parts, $this->admin_extra_where_clauses( $args ) );
+		$where_sql     = ' WHERE ' . implode( ' AND ', $where_parts );
+
+		$orderby = $this->admin_sanitize_orderby( (string) ( $args['orderby'] ?? 'updated_at_utc' ) );
+		$order   = 'ASC' === strtoupper( (string) ( $args['order'] ?? 'DESC' ) ) ? 'ASC' : 'DESC';
+
+		$sql = 'SELECT project_id, user_id, order_id, order_item_id, product_id, template_id, event_title, status, publication_status, event_start_utc, created_at_utc, updated_at_utc, last_error_code
+			FROM ' . $this->tables->projects() . $where_sql . '
+			ORDER BY ' . $orderby . ' ' . $order . '
 			LIMIT %d OFFSET %d';
 
 		$items = $this->wpdb->get_results(
@@ -270,7 +340,7 @@ final class ProjectRepository extends AbstractRepository {
 
 		return [
 			'items'    => is_array( $items ) ? $items : [],
-			'total'    => $this->count_admin_by_filter( $filter ),
+			'total'    => $this->count_admin_query( array_merge( $args, [ 'filter' => $filter ] ) ),
 			'page'     => $page,
 			'per_page' => $per_page,
 			'filter'   => $filter,
@@ -278,22 +348,124 @@ final class ProjectRepository extends AbstractRepository {
 	}
 
 	public function count_admin_by_filter( string $filter ): int {
-		$filter = ProjectAdminFilter::sanitize( $filter );
-		$where  = $this->admin_filter_where_clause( $filter );
-		$sql    = 'SELECT COUNT(*) FROM ' . $this->tables->projects() . ' WHERE deleted_at_utc IS NULL' . $where;
+		return $this->count_admin_query( [ 'filter' => $filter ] );
+	}
+
+	/**
+	 * @param array<string, mixed> $args
+	 */
+	public function count_admin_query( array $args ): int {
+		$filter = ProjectAdminFilter::sanitize( (string) ( $args['filter'] ?? ProjectAdminFilter::ALL ) );
+
+		$where_parts = [ 'deleted_at_utc IS NULL' ];
+		$filter_part = $this->admin_filter_condition( $filter );
+		if ( null !== $filter_part ) {
+			$where_parts[] = $filter_part;
+		}
+		$where_parts = array_merge( $where_parts, $this->admin_extra_where_clauses( $args ) );
+		$where_sql     = ' WHERE ' . implode( ' AND ', $where_parts );
+
+		$sql = 'SELECT COUNT(*) FROM ' . $this->tables->projects() . $where_sql;
 
 		return (int) $this->wpdb->get_var( $sql );
 	}
 
-	private function admin_filter_where_clause( string $filter ): string {
+	/**
+	 * @param array<string, mixed> $args
+	 * @return list<string>
+	 */
+	private function admin_extra_where_clauses( array $args ): array {
+		$clauses = [];
+
+		$search = trim( (string) ( $args['search'] ?? '' ) );
+		if ( '' !== $search ) {
+			$like = '%' . $this->wpdb->esc_like( $search ) . '%';
+			$search_parts = [ $this->wpdb->prepare( 'event_title LIKE %s', $like ) ];
+
+			if ( ctype_digit( $search ) ) {
+				$id = (int) $search;
+				$search_parts[] = $this->wpdb->prepare( 'project_id = %d', $id );
+				$search_parts[] = $this->wpdb->prepare( 'order_id = %d', $id );
+			}
+
+			$users = $this->wpdb->users;
+			$search_parts[] = $this->wpdb->prepare(
+				"user_id IN (SELECT ID FROM {$users} WHERE display_name LIKE %s OR user_email LIKE %s)",
+				$like,
+				$like
+			);
+
+			$clauses[] = '(' . implode( ' OR ', $search_parts ) . ')';
+		}
+
+		$publication = sanitize_key( (string) ( $args['publication_status'] ?? '' ) );
+		if ( '' !== $publication ) {
+			$clauses[] = $this->wpdb->prepare( 'publication_status = %s', $publication );
+		}
+
+		$event_date = sanitize_key( (string) ( $args['event_date'] ?? '' ) );
+		$now        = gmdate( 'Y-m-d H:i:s' );
+		if ( InvitationAdminQuery::EVENT_UPCOMING === $event_date ) {
+			$clauses[] = $this->wpdb->prepare( 'event_start_utc IS NOT NULL AND event_start_utc > %s', $now );
+		} elseif ( InvitationAdminQuery::EVENT_PAST === $event_date ) {
+			$clauses[] = $this->wpdb->prepare( 'event_start_utc IS NOT NULL AND event_start_utc <= %s', $now );
+		} elseif ( InvitationAdminQuery::EVENT_NONE === $event_date ) {
+			$clauses[] = 'event_start_utc IS NULL';
+		}
+
+		$product_id = (int) ( $args['product_id'] ?? 0 );
+		if ( $product_id > 0 ) {
+			$clauses[] = $this->wpdb->prepare( 'product_id = %d', $product_id );
+		}
+
+		if ( ! empty( $args['has_pending_photos'] ) ) {
+			$photos = $this->tables->photos();
+			$clauses[] = "project_id IN (SELECT project_id FROM {$photos} WHERE deleted_at_utc IS NULL AND moderation_status = '" . PhotoModerationStatus::PENDING . "')";
+		}
+
+		$order_status = sanitize_key( (string) ( $args['order_status'] ?? '' ) );
+		if ( '' !== $order_status && function_exists( 'wc_get_order_statuses' ) ) {
+			$normalized = str_starts_with( $order_status, 'wc-' ) ? $order_status : 'wc-' . $order_status;
+			$posts      = $this->wpdb->posts;
+			$clauses[]  = $this->wpdb->prepare(
+				"order_id IN (SELECT ID FROM {$posts} WHERE post_type = 'shop_order' AND post_status = %s)",
+				$normalized
+			);
+		}
+
+		return $clauses;
+	}
+
+	private function admin_sanitize_orderby( string $orderby ): string {
+		$allowed = [
+			'updated_at_utc',
+			'created_at_utc',
+			'event_start_utc',
+			'publication_status',
+			'status',
+			'order_id',
+			'project_id',
+		];
+		$orderby = sanitize_key( $orderby );
+
+		return in_array( $orderby, $allowed, true ) ? $orderby : 'updated_at_utc';
+	}
+
+	private function admin_filter_condition( string $filter ): ?string {
 		return match ( ProjectAdminFilter::sanitize( $filter ) ) {
-			ProjectAdminFilter::ACTIVE => $this->wpdb->prepare( ' AND status = %s', ProjectStatus::ACTIVE ),
+			ProjectAdminFilter::ACTIVE => $this->wpdb->prepare( 'status = %s', ProjectStatus::ACTIVE ),
 			ProjectAdminFilter::DEACTIVATED => $this->wpdb->prepare(
-				' AND status IN (' . implode( ', ', array_fill( 0, count( ProjectAdminFilter::deactivated_statuses() ), '%s' ) ) . ')',
+				'status IN (' . implode( ', ', array_fill( 0, count( ProjectAdminFilter::deactivated_statuses() ), '%s' ) ) . ')',
 				...ProjectAdminFilter::deactivated_statuses()
 			),
-			default => '',
+			default => null,
 		};
+	}
+
+	private function admin_filter_where_clause( string $filter ): string {
+		$condition = $this->admin_filter_condition( $filter );
+
+		return null !== $condition ? ' AND ' . $condition : '';
 	}
 
 	/**

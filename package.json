@@ -4,10 +4,10 @@
   "private": true,
   "description": "Asset build for Prikogstreg Online Invitations",
   "scripts": {
-    "build:js": "esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js --bundle --minify --outdir=assets/build/js",
+    "build:js": "esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js assets/src/js/product.js assets/src/js/photo-share-entry.js assets/src/js/photo-wall-entry.js --bundle --minify --outdir=assets/build/js",
     "build:css": "sass assets/src/scss:assets/build/css --style=compressed --no-source-map",
     "build": "npm run build:css && npm run build:js",
-    "dev": "concurrently \"sass assets/src/scss:assets/build/css --watch\" \"esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js --bundle --outdir=assets/build/js --watch\"",
+    "dev": "concurrently \"sass assets/src/scss:assets/build/css --watch\" \"esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js assets/src/js/product.js assets/src/js/photo-share-entry.js assets/src/js/photo-wall-entry.js --bundle --outdir=assets/build/js --watch\"",
     "i18n": "bash scripts/i18n.sh",
     "i18n:pot": "wp i18n make-pot . languages/prikogstreg-online-invitations.pot --domain=prikogstreg-online-invitations --exclude=vendor,node_modules,pdf-plugin,assets/src"
   },

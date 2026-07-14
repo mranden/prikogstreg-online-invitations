@@ -131,7 +131,7 @@ final class ProjectSupportActions {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$url = $project_id > 0
-			? get_edit_post_link( $project_id, 'raw' )
+			? ProjectAdminListViewModel::detail_url( $project_id, 'tools' )
 			: wp_get_referer();
 
 		wp_safe_redirect( is_string( $url ) && '' !== $url ? $url : admin_url() );

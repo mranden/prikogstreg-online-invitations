@@ -29,4 +29,18 @@ final class TemplateLoaderTest extends TestCase {
 
 		$this->assertStringContainsString( 'templates/public/photos.php', $path );
 	}
+
+	public function test_public_photo_share_template_is_allowlisted(): void {
+		$loader = new TemplateLoader();
+		$path   = $loader->locate( 'public/photo-share' );
+
+		$this->assertStringContainsString( 'templates/public/photo-share.php', $path );
+	}
+
+	public function test_public_photo_wall_template_is_allowlisted(): void {
+		$loader = new TemplateLoader();
+		$path   = $loader->locate( 'public/photo-wall' );
+
+		$this->assertStringContainsString( 'templates/public/photo-wall.php', $path );
+	}
 }

@@ -1,0 +1,84 @@
+.pks-oi-poster-viewport {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.pks-oi-poster-viewport__frame {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.pks-oi-poster-viewport__canvas {
+  width: calc(var(--pks-oi-poster-width, 510) * 1px);
+  height: calc(var(--pks-oi-poster-height, 680) * 1px);
+  max-width: 100%;
+  margin: 0 auto;
+  transform-origin: top center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pks-oi-poster-page {
+  width: 100%;
+  height: 100%;
+}
+
+.pks-oi-poster-pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  flex-wrap: wrap;
+}
+
+.pks-oi-poster-pages__status {
+  margin: 0;
+  min-width: 8rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.pks-oi-poster-pages__prev,
+.pks-oi-poster-pages__next {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #2f5d50;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pks-oi-poster-pages__prev:focus-visible,
+.pks-oi-poster-pages__next:focus-visible {
+  outline: 3px solid #2f5d50;
+  outline-offset: 2px;
+}
+
+.pks-oi-poster-pages__prev:disabled,
+.pks-oi-poster-pages__next:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bpp-public-invitation {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.bpp-public-page {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 1024px) {
+  .pks-oi-poster-viewport {
+    max-width: min(100%, calc(var(--pks-oi-poster-width, 510) * 1px));
+  }
+}

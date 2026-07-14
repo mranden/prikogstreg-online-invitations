@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Database;
 
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
+
 /**
  * Runs versioned schema installation via WordPress dbDelta().
  */
@@ -47,6 +49,14 @@ final class Migrator {
 			update_option( self::OPTION_DB_VERSION, Schema::CURRENT_VERSION, false );
 			delete_option( self::OPTION_MIGRATION_ERROR );
 
+			if ( Schema::CURRENT_VERSION >= 3 ) {
+				$this->run_photo_share_backfill();
+			}
+
+			if ( Schema::CURRENT_VERSION >= 4 ) {
+				$this->run_photo_feature_defaults();
+			}
+
 			return true;
 		} catch ( \Throwable $e ) {
 			$this->store_error( 'migration_failed' );
@@ -84,5 +94,21 @@ final class Migrator {
 		if ( ! function_exists( 'dbDelta' ) ) {
 			throw new \RuntimeException( 'dbDelta is unavailable.' );
 		}
+	}
+
+	private function run_photo_share_backfill(): void {
+		$registry = new RepositoryRegistry( $this->wpdb );
+		( new PhotoShareBackfill(
+			$registry->projects(),
+			new PhotoShareTokenService( $registry->projects() )
+		) )->run();
+	}
+
+	private function run_photo_feature_defaults(): void {
+		$table = $this->wpdb->prefix . 'pks_oi_projects';
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from trusted prefix.
+		$this->wpdb->query(
+			"UPDATE {$table} SET photo_auto_approve_enabled = 1, photo_gallery_public_enabled = 1 WHERE guest_photos_enabled = 1"
+		);
 	}
 }

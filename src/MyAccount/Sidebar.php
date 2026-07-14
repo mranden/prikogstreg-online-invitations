@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\MyAccount;
 
 use PrikOgStreg\OnlineInvitations\Security\Authorization;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectService;
 use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
 
 /**
@@ -16,7 +18,9 @@ final class Sidebar {
 		private Authorization $authorization,
 		private Router $router,
 		private TemplateLoader $templates,
-		private SectionNavBuilder $section_nav
+		private SectionNavBuilder $section_nav,
+		private ?ProjectService $project_service = null,
+		private ?ProjectStateService $state_service = null
 	) {}
 
 	public function register(): void {
@@ -42,6 +46,14 @@ final class Sidebar {
 		$project = $this->authorization->resolve_viewable_project( $route['project_id'] );
 		if ( ! is_array( $project ) ) {
 			return;
+		}
+
+		if ( null !== $this->project_service ) {
+			$project = $this->project_service->recover_failed_import_if_needed( $project );
+		}
+
+		if ( null !== $this->state_service ) {
+			$project['design_source'] = $this->state_service->read_design_source( $project );
 		}
 
 		$user_id = $this->authorization->current_user_id();

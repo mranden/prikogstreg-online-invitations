@@ -128,6 +128,39 @@ final class BuilderValidityTest extends TestCase {
 		$this->assertContains( 'envelope_image_invalid', $errors );
 	}
 
+	public function test_invalid_when_builder_has_no_pages(): void {
+		\BPP_Product::set_test_model(
+			16,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+				'pages'           => [],
+			]
+		);
+		$this->set_product_meta(
+			16,
+			[
+				ProductMeta::ENVELOPE_PRESET   => 'classic',
+				ProductMeta::BACKGROUND_PRESET => 'neutral',
+				'_price'                       => '199',
+			]
+		);
+
+		$errors = BuilderValidity::validation_errors( 16 );
+		$this->assertContains( 'builder_pages_missing', $errors );
+		$this->assertFalse( BuilderValidity::has_template_pages( 16 ) );
+	}
+
 	public function test_invalid_when_price_missing(): void {
 		$this->set_active_builder( 15, true );
 		$this->set_product_meta(
@@ -166,6 +199,9 @@ final class BuilderValidityTest extends TestCase {
 						],
 					],
 				],
+				'pages'           => $active
+					? [ (object) [ 'low_res_html' => '<div>page</div>' ] ]
+					: [],
 			]
 		);
 	}

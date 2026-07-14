@@ -1,6 +1,6 @@
 # Product, cart, checkout, and project creation
 
-**Last verified:** 2026-07-14
+**Last verified:** 2026-07-14 (product configurator frontend shipped)
 
 ---
 
@@ -14,7 +14,7 @@
 | Virtual product | `is_virtual()` true |
 | Sold individually | `is_sold_individually()` true |
 | Quantity 1 min/max | Product class + `QuantityGuard` |
-| Add to cart template | `woocommerce_online_invitation_add_to_cart` → simple template |
+| Add-to-cart template | `OnlineInvitationProductFrontend` → `templates/product/add-to-cart-online-invitation.php` |
 | Admin data panel | `ProductDataPanel` — envelope, BPP link (`prdid` query param) |
 
 ---
@@ -22,11 +22,18 @@
 ## Pre-purchase customer flow
 
 1. Customer opens single product page
-2. Theme renders BPP canvas (left column)
-3. `StorefrontBuilderBridge` renders field form + hidden size/format (simple products)
-4. Customer edits fields; BPP JS updates `page[]` / `field[]`
-5. Add to cart → `CartPayloadValidator` validates structure
-6. `InvitationCart` annotates line with OI markers + checksum
+2. `ProductReadiness` shows customer-friendly unavailable state when configuration incomplete; shop managers with `manage_woocommerce` see diagnostic codes
+3. Theme renders BPP canvas in left column (`#customizer-area`)
+4. `OnlineInvitationProductFrontend` renders `.pks-oi-product-configurator` form:
+   - `EnvelopeFrontend` preview (from existing product meta / `EnvelopeDesign`)
+   - Canvas hint when BPP customizable
+   - `BuilderFrontendBridge` → BPP field form + hidden size/format
+   - BPP preview + purchase hooks (preserved WC hook order)
+5. Customer edits fields; BPP JS updates `page[]` / `field[]`
+6. Add to cart → `CartPayloadValidator` validates structure
+7. `InvitationCart` annotates line with OI markers + checksum
+
+**Product-page assets:** OI loads `assets/build/css/product.css` and `product.js` only on `online_invitation` pages. BPP loads its own editor assets. The public invitation app (`public.css` / `public.js`) is **not** enqueued on product pages.
 
 **Cart rejection cases:**
 

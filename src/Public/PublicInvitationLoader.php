@@ -9,6 +9,7 @@ use PrikOgStreg\OnlineInvitations\Security\PublishedHtmlSanitizer;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageChecksumException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
+use PrikOgStreg\OnlineInvitations\Support\PublishedHtmlValidator;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 /**
@@ -60,9 +61,15 @@ final class PublicInvitationLoader {
 			}
 
 			$index = (int) ( $page['index'] ?? ( count( $pages ) + 1 ) );
+			$wrapped = $this->wrap_page_html( $html, $project, $index, count( $manifest->pages ) );
+
+			if ( ! PublishedHtmlValidator::has_visible_content( $wrapped ) ) {
+				return [ 'success' => false, 'error' => 'empty_published_html' ];
+			}
+
 			$pages[] = [
 				'index' => max( 1, $index ),
-				'html'  => $this->wrap_page_html( $html, $project, $index, count( $manifest->pages ) ),
+				'html'  => $wrapped,
 			];
 		}
 

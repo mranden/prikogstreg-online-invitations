@@ -8,6 +8,7 @@ use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\EventRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageConflictException;
+use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectManifest;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
 use PrikOgStreg\OnlineInvitations\Storage\StorageLimits;
@@ -42,6 +43,93 @@ final class ProjectStateService {
 		}
 
 		return $this->load_state_from_files( $project );
+	}
+
+	/**
+	 * Loads builder state for publish with editable page HTML merged from project files.
+	 *
+	 * @param array<string, mixed> $project
+	 * @return array<string, mixed>
+	 */
+	public function load_state_for_publish( array $project ): array {
+		$adapter = $this->builder->get_adapter();
+		$context = $this->adapter_context( $project, 'public' );
+
+		$state = null;
+		if ( null !== $adapter && method_exists( $adapter, 'load_state' ) ) {
+			$loaded = $adapter->load_state( $context );
+			if ( is_array( $loaded ) ) {
+				$state = $loaded;
+			}
+		}
+
+		if ( null === $state ) {
+			return $this->load_state_from_files( $project );
+		}
+
+		return $this->merge_editable_pages_into_state( $project, $state );
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $state
+	 * @return array<string, mixed>
+	 */
+	private function merge_editable_pages_into_state( array $project, array $state ): array {
+		if ( $this->state_has_substantive_pages( $state ) ) {
+			return $state;
+		}
+
+		$file_state = $this->load_state_from_files( $project );
+		$file_pages = is_array( $file_state['page'] ?? null ) ? $file_state['page'] : [];
+
+		if ( [] !== $file_pages && $this->pages_have_substantive_content( $file_pages ) ) {
+			$state['page'] = $file_pages;
+		}
+
+		return $state;
+	}
+
+	/**
+	 * @param array<string, mixed> $state
+	 */
+	private function state_has_substantive_pages( array $state ): bool {
+		$pages = is_array( $state['page'] ?? null ) ? $state['page'] : [];
+
+		return $this->pages_have_substantive_content( $pages );
+	}
+
+	/**
+	 * @param list<mixed> $pages
+	 */
+	private function pages_have_substantive_content( array $pages ): bool {
+		foreach ( $pages as $html ) {
+			if ( is_string( $html ) && '' !== trim( wp_strip_all_tags( $html ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 */
+	public function read_design_source( array $project ): string {
+		if ( (int) ( $project['state_version'] ?? 0 ) < 1 ) {
+			return '';
+		}
+
+		try {
+			$json    = $this->storage->read_current_state( (string) $project['storage_uuid'], false );
+			$decoded = json_decode( $json, true );
+
+			return is_array( $decoded )
+				? (string) ( $decoded['design_source'] ?? ProjectDesignSource::CUSTOMER )
+				: ProjectDesignSource::CUSTOMER;
+		} catch ( StorageException $exception ) {
+			return '';
+		}
 	}
 
 	/**
@@ -115,6 +203,7 @@ final class ProjectStateService {
 
 		$state_payload = [
 			'schema_version' => (string) ( $state['schema_version'] ?? $project['builder_schema_version'] ?? '1' ),
+			'design_source'  => (string) ( $state['design_source'] ?? ProjectDesignSource::CUSTOMER ),
 			'field'          => is_array( $state['field'] ?? null ) ? $state['field'] : [],
 			'size'           => (string) ( $state['size'] ?? '' ),
 			'format'         => (string) ( $state['format'] ?? '' ),
@@ -156,9 +245,17 @@ final class ProjectStateService {
 	 */
 	private function load_state_from_files( array $project ): array {
 		$storage_uuid = (string) $project['storage_uuid'];
-		$json         = $this->storage->read_current_state( $storage_uuid, true );
-		$decoded      = json_decode( $json, true );
-		$manifest     = $this->storage->read_state_manifest( $storage_uuid );
+
+		try {
+			$json     = $this->storage->read_current_state( $storage_uuid, true );
+			$decoded  = json_decode( $json, true );
+			$manifest = $this->storage->read_state_manifest( $storage_uuid );
+		} catch ( StorageException $exception ) {
+			return ( new ProjectTemplateFallback( $this->builder ) )->resolve_for_product(
+				(int) $project['product_id'],
+				$this->adapter_context( $project, 'edit' )
+			);
+		}
 
 		$pages = [];
 		foreach ( $manifest->pages as $page ) {
@@ -174,6 +271,7 @@ final class ProjectStateService {
 
 		return [
 			'schema_version' => (string) ( is_array( $decoded ) ? ( $decoded['schema_version'] ?? '1' ) : '1' ),
+			'design_source'  => (string) ( is_array( $decoded ) ? ( $decoded['design_source'] ?? ProjectDesignSource::CUSTOMER ) : ProjectDesignSource::CUSTOMER ),
 			'template_id'    => (int) $project['product_id'],
 			'product_id'     => (int) $project['product_id'],
 			'size'           => (string) ( is_array( $decoded ) ? ( $decoded['size'] ?? '' ) : '' ),
@@ -198,7 +296,7 @@ final class ProjectStateService {
 			'state_version' => (int) ( $project['state_version'] ?? 0 ),
 			'locale'        => (string) ( $project['locale'] ?? 'da_DK' ),
 			'is_preview'    => 'preview' === $mode,
-			'is_public'     => false,
+			'is_public'     => 'public' === $mode,
 		];
 	}
 

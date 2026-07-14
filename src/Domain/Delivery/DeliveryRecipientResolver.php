@@ -7,6 +7,7 @@ namespace PrikOgStreg\OnlineInvitations\Domain\Delivery;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestSendTokenStore;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\RsvpStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
 use PrikOgStreg\OnlineInvitations\Security\InvitationToken;
@@ -40,7 +41,7 @@ final class DeliveryRecipientResolver {
 
 		$type = (string) ( $delivery['delivery_type'] ?? '' );
 
-		if ( in_array( $type, [ DeliveryType::GUEST_INVITATION, DeliveryType::RSVP_REMINDER, DeliveryType::RSVP_CONFIRMATION ], true ) ) {
+		if ( in_array( $type, [ DeliveryType::GUEST_INVITATION, DeliveryType::RSVP_REMINDER, DeliveryType::RSVP_CONFIRMATION, DeliveryType::PHOTO_SHARE_INVITE ], true ) ) {
 			if ( ! is_array( $guest ) ) {
 				return [ 'success' => false, 'error' => 'guest_missing' ];
 			}
@@ -78,6 +79,15 @@ final class DeliveryRecipientResolver {
 
 		if ( in_array( $type, [ DeliveryType::WELCOME, DeliveryType::DEMO, DeliveryType::ORGANIZER_RSVP, DeliveryType::PHOTO_NOTIFICATION ], true ) ) {
 			$context['account_url'] = $this->account_url( $project_id, $type );
+		}
+
+		if ( DeliveryType::PHOTO_SHARE_INVITE === $type ) {
+			$share_tokens = new PhotoShareTokenService( $this->projects );
+			$raw          = $share_tokens->resolve_raw_token( $project );
+			if ( null === $raw ) {
+				return [ 'success' => false, 'error' => 'photo_share_unavailable' ];
+			}
+			$context['photo_share_url'] = PhotoShareTokenService::public_url( $raw );
 		}
 
 		return $context;

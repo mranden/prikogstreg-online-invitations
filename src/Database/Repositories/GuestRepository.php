@@ -288,6 +288,58 @@ final class GuestRepository extends AbstractRepository {
 	}
 
 	/**
+	 * @param list<int> $project_ids
+	 * @return array<int, array<string, int>>
+	 */
+	public function batch_status_summaries( array $project_ids ): array {
+		$project_ids = array_values( array_filter( array_map( 'intval', $project_ids ) ) );
+		if ( [] === $project_ids ) {
+			return [];
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $project_ids ), '%d' ) );
+		$sql          = $this->wpdb->prepare(
+			'SELECT project_id, rsvp_status FROM ' . $this->tables->guests()
+			. " WHERE project_id IN ({$placeholders}) AND archived_at_utc IS NULL",
+			...$project_ids
+		);
+		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
+
+		$summaries = [];
+		foreach ( $project_ids as $project_id ) {
+			$summaries[ $project_id ] = [
+				'total'        => 0,
+				'pending_rsvp' => 0,
+				'attending'    => 0,
+				'declined'     => 0,
+			];
+		}
+
+		if ( ! is_array( $rows ) ) {
+			return $summaries;
+		}
+
+		foreach ( $rows as $row ) {
+			$project_id = (int) ( $row['project_id'] ?? 0 );
+			if ( ! isset( $summaries[ $project_id ] ) ) {
+				continue;
+			}
+
+			++$summaries[ $project_id ]['total'];
+			$rsvp = (string) ( $row['rsvp_status'] ?? RsvpStatus::PENDING );
+			if ( RsvpStatus::ATTENDING === $rsvp ) {
+				++$summaries[ $project_id ]['attending'];
+			} elseif ( RsvpStatus::DECLINED === $rsvp ) {
+				++$summaries[ $project_id ]['declined'];
+			} else {
+				++$summaries[ $project_id ]['pending_rsvp'];
+			}
+		}
+
+		return $summaries;
+	}
+
+	/**
 	 * @return list<array<string, mixed>>
 	 */
 	public function export_rows_for_project( int $project_id ): array {

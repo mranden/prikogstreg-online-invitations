@@ -149,6 +149,25 @@ final class DeliveryQueueService {
 		) > 0;
 	}
 
+	/**
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $guest
+	 */
+	public function queue_photo_share_invite( array $project, array $guest ): bool {
+		$email = sanitize_email( (string) ( $guest['email'] ?? '' ) );
+		if ( '' === $email ) {
+			return false;
+		}
+
+		return $this->queue(
+			(int) ( $project['project_id'] ?? 0 ),
+			(int) ( $guest['guest_id'] ?? 0 ),
+			DeliveryType::PHOTO_SHARE_INVITE,
+			'photo_share:' . (int) ( $guest['guest_id'] ?? 0 ) . ':' . gmdate( 'Ymd' ),
+			$email
+		) > 0;
+	}
+
 	public function cancel_queued_for_project( int $project_id, ?string $delivery_type = null ): int {
 		$rows = $this->deliveries->list_by_project_and_status( $project_id, DeliveryStatus::QUEUED, $delivery_type );
 		$count = 0;

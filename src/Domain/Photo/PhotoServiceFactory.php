@@ -23,6 +23,7 @@ final class PhotoServiceFactory {
 			$repositories->guests(),
 			$repositories->events(),
 			new PhotoUploadIntentService(),
+			new PhotoShareUploadIntentService(),
 			new PhotoImageValidator(),
 			new PhotoImageProcessor(),
 			new PhotoStorageService(

@@ -70,6 +70,25 @@ All custom tables use UTC datetime columns. Projects link to WooCommerce via `or
 
 ---
 
+## Admin project view model
+
+`Admin\ProjectSupportViewModel::build_detail()` assembles a redacted support payload for list/detail screens:
+
+| Field group | Source | Redacted in admin |
+|-------------|--------|-------------------|
+| Owner, order, product | WP user + WC order/product APIs | — |
+| Guest / photo counts | `GuestRepository::status_summary()`, `PhotoRepository::batch_moderation_counts()` | — |
+| Storage health | `StorageDiagnostic::diagnose_project()` | Absolute filesystem paths |
+| Project row | `ProjectRepository` | `generic_token_hash`, photo access/share hashes, manifest paths |
+
+List queries: `ProjectRepository::list_admin_query()` with filters (status, publication, event date, product, pending photos, search) and sortable columns.
+
+Admin support edits persist through `Admin\AdminSupportService` → domain services; audit rows use `ProjectLifecycleAudit::record_admin()` (`pks_oi_events`, `actor_type = admin`).
+
+No new tables or indexes were required for the admin list (existing `updated_at_utc`, `status`, `publication_status` columns are used).
+
+---
+
 ## Private file storage
 
 Root: `PKS_OI_STORAGE_PATH` or `{uploads}/pks-oi-private` (fallback).

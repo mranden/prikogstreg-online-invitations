@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\WooCommerce\ProductType;
 
+use PrikOgStreg\OnlineInvitations\Plugin;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\BuilderFrontendBridge;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\EnvelopeFrontend;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\OnlineInvitationProductFrontend;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\ProductBodyClass;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\ProductFrontendAssets;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\ProductReadiness;
+
 /**
  * Registers the online_invitation WooCommerce product type.
  */
@@ -14,14 +22,22 @@ final class ProductTypeRegistrar {
 		add_filter( 'woocommerce_product_class', [ $this, 'map_product_class' ], 10, 2 );
 		add_filter( 'woocommerce_product_data_tabs', [ $this, 'product_data_tabs' ] );
 		add_filter( 'woocommerce_product_supports', [ $this, 'product_supports' ], 10, 3 );
-		add_action( 'woocommerce_online_invitation_add_to_cart', 'woocommerce_simple_add_to_cart' );
 
 		require_once PKS_OI_PLUGIN_PATH . 'src/WooCommerce/ProductType/WC_Product_Online_Invitation.php';
 
 		( new ProductDataPanel() )->register();
 		( new QuantityGuard() )->register();
 		( new BuilderIntegration() )->register();
-		( new StorefrontBuilderBridge() )->register();
+
+		$builder_bridge = new BuilderFrontendBridge( Plugin::instance()->builder() );
+
+		( new OnlineInvitationProductFrontend(
+			new ProductReadiness( $builder_bridge ),
+			new EnvelopeFrontend(),
+			$builder_bridge,
+			new ProductFrontendAssets()
+		) )->register();
+		( new ProductBodyClass( $builder_bridge ) )->register();
 		( new ProductPagePlaceholder() )->register();
 	}
 

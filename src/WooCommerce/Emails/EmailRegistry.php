@@ -29,6 +29,7 @@ final class EmailRegistry {
 		$emails['pks_oi_rsvp_confirmation']  = new RsvpConfirmationEmail();
 		$emails['pks_oi_organizer_rsvp']      = new OrganizerRsvpEmail();
 		$emails['pks_oi_photo_upload']         = new PhotoNotificationEmail();
+		$emails['pks_oi_photo_share_invite']   = new PhotoShareInviteEmail();
 
 		return $emails;
 	}

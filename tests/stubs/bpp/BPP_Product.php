@@ -48,6 +48,11 @@ class BPP_Product {
 					],
 				],
 			],
+			'pages'           => [
+				(object) [
+					'low_res_html' => '<div class="customizer-page-content">page</div>',
+				],
+			],
 		];
 	}
 }

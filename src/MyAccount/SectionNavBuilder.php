@@ -9,6 +9,7 @@ use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\PhotoRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\WishlistItemRepository;
 use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoModerationStatus;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectDesignSource;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
 
@@ -50,6 +51,16 @@ final class SectionNavBuilder {
 				ProjectSections::SETTINGS,
 			],
 		],
+	];
+
+	/**
+	 * @var list<string>
+	 */
+	private const GROUP_ORDER = [
+		'setup',
+		'launch',
+		'manage',
+		'settings',
 	];
 
 	/**
@@ -156,6 +167,7 @@ final class SectionNavBuilder {
 			'has_event'          => ProjectEntitlement::has_required_event_data( $project ),
 			'is_published'       => PublicationStatus::PUBLISHED === (string) ( $project['publication_status'] ?? '' ),
 			'has_import_error'   => '' !== (string) ( $project['last_error_code'] ?? '' ),
+			'uses_template_fallback' => ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' ),
 		];
 	}
 
@@ -176,6 +188,13 @@ final class SectionNavBuilder {
 					return [
 						'status' => 'attention',
 						'meta'   => \__( 'Needs attention', 'prikogstreg-online-invitations' ),
+					];
+				}
+
+				if ( $stats['uses_template_fallback'] ) {
+					return [
+						'status' => 'pending',
+						'meta'   => \__( 'Default template', 'prikogstreg-online-invitations' ),
 					];
 				}
 
@@ -329,10 +348,9 @@ final class SectionNavBuilder {
 	 * @return list<array{slug:string,label:string,items:list<array<string,mixed>>}>
 	 */
 	private function build_groups( array $items ): array {
-		$core_setup_complete = $this->is_core_setup_complete( $items );
-		$groups              = [];
+		$groups = [];
 
-		foreach ( $this->group_order( $core_setup_complete ) as $group_slug ) {
+		foreach ( self::GROUP_ORDER as $group_slug ) {
 			$group = self::GROUPS[ $group_slug ] ?? null;
 			if ( ! is_array( $group ) ) {
 				continue;
@@ -349,10 +367,6 @@ final class SectionNavBuilder {
 				continue;
 			}
 
-			if ( 'setup' === $group_slug ) {
-				$group_items = $this->sort_setup_group_items( $group_items, $core_setup_complete );
-			}
-
 			$groups[] = [
 				'slug'  => $group_slug,
 				'label' => $this->group_label( (string) $group['label'] ),
@@ -361,66 +375,6 @@ final class SectionNavBuilder {
 		}
 
 		return $groups;
-	}
-
-	/**
-	 * @param array<string, array<string, mixed>> $items
-	 */
-	private function is_core_setup_complete( array $items ): bool {
-		foreach ( [ ProjectSections::DESIGN, ProjectSections::EVENT, ProjectSections::GUESTS ] as $slug ) {
-			if ( 'complete' !== (string) ( $items[ $slug ]['status'] ?? '' ) ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * @return list<string>
-	 */
-	private function group_order( bool $core_setup_complete ): array {
-		if ( $core_setup_complete ) {
-			return [ 'manage', 'launch', 'setup', 'settings' ];
-		}
-
-		return [ 'setup', 'launch', 'manage', 'settings' ];
-	}
-
-	/**
-	 * @param list<array<string, mixed>> $group_items
-	 * @return list<array<string, mixed>>
-	 */
-	private function sort_setup_group_items( array $group_items, bool $core_setup_complete ): array {
-		if ( ! $core_setup_complete ) {
-			return $group_items;
-		}
-
-		$overview  = [];
-		$pending   = [];
-		$completed = [];
-
-		foreach ( $group_items as $item ) {
-			$slug = (string) ( $item['slug'] ?? '' );
-
-			if ( ProjectSections::OVERVIEW === $slug ) {
-				$overview[] = $item;
-				continue;
-			}
-
-			if ( in_array( $slug, [ ProjectSections::DESIGN, ProjectSections::EVENT, ProjectSections::GUESTS ], true ) ) {
-				if ( 'complete' === (string) ( $item['status'] ?? '' ) ) {
-					$completed[] = $item;
-				} else {
-					$pending[] = $item;
-				}
-				continue;
-			}
-
-			$overview[] = $item;
-		}
-
-		return array_merge( $overview, $pending, $completed );
 	}
 
 	/**

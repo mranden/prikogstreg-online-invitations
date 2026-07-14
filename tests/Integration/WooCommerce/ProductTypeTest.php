@@ -104,21 +104,29 @@ final class ProductTypeTest extends TestCase {
 			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductTypeRegistrar.php'
 		);
 
-		$this->assertStringContainsString(
+		$this->assertStringContainsString( 'OnlineInvitationProductFrontend', $source );
+		$this->assertStringNotContainsString(
 			"add_action( 'woocommerce_online_invitation_add_to_cart', 'woocommerce_simple_add_to_cart' )",
 			$source
 		);
 	}
 
-	public function test_registers_storefront_builder_bridge(): void {
+	public function test_registers_product_frontend_instead_of_storefront_bridge(): void {
 		$source = (string) file_get_contents(
 			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductTypeRegistrar.php'
 		);
 
-		$this->assertStringContainsString(
-			'( new StorefrontBuilderBridge() )->register()',
-			$source
+		$this->assertStringContainsString( 'BuilderFrontendBridge', $source );
+		$this->assertStringNotContainsString( 'StorefrontBuilderBridge', $source );
+	}
+
+	public function test_does_not_modify_global_simple_add_to_cart_handler(): void {
+		$source = (string) file_get_contents(
+			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductTypeRegistrar.php'
 		);
+
+		$this->assertStringNotContainsString( 'woocommerce_simple_add_to_cart', $source );
+		$this->assertStringNotContainsString( 'remove_action', $source );
 	}
 
 	public function test_admin_customize_link_uses_prdid_query_param(): void {
@@ -148,6 +156,9 @@ final class ProductTypeTest extends TestCase {
 							'available'      => true,
 						],
 					],
+				],
+				'pages'           => [
+					(object) [ 'low_res_html' => '<div>page</div>' ],
 				],
 			]
 		);

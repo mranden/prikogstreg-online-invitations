@@ -24,7 +24,8 @@ final class BuilderIntegration {
 			return false;
 		}
 
-		return BuilderValidity::has_active_builder_template( $product_id );
+		return BuilderValidity::has_active_builder_template( $product_id )
+			&& BuilderValidity::has_template_pages( $product_id );
 	}
 
 	public function filter_purchasable( bool $purchasable, $product ): bool {

@@ -9,7 +9,7 @@
 | Context | Mechanism |
 |---------|-----------|
 | My Account | Logged-in customer; `Authorization::can_access_project()` |
-| Admin support | `pks_oi_manage_all_projects` capability |
+| Admin support | Plugin capabilities (see below) |
 | Authenticated REST | Cookie session + `wp_rest` nonce |
 | Public invitation | Opaque bearer token only — no user IDs in URL |
 | Public REST | Token in path + `wp_rest` nonce + rate limits |
@@ -38,7 +38,8 @@ Personal tokens checked before generic tokens (`TokenResolver`).
 | Published HTML | `PublishedHtmlSanitizer` at publish + public load |
 | Cart payload | `CartPayloadValidator` structural checks |
 | Guest CSV | Normalisation in import service |
-| Photo uploads | MIME/size/dimension validation |
+| Photo uploads | MIME/size/dimension validation; share-page session + HMAC upload intent |
+| Photo access code | Stored as hash only (`wp_hash_password`); never in URL, QR, or e-mail |
 | Admin meta | `ProductMeta` allowlists for presets |
 
 **Public HTML:** Never serves `pages/editable/`, raw `page[]` POST data, or order-item files.
@@ -55,11 +56,56 @@ Personal tokens checked before generic tokens (`TokenResolver`).
 
 ## Capabilities
 
-| Capability | Purpose |
-|------------|---------|
-| `pks_oi_manage_all_projects` | Admin support screen actions |
+Registered idempotently in `Admin\Capabilities::register_for_roles()` on every plugin boot (activation also calls this).
 
-Registered in `Admin\Capabilities` on activation.
+| Capability | Purpose | administrator | shop_manager | customer |
+|------------|---------|:-------------:|:------------:|:--------:|
+| `manage_online_invitations` | Full plugin admin | ✓ | — | — |
+| `view_online_invitation_projects` | Menu + list/detail read | ✓ | ✓ | — |
+| `edit_online_invitation_projects` | Safe support field edits | ✓ | ✓ | — |
+| `moderate_online_invitation_photos` | Photos submenu + moderation | ✓ | ✓ | — |
+| `manage_online_invitation_settings` | Settings submenu | ✓ | — | — |
+| `run_online_invitation_tools` | Tools tab (publish, restrict, delete, …) | ✓ | ✓ | — |
+| `pks_oi_support_projects` | Legacy alias; lifecycle tools | ✓ | ✓ | — |
+| `pks_oi_manage_own_projects` | My Account owner access | ✓ | — | ✓ |
+
+Every admin screen and `admin-post.php` handler calls `current_user_can()` — hidden menus are not sufficient authorization.
+
+---
+
+## Admin preview authorization
+
+| Mode | Route | Rules |
+|------|-------|-------|
+| Draft | `admin-post.php?action=pks_oi_admin_preview&mode=draft` | `view_online_invitation_projects` + per-project nonce; uses `ProjectPreviewService` (no open tracking) |
+| Published | same with `mode=published` | Requires `publication_status = published`; loads verified snapshot via `PublicInvitationLoader` |
+
+Responses set `X-Robots-Tag: noindex, nofollow`. Raw generic/personal tokens are never embedded in admin list markup; public links use published preview or customer-owned My Account.
+
+---
+
+## Safe edit policy (admin)
+
+| Editable (domain service) | View-only |
+|---------------------------|-----------|
+| Event fields in `ProjectEventService::ALLOWED_FIELDS` | Order, product, storage UUID, token hashes |
+| Guest display name, email, RSVP status, attendee count | Builder raw state, imported HTML |
+| Photo moderation status | Manifest/checksum values, access-code hashes |
+
+Dangerous actions (restrict, hard delete, token rotate, import retry) live on the **Tools** tab: POST + nonce + `pks_oi_support_projects` / `run_online_invitation_tools`.
+
+---
+
+## Admin audit logging
+
+`ProjectLifecycleAudit::record_admin()` writes to `pks_oi_events` for:
+
+- `admin.event_details_changed`
+- `admin.guest_updated`
+- `admin.photo_moderated`
+- Existing lifecycle types (`project.restricted`, `project.restored`, …)
+
+Metadata is scalar-truncated; tokens, HTML blobs, and filesystem paths are never logged.
 
 ---
 
@@ -98,7 +144,8 @@ Private storage outside web root (recommended). When served:
 
 - `FileStreamResponse` with token entitlement check
 - Envelope image, poster CSS — token-scoped URLs only
-- No direct public URLs to `pages/editable/` or order payloads
+- Guest photo streams — photo share session or owner auth; `/photos/{token}/stream/{id}/`
+- No direct public URLs to `pages/editable/`, order payloads, or `photos/pending|approved/`
 
 ---
 
@@ -108,7 +155,8 @@ Private storage outside web root (recommended). When served:
 |----------|-------|
 | Invalid public tokens | Per client key |
 | RSVP POST | Per token / generic creation per IP |
-| Photo upload | Intent + size limits |
+| Photo share verify | 8 failures / 15 min per token + IP |
+| Photo upload | Session cookie + intent + size limits |
 | Wishlist reserve | Idempotency keys |
 
 ---
@@ -143,4 +191,5 @@ Pen-test published HTML with real BPP output before production launch.
 | View public invitation | — | ✓ | ✓ | — |
 | RSVP | — | ✓ | ✓ (creates guest) | — |
 | Wishlist reserve | — | ✓ | ✓ (name may be required) | — |
-| Upload photos | — | ✓ | ✓ (name may be required) | — |
+| Upload photos | — | — | — | — |
+| Upload photos (photo share page) | — | ✓ (access code + session) | ✓ (access code + session) | — |

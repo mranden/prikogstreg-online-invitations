@@ -124,6 +124,30 @@ final class ProjectService {
 	}
 
 	/**
+	 * @param array<string, mixed> $project
+	 * @return array<string, mixed>
+	 */
+	public function recover_failed_import_if_needed( array $project ): array {
+		if ( ProjectEntitlement::is_project_usable( $project ) ) {
+			return $project;
+		}
+
+		$error_code = (string) ( $project['last_error_code'] ?? '' );
+		if ( ! ProjectTemplateFallback::is_recoverable_import_error( $error_code ) ) {
+			return $project;
+		}
+
+		$project_id = (int) ( $project['project_id'] ?? 0 );
+		if ( $project_id <= 0 || ! $this->retry_import( $project_id ) ) {
+			return $project;
+		}
+
+		$refreshed = $this->projects->find_by_id( $project_id );
+
+		return is_array( $refreshed ) ? $refreshed : $project;
+	}
+
+	/**
 	 * @param object $order WooCommerce order.
 	 * @param object $item  WooCommerce order item product.
 	 */
@@ -309,64 +333,17 @@ final class ProjectService {
 			'order_item_id' => $order_item_id,
 			'product_id'    => $product_id,
 			'project_id'    => $project_id,
+			'storage_uuid'  => $storage_uuid,
 			'template_id'   => (int) ( $project['template_id'] ?? $product_id ),
 		];
 
-		$state = $adapter->load_state( $context );
-		if ( is_wp_error( $state ) ) {
-			$this->mark_import_failed(
-				$project_id,
-				$storage_uuid,
-				(string) ( $state->get_error_code() ?: 'invalid_builder_state' ),
-				$order_id,
-				$order_item_id
-			);
-
+		$resolved = $this->resolve_import_state( $context, $product_id, $item );
+		if ( null === $resolved ) {
 			return false;
 		}
 
-		if ( ! is_array( $state ) ) {
-			$this->mark_import_failed( $project_id, $storage_uuid, 'malformed_payload', $order_id, $order_item_id );
-
-			return false;
-		}
-
-		if ( method_exists( $adapter, 'validate_state' ) ) {
-			$validated = $adapter->validate_state(
-				$state,
-				array_merge( $context, [ 'mode' => 'import' ] )
-			);
-
-			if ( is_wp_error( $validated ) ) {
-				$this->mark_import_failed(
-					$project_id,
-					$storage_uuid,
-					(string) ( $validated->get_error_code() ?: 'invalid_builder_state' ),
-					$order_id,
-					$order_item_id
-				);
-
-				return false;
-			}
-
-			if ( is_array( $validated ) ) {
-				$state = $validated;
-			}
-		}
-
-		$page_error = ProjectImportGuard::validate_builder_pages( $state );
-		if ( null !== $page_error ) {
-			$this->mark_import_failed( $project_id, $storage_uuid, $page_error, $order_id, $order_item_id );
-
-			return false;
-		}
-
-		$checksum_error = ProjectImportGuard::validate_payload_checksum( $state, $item );
-		if ( null !== $checksum_error ) {
-			$this->mark_import_failed( $project_id, $storage_uuid, $checksum_error, $order_id, $order_item_id );
-
-			return false;
-		}
+		$state         = $resolved['state'];
+		$used_fallback = $resolved['used_fallback'];
 
 		$schema_version = '1';
 		if ( method_exists( $adapter, 'get_schema_version' ) ) {
@@ -428,9 +405,10 @@ final class ProjectService {
 				$project_id,
 				'project_import_succeeded',
 				[
-					'order_id'      => $order_id,
-					'order_item_id' => $order_item_id,
-					'state_version' => (int) $import['state_version'],
+					'order_id'       => $order_id,
+					'order_item_id'  => $order_item_id,
+					'state_version'  => (int) $import['state_version'],
+					'design_source'  => $used_fallback ? ProjectDesignSource::TEMPLATE_FALLBACK : ProjectDesignSource::CUSTOMER,
 				]
 			);
 			do_action( 'pks_oi_project_import_succeeded', $project_id );
@@ -456,6 +434,76 @@ final class ProjectService {
 
 			return false;
 		}
+	}
+
+	/**
+	 * @param array<string, mixed> $context
+	 * @param object               $item WooCommerce order item.
+	 * @return array{state:array<string,mixed>,used_fallback:bool}|null
+	 */
+	private function resolve_import_state( array $context, int $product_id, object $item ): ?array {
+		$adapter       = $this->builder->get_adapter();
+		$fallback      = new ProjectTemplateFallback( $this->builder );
+		$used_fallback = false;
+		$project_id    = (int) ( $context['project_id'] ?? 0 );
+		$storage_uuid  = (string) ( $context['storage_uuid'] ?? '' );
+		$order_id      = (int) ( $context['order_id'] ?? 0 );
+		$order_item_id = (int) ( $context['order_item_id'] ?? 0 );
+
+		$state = $adapter->load_state( $context );
+
+		if ( is_wp_error( $state ) ) {
+			$error_code = (string) ( $state->get_error_code() ?: 'invalid_builder_state' );
+			if ( ProjectTemplateFallback::is_recoverable_import_error( $error_code ) ) {
+				$state         = $fallback->resolve_for_product( $product_id, $context );
+				$used_fallback = true;
+			} else {
+				$this->mark_import_failed( $project_id, $storage_uuid, $error_code, $order_id, $order_item_id );
+
+				return null;
+			}
+		} elseif ( ! is_array( $state ) ) {
+			$state         = $fallback->resolve_for_product( $product_id, $context );
+			$used_fallback = true;
+		} elseif ( method_exists( $adapter, 'validate_state' ) ) {
+			$validated = $adapter->validate_state(
+				$state,
+				array_merge( $context, [ 'mode' => 'import' ] )
+			);
+
+			if ( is_wp_error( $validated ) ) {
+				$error_code = (string) ( $validated->get_error_code() ?: 'invalid_builder_state' );
+				if ( ProjectTemplateFallback::is_recoverable_import_error( $error_code ) ) {
+					$state         = $fallback->resolve_for_product( $product_id, $context );
+					$used_fallback = true;
+				} else {
+					$this->mark_import_failed( $project_id, $storage_uuid, $error_code, $order_id, $order_item_id );
+
+					return null;
+				}
+			} elseif ( is_array( $validated ) ) {
+				$state = $validated;
+			}
+		}
+
+		if ( ! $used_fallback && null !== ProjectImportGuard::validate_builder_pages( $state ) ) {
+			$state         = $fallback->resolve_for_product( $product_id, $context );
+			$used_fallback = true;
+		}
+
+		if ( ! $used_fallback ) {
+			$checksum_error = ProjectImportGuard::validate_payload_checksum( $state, $item );
+			if ( null !== $checksum_error ) {
+				$this->mark_import_failed( $project_id, $storage_uuid, $checksum_error, $order_id, $order_item_id );
+
+				return null;
+			}
+		}
+
+		return [
+			'state'         => $state,
+			'used_fallback' => $used_fallback,
+		];
 	}
 
 	private function mark_import_failed(

@@ -9,17 +9,20 @@ use PrikOgStreg\OnlineInvitations\Database\MigrationLock;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectDesignSource;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublicUrlService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectArchiveService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
 use PrikOgStreg\OnlineInvitations\Security\Authorization;
+use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
 
 /**
@@ -43,6 +46,7 @@ final class ProjectController {
 		private ProjectPreviewService $preview_service,
 		private ProjectPublishService $publish_service,
 		private ProjectPublicUrlService $public_url_service,
+		private ProjectService $project_service,
 		private GuestController $guest_controller,
 		private AddressBookController $address_book_controller,
 		private ResponsesController $responses_controller,
@@ -177,6 +181,8 @@ final class ProjectController {
 			return;
 		}
 
+		$project = $this->project_service->recover_failed_import_if_needed( $project );
+
 		$context = $this->base_context( $project, $project_id, $section );
 
 		switch ( $section ) {
@@ -225,14 +231,23 @@ final class ProjectController {
 	private function render_design( array $context, array $project ): void {
 		if ( ! $this->authorization->can_edit_project( $project ) ) {
 			$context['editor_html'] = '';
-			$context['editor_error'] = __( 'Design editing is not available for this project.', 'prikogstreg-online-invitations' );
+			$context['editor_error'] = $this->design_unavailable_message( $project );
+			$this->templates->render( 'myaccount/project-design', $context );
+
+			return;
+		}
+
+		try {
+			$state = $this->state_service->load_canonical_state( $project );
+		} catch ( StorageException $exception ) {
+			$context['editor_html']  = '';
+			$context['editor_error'] = $this->design_unavailable_message( $project );
 			$this->templates->render( 'myaccount/project-design', $context );
 
 			return;
 		}
 
 		$adapter = $this->builder->get_adapter();
-		$state   = $this->state_service->load_canonical_state( $project );
 		$adapter_context = $this->state_service->adapter_context( $project, 'project_edit' );
 
 		if ( null !== $adapter && method_exists( $adapter, 'enqueue_editor_assets' ) ) {
@@ -280,9 +295,11 @@ final class ProjectController {
 		}
 
 		$preview = $this->preview_service->render_preview( $project );
-		$context['project']            = $project;
-		$context['preview_html']     = $preview['html'];
-		$context['envelope_preset']  = $preview['envelope_preset'];
+		$project = $context['project'] ?? $project;
+		$context['project']                 = $project;
+		$context['preview_html']            = $preview['html'];
+		$context['preview_uses_template_fallback'] = ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' );
+		$context['envelope_preset']         = $preview['envelope_preset'];
 		$context['track_opens']      = false;
 		$context['public_url']       = $public_url;
 		$context['is_public_live']   = PublicEntitlement::is_publicly_available( $project );
@@ -294,6 +311,7 @@ final class ProjectController {
 	 * @return array<string, mixed>
 	 */
 	private function base_context( array $project, int $project_id, string $section ): array {
+		$project['design_source'] = $this->state_service->read_design_source( $project );
 		$guest_summary = $this->guests->status_summary( $project_id );
 		$section_urls  = $this->section_urls( $project_id );
 
@@ -381,16 +399,21 @@ final class ProjectController {
 	 */
 	private function build_checklist( array $project, int $project_id ): array {
 		$has_design  = (int) ( $project['state_version'] ?? 0 ) >= 1 && '' === (string) ( $project['last_error_code'] ?? '' );
+		$uses_fallback = ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' );
 		$has_event   = ProjectEntitlement::has_required_event_data( $project );
 		$guest_count = $this->guests->count_for_project( $project_id );
 		$has_guests  = $guest_count > 0;
 
 		return [
 			'design'  => [
-				'label'  => __( 'Design imported', 'prikogstreg-online-invitations' ),
+				'label'  => $uses_fallback
+					? __( 'Default template loaded', 'prikogstreg-online-invitations' )
+					: __( 'Design imported', 'prikogstreg-online-invitations' ),
 				'done'   => $has_design,
 				'detail' => $has_design
-					? __( 'Your customised design is ready to edit.', 'prikogstreg-online-invitations' )
+					? ( $uses_fallback
+						? __( 'No custom design was saved with your order. Customise the default template to get started.', 'prikogstreg-online-invitations' )
+						: __( 'Your customised design is ready to edit.', 'prikogstreg-online-invitations' ) )
 					: __( 'Import is pending or failed — contact support if this persists.', 'prikogstreg-online-invitations' ),
 				'url'    => Endpoints::project_url( $project_id, ProjectSections::DESIGN ),
 			],
@@ -474,9 +497,28 @@ final class ProjectController {
 				'type'    => 'error',
 				'message' => __( 'This project import failed and needs support attention before you can continue.', 'prikogstreg-online-invitations' ),
 			];
+		} elseif (
+			is_array( $project )
+			&& ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' )
+		) {
+			$notices[] = [
+				'type'    => 'info',
+				'message' => __( 'No custom design was saved with your order. We loaded the default template so you can customise it now.', 'prikogstreg-online-invitations' ),
+			];
 		}
 
 		return $notices;
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 */
+	private function design_unavailable_message( array $project ): string {
+		if ( '' !== (string) ( $project['last_error_code'] ?? '' ) ) {
+			return __( 'Your order design could not be imported. Please contact support so we can restore your invitation.', 'prikogstreg-online-invitations' );
+		}
+
+		return __( 'Design editing is not available for this project.', 'prikogstreg-online-invitations' );
 	}
 
 	/**

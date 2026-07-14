@@ -1,0 +1,306 @@
+@use '../shared';
+
+// Prik og Streg guest photo pages — matches invitation shell palette.
+body.pks-oi-photo-share-page,
+body.pks-oi-photo-wall-page {
+  &.pks-oi-public-shell {
+    margin: 0 !important;
+    min-height: 100vh;
+    color: var(--pks-oi-text, #2c2825);
+    background:
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(245, 199, 163, 0.35), transparent 55%),
+      var(--pks-oi-page-bg, #f6f4ef);
+    font-family: inherit;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &.admin-bar {
+    margin-top: 0 !important;
+  }
+
+  #wpadminbar {
+    display: none !important;
+  }
+}
+
+.pks-oi-photo-share,
+.pks-oi-photo-wall {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+.pks-oi-photo-share__hero,
+.pks-oi-photo-wall__hero {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.pks-oi-photo-share__eyebrow,
+.pks-oi-photo-wall__eyebrow {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(245, 199, 163, 0.45);
+  color: #6b4f3a;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pks-oi-photo-share__hero h1,
+.pks-oi-photo-wall__hero h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 5vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #1f1c19;
+}
+
+.pks-oi-photo-share__organiser,
+.pks-oi-photo-wall__organiser {
+  margin: 0;
+  color: var(--pks-oi-muted, #5c5348);
+  font-size: 1.05rem;
+}
+
+.pks-oi-photo-share__intro,
+.pks-oi-photo-wall__intro {
+  margin: 0 0 1.5rem;
+  text-align: center;
+  color: var(--pks-oi-muted, #5c5348);
+  font-size: 1.05rem;
+}
+
+.pks-oi-photo-share__status {
+  margin-bottom: 1rem;
+}
+
+.pks-oi-photo-share__card,
+.pks-oi-photo-wall__panel {
+  margin-bottom: 1.25rem;
+  padding: 1.75rem 1.5rem;
+  border: 1px solid rgba(212, 205, 195, 0.9);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 1px 2px rgba(44, 40, 37, 0.04),
+    0 12px 32px rgba(44, 40, 37, 0.07);
+}
+
+.pks-oi-photo-share__card h2,
+.pks-oi-photo-wall__panel h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.pks-oi-photo-share__card-lead {
+  margin: 0 0 1.25rem;
+  color: var(--pks-oi-muted, #5c5348);
+  font-size: 0.95rem;
+}
+
+.pks-oi-photo-share__code-form label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.pks-oi-photo-share__code-form input[type='password'],
+.pks-oi-photo-share__code-form input[type='text'],
+.pks-oi-photo-share__uploader input[type='text'],
+.pks-oi-photo-share__uploader input[type='file'] {
+  width: 100%;
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d4cdc3;
+  border-radius: 0.5rem;
+  background: #fff;
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pks-oi-photo-share__code-form input:focus-visible,
+.pks-oi-photo-share__uploader input:focus-visible {
+  border-color: #c9a882;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 199, 163, 0.45);
+}
+
+.pks-oi-photo-share__code-form p,
+.pks-oi-photo-share__uploader p {
+  margin: 0 0 1rem;
+}
+
+.pks-oi-photo-share__code-form p:last-child,
+.pks-oi-photo-share__uploader p:last-child {
+  margin-bottom: 0;
+}
+
+.pks-oi-photo-share__submit,
+.pks-oi-photo-share__uploader button,
+.pks-oi-photo-wall__load-more {
+  @include shared.pks-oi-touch-target;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f5c7a3 0%, #e8b48a 100%);
+  color: #3d2e22;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(201, 148, 104, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pks-oi-photo-share__submit:hover,
+.pks-oi-photo-share__uploader button:hover,
+.pks-oi-photo-wall__load-more:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(201, 148, 104, 0.4);
+}
+
+.pks-oi-photo-share__submit:focus-visible,
+.pks-oi-photo-share__uploader button:focus-visible,
+.pks-oi-photo-wall__load-more:focus-visible {
+  @include shared.pks-oi-focus-ring;
+}
+
+.pks-oi-photo-share__hint {
+  margin: 1rem 0 0;
+  color: var(--pks-oi-muted, #5c5348);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.pks-oi-photo-share__wall-card {
+  padding: 1.35rem 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(47, 93, 80, 0.08) 0%, rgba(47, 93, 80, 0.03) 100%);
+  border: 1px solid rgba(47, 93, 80, 0.18);
+  text-align: center;
+}
+
+.pks-oi-photo-share__wall-card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  color: #1f4339;
+}
+
+.pks-oi-photo-share__wall-card p {
+  margin: 0 0 1rem;
+  color: var(--pks-oi-muted, #5c5348);
+  font-size: 0.9rem;
+}
+
+.pks-oi-photo-share__wall-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: 999px;
+  background: #2f5d50;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.pks-oi-photo-share__wall-btn:hover,
+.pks-oi-photo-share__wall-btn:focus-visible {
+  background: #264a40;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.pks-oi-photo-share__wall-btn:focus-visible {
+  @include shared.pks-oi-focus-ring;
+}
+
+.pks-oi-photo-share__previews {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.pks-oi-photo-share__previews li {
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.35rem;
+  background: #f8f6f2;
+  font-size: 0.875rem;
+}
+
+.pks-oi-photo-share__consent {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.pks-oi-photo-share__consent input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.pks-oi-photo-wall__grid,
+.pks-oi-photo-share__gallery-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+}
+
+.pks-oi-photo-wall__grid img,
+.pks-oi-photo-share__gallery-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.65rem;
+  background: #ebe6df;
+  box-shadow: 0 4px 12px rgba(44, 40, 37, 0.08);
+}
+
+.pks-oi-photo-wall__empty {
+  margin: 2rem 0 0;
+  padding: 2rem 1rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  color: var(--pks-oi-muted, #5c5348);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pks-oi-photo-wall__load-more-wrap {
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .pks-oi-photo-share,
+  .pks-oi-photo-wall {
+    padding-top: 3.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .pks-oi-photo-share__submit,
+  .pks-oi-photo-share__uploader button {
+    width: auto;
+    min-width: 12rem;
+  }
+}

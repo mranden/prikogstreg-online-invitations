@@ -13,4 +13,5 @@ final class DeliveryType {
 	public const RSVP_CONFIRMATION  = 'rsvp_confirmation';
 	public const ORGANIZER_RSVP     = 'organizer_rsvp';
 	public const PHOTO_NOTIFICATION = 'photo_notification';
+	public const PHOTO_SHARE_INVITE = 'photo_share_invite';
 }

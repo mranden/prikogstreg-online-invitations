@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\Domain\Project;
 
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
+use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 
 /**
  * Authenticated draft preview without open tracking.
@@ -21,7 +22,22 @@ final class ProjectPreviewService {
 	 * @return array{html:string,envelope_preset:string,track_opens:bool}
 	 */
 	public function render_preview( array $project ): array {
-		$state   = $this->state_service->load_canonical_state( $project );
+		$empty = [
+			'html'             => '',
+			'envelope_preset'  => (string) ( $project['envelope_preset'] ?? '' ),
+			'track_opens'      => false,
+		];
+
+		if ( ! ProjectEntitlement::is_project_usable( $project ) ) {
+			return $empty;
+		}
+
+		try {
+			$state = $this->state_service->load_canonical_state( $project );
+		} catch ( StorageException $exception ) {
+			return $empty;
+		}
+
 		$context = $this->state_service->adapter_context( $project, 'preview' );
 		$context['track_opens'] = false;
 

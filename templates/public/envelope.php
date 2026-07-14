@@ -18,40 +18,65 @@ $view = $envelope_view;
 ?>
 <div
 	class="pks-oi-envelope pks-oi-envelope--<?php echo esc_attr( $view->envelope_preset ); ?> pks-oi-envelope--bg-<?php echo esc_attr( $view->background_preset ); ?>"
+	data-envelope-state="closed"
 	data-pks-oi-link-type="<?php echo esc_attr( $view->link_type ); ?>"
 	data-pks-oi-track-opens="<?php echo $view->track_opens ? '1' : '0'; ?>"
+	<?php if ( '' !== $view->session_storage_key ) : ?>
+		data-pks-oi-session-key="<?php echo esc_attr( $view->session_storage_key ); ?>"
+	<?php endif; ?>
 >
-	<div class="pks-oi-envelope__stage">
-		<div
-			class="pks-oi-envelope__card"
-			role="img"
-			aria-label="<?php esc_attr_e( 'Invitation envelope', 'prikogstreg-online-invitations' ); ?>"
-		>
-			<?php if ( '' !== $view->envelope_image_url ) : ?>
-				<img
-					class="pks-oi-envelope__card-image"
-					src="<?php echo esc_url( $view->envelope_image_url ); ?>"
-					alt=""
-					loading="lazy"
-					decoding="async"
-					<?php if ( $view->envelope_image_width > 0 && $view->envelope_image_height > 0 ) : ?>
-						width="<?php echo esc_attr( (string) $view->envelope_image_width ); ?>"
-						height="<?php echo esc_attr( (string) $view->envelope_image_height ); ?>"
+	<div
+		class="pks-oi-envelope__stage"
+		aria-labelledby="pks-oi-envelope-title"
+		aria-describedby="pks-oi-envelope-desc"
+	>
+		<p id="pks-oi-envelope-desc" class="pks-oi-sr-only">
+			<?php esc_html_e( 'A digital invitation envelope. Use the button below to open it and read the invitation.', 'prikogstreg-online-invitations' ); ?>
+		</p>
+
+		<div class="pks-oi-envelope__scene">
+			<div class="pks-oi-envelope__shell" aria-hidden="true">
+				<div class="pks-oi-envelope__pocket"></div>
+				<div class="pks-oi-envelope__flap"></div>
+			</div>
+
+			<div class="pks-oi-envelope__letter">
+				<div class="pks-oi-envelope__card">
+					<?php if ( '' !== $view->envelope_image_url ) : ?>
+						<img
+							class="pks-oi-envelope__card-image"
+							src="<?php echo esc_url( $view->envelope_image_url ); ?>"
+							alt=""
+							loading="eager"
+							decoding="async"
+							<?php if ( $view->envelope_image_width > 0 && $view->envelope_image_height > 0 ) : ?>
+								width="<?php echo esc_attr( (string) $view->envelope_image_width ); ?>"
+								height="<?php echo esc_attr( (string) $view->envelope_image_height ); ?>"
+							<?php endif; ?>
+						/>
+					<?php else : ?>
+						<div class="pks-oi-envelope__card-fallback" aria-hidden="true"></div>
 					<?php endif; ?>
-				/>
-			<?php else : ?>
-				<div class="pks-oi-envelope__card-fallback" aria-hidden="true"></div>
-			<?php endif; ?>
-			<p class="pks-oi-envelope__addressee"><?php echo esc_html( $view->addressee_label ); ?></p>
-			<?php if ( '' !== $view->event_title ) : ?>
-				<p class="pks-oi-envelope__event"><?php echo esc_html( $view->event_title ); ?></p>
-			<?php endif; ?>
+					<p class="pks-oi-envelope__addressee" id="pks-oi-envelope-title"><?php echo esc_html( $view->addressee_label ); ?></p>
+					<?php if ( '' !== $view->event_title ) : ?>
+						<p class="pks-oi-envelope__event"><?php echo esc_html( $view->event_title ); ?></p>
+					<?php endif; ?>
+				</div>
+
+				<div class="pks-oi-envelope__letter-content">
+					<div class="pks-oi-envelope__invitation">
+						<?php require __DIR__ . '/poster.php'; ?>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<button
 			type="button"
 			class="pks-oi-envelope__open"
 			id="pks-oi-open-invitation"
+			aria-controls="pks-oi-invitation-content"
+			aria-expanded="false"
 			aria-label="<?php esc_attr_e( 'Open invitation', 'prikogstreg-online-invitations' ); ?>"
 		>
 			<?php esc_html_e( 'Open invitation', 'prikogstreg-online-invitations' ); ?>
@@ -63,8 +88,10 @@ $view = $envelope_view;
 		id="pks-oi-invitation-content"
 		tabindex="-1"
 		hidden
+		inert
 	>
-		<div class="pks-oi-envelope__invitation">
+		<div class="pks-oi-envelope__revealed-poster">
+			<h2 class="pks-oi-sr-only" id="pks-oi-invitation-heading" tabindex="-1"><?php esc_html_e( 'Invitation', 'prikogstreg-online-invitations' ); ?></h2>
 			<?php require __DIR__ . '/poster.php'; ?>
 		</div>
 
@@ -74,7 +101,12 @@ $view = $envelope_view;
 			<?php endif; ?>
 			<section class="pks-oi-public-section pks-oi-public-section--<?php echo esc_attr( (string) $section['key'] ); ?>" aria-label="<?php echo esc_attr( (string) $section['label'] ); ?>">
 				<h2><?php echo esc_html( (string) $section['label'] ); ?></h2>
-				<?php if ( 'rsvp' === (string) ( $section['key'] ?? '' ) ) : ?>
+				<?php if ( 'event' === (string) ( $section['key'] ?? '' ) ) : ?>
+					<?php
+					$event_details = $view->event_details;
+					require __DIR__ . '/partials/event-details.php';
+					?>
+				<?php elseif ( 'rsvp' === (string) ( $section['key'] ?? '' ) ) : ?>
 					<?php
 					$rsvp_form = $view->rsvp_form;
 					require __DIR__ . '/rsvp-form.php';
@@ -89,8 +121,6 @@ $view = $envelope_view;
 					$photos = $view->photos;
 					require __DIR__ . '/photos.php';
 					?>
-				<?php else : ?>
-					<p class="pks-oi-public-section__placeholder"><?php esc_html_e( 'This section will be available in a later update.', 'prikogstreg-online-invitations' ); ?></p>
 				<?php endif; ?>
 			</section>
 		<?php endforeach; ?>
@@ -98,8 +128,10 @@ $view = $envelope_view;
 
 	<noscript>
 		<style>
+			.pks-oi-envelope__stage { display: none !important; }
 			#pks-oi-invitation-content[hidden] { display: block !important; }
-			.pks-oi-envelope__open { display: none; }
+			#pks-oi-invitation-content[inert] { pointer-events: auto; }
+			.pks-oi-envelope__open { display: none !important; }
 		</style>
 	</noscript>
 </div>

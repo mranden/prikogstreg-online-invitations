@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?> class="pks-oi-public-html">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 	<meta name="robots" content="noindex,nofollow" />
 	<title><?php echo esc_html( '' !== $view->event_title ? $view->event_title : __( 'Invitation', 'prikogstreg-online-invitations' ) ); ?></title>
 	<?php wp_head(); ?>

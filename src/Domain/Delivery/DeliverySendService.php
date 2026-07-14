@@ -144,6 +144,7 @@ final class DeliverySendService {
 			DeliveryType::RSVP_CONFIRMATION => 'pks_oi_rsvp_confirmation',
 			DeliveryType::ORGANIZER_RSVP    => 'pks_oi_organizer_rsvp',
 			DeliveryType::PHOTO_NOTIFICATION => 'pks_oi_photo_upload',
+			DeliveryType::PHOTO_SHARE_INVITE   => 'pks_oi_photo_share_invite',
 			default                         => '',
 		};
 	}

@@ -29,6 +29,7 @@ final class PhotoService {
 		private GuestRepository $guests,
 		private EventRepository $events,
 		private PhotoUploadIntentService $intents,
+		private PhotoShareUploadIntentService $share_intents,
 		private PhotoImageValidator $validator,
 		private PhotoImageProcessor $processor,
 		private PhotoStorageService $storage,
@@ -128,6 +129,181 @@ final class PhotoService {
 
 	/**
 	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $session
+	 * @param array<string, mixed> $input
+	 * @return array{success:bool,error?:string,intent?:string,expires_at?:int,max_files?:int}
+	 */
+	public function issue_share_intent(
+		array $project,
+		array $session,
+		string $share_token_hash,
+		array $input = []
+	): array {
+		if ( ! PhotoShareEntitlement::is_upload_open( $project ) ) {
+			return [ 'success' => false, 'error' => 'photos_disabled' ];
+		}
+
+		if ( ! $this->rate_limiter->allow( $share_token_hash ) ) {
+			return [ 'success' => false, 'error' => 'rate_limited' ];
+		}
+
+		$session_key = 'share-' . (string) ( $session['nonce'] ?? '' );
+		$guest       = $this->resolve_share_guest( $project, $input, $session_key );
+		if ( isset( $guest['error'] ) ) {
+			return [ 'success' => false, 'error' => (string) $guest['error'] ];
+		}
+
+		/** @var array<string, mixed> $guest_row */
+		$guest_row = $guest['guest'];
+		$guest_id  = (int) ( $guest_row['guest_id'] ?? 0 );
+
+		return $this->share_intents->issue( $project, $session, $share_token_hash, $guest_id );
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $session
+	 * @param list<array{name:string,tmp_name:string,size:int,error:int}> $files
+	 * @return array{success:bool,error?:string,uploaded?:list<array<string,mixed>>}
+	 */
+	public function upload_share(
+		array $project,
+		array $session,
+		string $share_token_hash,
+		string $intent_token,
+		array $files
+	): array {
+		if ( ! PhotoShareEntitlement::is_upload_open( $project ) ) {
+			return [ 'success' => false, 'error' => 'photos_disabled' ];
+		}
+
+		$intent = $this->share_intents->verify( $intent_token, $project, $session, $share_token_hash );
+		if ( empty( $intent['success'] ) ) {
+			return [ 'success' => false, 'error' => (string) ( $intent['error'] ?? 'invalid_intent' ) ];
+		}
+
+		$payload   = is_array( $intent['payload'] ?? null ) ? $intent['payload'] : [];
+		$max_files = (int) ( $payload['max_files'] ?? PhotoLimits::MAX_FILES_PER_REQUEST );
+		$guest_id  = (int) ( $payload['guest_id'] ?? 0 );
+
+		if ( count( $files ) > $max_files || count( $files ) > PhotoLimits::MAX_FILES_PER_REQUEST ) {
+			return [ 'success' => false, 'error' => 'too_many_files' ];
+		}
+
+		if ( [] === $files ) {
+			return [ 'success' => false, 'error' => 'no_files' ];
+		}
+
+		$project_id   = (int) $project['project_id'];
+		$storage_uuid = (string) ( $project['storage_uuid'] ?? '' );
+		$used_bytes   = $this->photos->sum_active_bytes( $project_id );
+		$uploaded     = [];
+
+		foreach ( $files as $file ) {
+			$result = $this->process_upload_file(
+				$project,
+				$guest_id,
+				$storage_uuid,
+				$used_bytes,
+				$file
+			);
+			if ( empty( $result['success'] ) ) {
+				return $result;
+			}
+
+			$used_bytes += (int) ( $result['bytes'] ?? 0 );
+			$uploaded[] = $result['photo'] ?? [];
+		}
+
+		$this->cleanup->cleanup_orphan_pending( $storage_uuid );
+
+		return [ 'success' => true, 'uploaded' => $uploaded ];
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @return array{items:list<array<string,mixed>>,total:int,page:int,per_page:int}
+	 */
+	public function list_gallery_page( array $project, int $page = 1, int $per_page = 20 ): array {
+		$page     = max( 1, $page );
+		$per_page = max( 1, min( 50, $per_page ) );
+
+		return $this->photos->list_paginated_for_project(
+			(int) $project['project_id'],
+			PhotoModerationStatus::APPROVED,
+			$page,
+			$per_page
+		);
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @return array{success:bool,error?:string,row?:array<string,mixed>,use_thumbnail?:bool}
+	 */
+	public function resolve_gallery_stream( array $project, int $photo_id, bool $thumbnail = true ): array {
+		if ( ! PhotoShareEntitlement::is_gallery_public( $project ) ) {
+			return [ 'success' => false, 'error' => 'forbidden' ];
+		}
+
+		$row = $this->photos->find_by_id_for_project( $photo_id, (int) $project['project_id'] );
+		if (
+			! is_array( $row )
+			|| null !== ( $row['deleted_at_utc'] ?? null )
+			|| PhotoModerationStatus::APPROVED !== (string) ( $row['moderation_status'] ?? '' )
+		) {
+			return [ 'success' => false, 'error' => 'not_found' ];
+		}
+
+		$thumb_path = (string) ( $row['thumbnail_path'] ?? '' );
+		if ( $thumbnail && '' !== $thumb_path ) {
+			return [ 'success' => true, 'row' => $row, 'use_thumbnail' => true ];
+		}
+
+		return [ 'success' => true, 'row' => $row, 'use_thumbnail' => false ];
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @return array{success:bool,error?:string,row?:array<string,mixed>,use_thumbnail?:bool}
+	 */
+	public function resolve_owner_stream( array $project, int $photo_id, Authorization $authorization, bool $thumbnail = true ): array {
+		if ( ! $authorization->can_edit_project( $project ) && ! $authorization->is_support_view( $project ) ) {
+			return [ 'success' => false, 'error' => 'forbidden' ];
+		}
+
+		$row = $this->photos->find_by_id_for_project( $photo_id, (int) $project['project_id'] );
+		if ( ! is_array( $row ) || null !== ( $row['deleted_at_utc'] ?? null ) ) {
+			return [ 'success' => false, 'error' => 'not_found' ];
+		}
+
+		$thumb_path = (string) ( $row['thumbnail_path'] ?? '' );
+		if ( $thumbnail && '' !== $thumb_path ) {
+			return [ 'success' => true, 'row' => $row, 'use_thumbnail' => true ];
+		}
+
+		return [ 'success' => true, 'row' => $row, 'use_thumbnail' => false ];
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @param list<int> $photo_ids
+	 * @return array{success:bool,processed:int}
+	 */
+	public function moderate_bulk( array $project, array $photo_ids, string $action ): array {
+		$processed = 0;
+		foreach ( $photo_ids as $photo_id ) {
+			$result = $this->moderate( $project, (int) $photo_id, $action );
+			if ( ! empty( $result['success'] ) ) {
+				++$processed;
+			}
+		}
+
+		return [ 'success' => true, 'processed' => $processed ];
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $context
 	 * @return list<array<string, mixed>>
 	 */
 	public function list_for_owner( array $project, ?string $status = null ): array {
@@ -283,12 +459,20 @@ final class PhotoService {
 		$this->record_event( $project, $guest_id, $photo_id, 'photo_uploaded' );
 		$this->delivery_queue->queue_photo_notification( $project, $guest_id, $photo_id );
 
+		$status = PhotoModerationStatus::PENDING;
+		if ( PhotoShareEntitlement::auto_approve_enabled( $project ) ) {
+			$row = $this->photos->find_by_id_for_project( $photo_id, (int) $project['project_id'] );
+			if ( is_array( $row ) && ! empty( $this->approve( $project, $row )['success'] ) ) {
+				$status = PhotoModerationStatus::APPROVED;
+			}
+		}
+
 		return [
 			'success' => true,
 			'bytes'   => strlen( $output ),
 			'photo'   => [
 				'photo_id' => $photo_id,
-				'status'   => PhotoModerationStatus::PENDING,
+				'status'   => $status,
 			],
 		];
 	}
@@ -393,10 +577,6 @@ final class PhotoService {
 		}
 	}
 
-	/**
-	 * @param array<string, mixed> $input
-	 * @return array{guest?:array<string,mixed>,error?:string}
-	 */
 	private function resolve_guest( TokenResolution $resolution, array $input, string $session_key ): array {
 		$guest = $resolution->guest();
 		if ( $resolution->is_personal() ) {
@@ -448,6 +628,52 @@ final class PhotoService {
 	}
 
 	/**
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $input
+	 * @return array{guest?:array<string,mixed>,error?:string}
+	 */
+	private function resolve_share_guest( array $project, array $input, string $session_key ): array {
+		$replay = $this->replay_guest_id( $session_key );
+		if ( $replay > 0 ) {
+			$existing = $this->guests->find_by_id( $replay );
+			if ( is_array( $existing ) && (int) ( $existing['project_id'] ?? 0 ) === (int) ( $project['project_id'] ?? 0 ) ) {
+				return [ 'guest' => $existing ];
+			}
+		}
+
+		$name = WishlistSanitizer::display_name( (string) ( $input['display_name'] ?? '' ) );
+		if ( '' === $name ) {
+			return [ 'error' => 'missing_display_name' ];
+		}
+
+		$pair     = InvitationToken::generate();
+		$guest_id = $this->guests->insert(
+			[
+				'project_id'          => (int) ( $project['project_id'] ?? 0 ),
+				'display_name'        => $name,
+				'email'               => null,
+				'token_hash'          => $pair['hash'],
+				'token_version'       => 1,
+				'invitation_status'   => InvitationStatus::OPENED,
+				'is_generic_response' => 1,
+			]
+		);
+		if ( $guest_id <= 0 ) {
+			return [ 'error' => 'create_failed' ];
+		}
+
+		GuestSendTokenStore::remember( $guest_id, $pair['raw'] );
+		$created = $this->guests->find_by_id( $guest_id );
+		if ( ! is_array( $created ) ) {
+			return [ 'error' => 'create_failed' ];
+		}
+
+		$this->remember_guest_id( $session_key, $guest_id );
+
+		return [ 'guest' => $created ];
+	}
+
+	/**
 	 * @param array<string, mixed> $row
 	 * @return array<string, mixed>
 	 */
@@ -471,6 +697,9 @@ final class PhotoService {
 			'height'            => (int) ( $row['height'] ?? 0 ),
 			'moderation_status' => (string) ( $row['moderation_status'] ?? '' ),
 			'created_at_utc'    => (string) ( $row['created_at_utc'] ?? '' ),
+			'thumbnail_path'    => (string) ( $row['thumbnail_path'] ?? '' ),
+			'storage_uuid'      => (string) ( $row['storage_uuid'] ?? '' ),
+			'relative_path'     => (string) ( $row['relative_path'] ?? '' ),
 		];
 	}
 

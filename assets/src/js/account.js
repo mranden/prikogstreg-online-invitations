@@ -1,6 +1,8 @@
 /**
  * My Account scripts (compiled to assets/build/js/account.js).
  */
+import { initPhotoShareTools } from "./modules/photo-share-tools.js";
+
 (function () {
   "use strict";
 
@@ -153,4 +155,5 @@
   initBulkSelection(document);
   initPreviewToggle();
   initDesignEditor();
+  initPhotoShareTools((window.pksOiAccount && window.pksOiAccount.i18n) || {});
 })();

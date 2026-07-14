@@ -73,11 +73,11 @@ $is_generic = 'generic' === (string) ( $form['link_type'] ?? '' );
 				<legend><?php esc_html_e( 'Will you attend?', 'prikogstreg-online-invitations' ); ?></legend>
 				<label>
 					<input type="radio" name="attending" value="yes" <?php checked( true, $form['attending'] ?? null ); ?> required />
-					<?php esc_html_e( 'Yes', 'prikogstreg-online-invitations' ); ?>
+					<span><?php esc_html_e( 'Yes', 'prikogstreg-online-invitations' ); ?></span>
 				</label>
 				<label>
 					<input type="radio" name="attending" value="no" <?php checked( false, $form['attending'] ?? null, false ); ?> />
-					<?php esc_html_e( 'No', 'prikogstreg-online-invitations' ); ?>
+					<span><?php esc_html_e( 'No', 'prikogstreg-online-invitations' ); ?></span>
 				</label>
 			</fieldset>
 

@@ -11,6 +11,7 @@ use PrikOgStreg\OnlineInvitations\Public\PublishedPosterAssetSnapshotter;
 use PrikOgStreg\OnlineInvitations\Security\PublishedHtmlSanitizer;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
+use PrikOgStreg\OnlineInvitations\Support\PublishedHtmlValidator;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
 /**
@@ -35,7 +36,7 @@ final class ProjectPublishService {
 			return [ 'success' => false, 'error' => 'publish_requirements_missing', 'code' => 422 ];
 		}
 
-		$state     = $this->state_service->load_canonical_state( $project );
+		$state      = $this->state_service->load_state_for_publish( $project );
 		$pages_html = $this->render_public_pages( $project, $state );
 		if ( isset( $pages_html['error'] ) ) {
 			return [ 'success' => false, 'error' => (string) $pages_html['error'], 'code' => 422 ];
@@ -106,7 +107,6 @@ final class ProjectPublishService {
 	private function render_public_pages( array $project, array $state ): array {
 		$adapter = $this->builder->get_adapter();
 		$context = $this->state_service->adapter_context( $project, 'public' );
-		$pages   = [];
 
 		if ( null !== $adapter && method_exists( $adapter, 'render_public_html' ) ) {
 			$html = $adapter->render_public_html( $state, $context );
@@ -120,23 +120,60 @@ final class ProjectPublishService {
 				return [ 'error' => 'published_html_unsafe' ];
 			}
 
-			$pages[] = [ 'index' => 1, 'html' => $sanitized ];
+			if ( ! PublishedHtmlValidator::has_visible_content( $sanitized ) ) {
+				$fallback = $this->render_pages_from_state( $state );
+				if ( isset( $fallback['error'] ) ) {
+					return $fallback;
+				}
 
-			return [ 'pages' => $pages ];
+				return $this->validate_pages_or_error( $fallback['pages'] );
+			}
+
+			return $this->validate_pages_or_error( [ [ 'index' => 1, 'html' => $sanitized ] ] );
 		}
 
+		$result = $this->render_pages_from_state( $state );
+		if ( isset( $result['error'] ) ) {
+			return $result;
+		}
+
+		return $this->validate_pages_or_error( $result['pages'] );
+	}
+
+	/**
+	 * @param array<string, mixed> $state
+	 * @return array{pages:list<array{index:int,html:string}>}|array{error:string}
+	 */
+	private function render_pages_from_state( array $state ): array {
+		$pages     = [];
 		$raw_pages = is_array( $state['page'] ?? null ) ? $state['page'] : [];
+
 		foreach ( array_values( $raw_pages ) as $index => $html ) {
 			try {
 				$sanitized = PublishedHtmlSanitizer::sanitize( (string) $html );
 			} catch ( \InvalidArgumentException $exception ) {
 				return [ 'error' => 'published_html_unsafe' ];
 			}
+
 			$pages[] = [ 'index' => $index + 1, 'html' => $sanitized ];
 		}
 
 		if ( [] === $pages ) {
 			return [ 'error' => 'missing_pages' ];
+		}
+
+		return [ 'pages' => $pages ];
+	}
+
+	/**
+	 * @param list<array{index:int,html:string}> $pages
+	 * @return array{pages:list<array{index:int,html:string}>}|array{error:string}
+	 */
+	private function validate_pages_or_error( array $pages ): array {
+		foreach ( $pages as $page ) {
+			if ( ! PublishedHtmlValidator::has_visible_content( (string) ( $page['html'] ?? '' ) ) ) {
+				return [ 'error' => 'empty_published_html' ];
+			}
 		}
 
 		return [ 'pages' => $pages ];

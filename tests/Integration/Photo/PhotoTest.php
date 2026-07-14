@@ -57,7 +57,7 @@ final class PhotoTest extends TestCase {
 	}
 
 	public function test_valid_png_upload_and_moderation(): void {
-		$project = $this->seed_project();
+		$project = $this->seed_project( [ 'photo_auto_approve_enabled' => 0 ] );
 		$token   = InvitationToken::generate();
 		$this->seed_guest( (int) $project['project_id'], $token );
 		$resolution = $this->resolver->resolve( $token['raw'] );
@@ -79,6 +79,26 @@ final class PhotoTest extends TestCase {
 		$this->assertIsArray( $row );
 		$this->assertSame( PhotoModerationStatus::APPROVED, $row['moderation_status'] ?? '' );
 		$this->assertStringStartsWith( 'photos/approved/', (string) ( $row['relative_path'] ?? '' ) );
+	}
+
+	public function test_auto_approve_upload_marks_photo_approved(): void {
+		$project = $this->seed_project( [ 'photo_auto_approve_enabled' => 1 ] );
+		$token   = InvitationToken::generate();
+		$this->seed_guest( (int) $project['project_id'], $token );
+		$resolution = $this->resolver->resolve( $token['raw'] );
+		$this->assertInstanceOf( TokenResolution::class, $resolution );
+
+		$intent = $this->photos->issue_intent( $resolution, $token['raw'] );
+		$this->assertTrue( $intent['success'] );
+
+		$file   = PhotoFixtures::file_from_bytes( PhotoFixtures::png_1x1(), 'party.png' );
+		$result = $this->photos->upload( $resolution, $token['raw'], (string) $intent['intent'], [ $file ] );
+		$this->assertTrue( $result['success'] );
+		$this->assertSame( PhotoModerationStatus::APPROVED, $result['uploaded'][0]['status'] ?? '' );
+
+		$row = $this->repositories->photos()->find_by_id( (int) ( $result['uploaded'][0]['photo_id'] ?? 0 ) );
+		$this->assertIsArray( $row );
+		$this->assertSame( PhotoModerationStatus::APPROVED, $row['moderation_status'] ?? '' );
 	}
 
 	public function test_jpeg_and_webp_validation(): void {
@@ -215,6 +235,34 @@ final class PhotoTest extends TestCase {
 		$removed = $cleanup->cleanup_orphan_pending( $uuid, 3600 );
 		$this->assertGreaterThanOrEqual( 1, $removed );
 		$this->assertFileDoesNotExist( $orphan );
+	}
+
+	public function test_share_upload_via_photo_share_session(): void {
+		Functions\when( 'wp_hash_password' )->alias( fn( string $p ) => 'hash:' . $p );
+
+		$raw_share = 'share-token-raw-value-0123456789abcdef';
+		$project   = $this->seed_project( [
+			'photo_share_token_hash'    => InvitationToken::hash( $raw_share ),
+			'photo_share_token_version' => 1,
+			'photo_access_code_hash'    => 'hash:party123',
+			'photo_access_code_version' => 1,
+		] );
+		$share_hash = InvitationToken::hash( $raw_share );
+		$session    = [
+			'project_id'          => (int) $project['project_id'],
+			'share_token_hash'    => $share_hash,
+			'share_token_version' => 1,
+			'code_version'        => 1,
+			'nonce'               => 'abc12345',
+			'exp'                 => time() + 3600,
+		];
+
+		$intent = $this->photos->issue_share_intent( $project, $session, $share_hash, [ 'display_name' => 'Uploader' ] );
+		$this->assertTrue( $intent['success'] );
+
+		$file   = PhotoFixtures::file_from_bytes( PhotoFixtures::png_1x1() );
+		$result = $this->photos->upload_share( $project, $session, $share_hash, (string) $intent['intent'], [ $file ] );
+		$this->assertTrue( $result['success'] );
 	}
 
 	public function test_guest_erasure_deletes_photos(): void {

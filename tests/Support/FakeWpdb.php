@@ -43,6 +43,10 @@ final class FakeWpdb {
 		return 'DEFAULT CHARSET=utf8mb4';
 	}
 
+	public function esc_like( string $text ): string {
+		return addcslashes( $text, '_%\\' );
+	}
+
 	/**
 	 * @param array<string, mixed> $data
 	 * @param list<string>         $format
@@ -192,6 +196,36 @@ final class FakeWpdb {
 			);
 		}
 
+		if ( preg_match( '/project_id IN \((\d+(?:,\s*\d+)*)\)/i', $query, $in_matches ) ) {
+			$ids = array_map( 'intval', preg_split( '/\s*,\s*/', $in_matches[1] ) ?: [] );
+			$rows = array_values(
+				array_filter(
+					$rows,
+					static fn( array $row ): bool => in_array( (int) ( $row['project_id'] ?? 0 ), $ids, true )
+				)
+			);
+		}
+
+		if ( preg_match( "/event_title LIKE '([^']*)'/i", $query, $like_matches ) ) {
+			$needle = str_replace( [ '\\%', '\\_' ], [ '%', '_' ], $like_matches[1] );
+			$needle = trim( $needle, '%' );
+			$rows   = array_values(
+				array_filter(
+					$rows,
+					static fn( array $row ): bool => str_contains( (string) ( $row['event_title'] ?? '' ), $needle )
+				)
+			);
+		}
+
+		if ( preg_match( '/\bproject_id = (\d+)\b/i', $query, $id_matches ) && str_contains( $query, ' OR ' ) ) {
+			$rows = array_values(
+				array_filter(
+					$rows,
+					static fn( array $row ): bool => (int) ( $row['project_id'] ?? 0 ) === (int) $id_matches[1]
+				)
+			);
+		}
+
 		if ( str_contains( $query, 'deleted_at_utc IS NULL' ) ) {
 			$rows = array_values(
 				array_filter(
@@ -270,7 +304,7 @@ final class FakeWpdb {
 			return 'ARRAY_A' === $output ? array_fill( 0, count( $rows ), [ 'COUNT(*)' => count( $rows ) ] ) : [];
 		}
 
-		if ( preg_match( '/SELECT\s+project_id,/i', $query ) ) {
+		if ( preg_match( '/SELECT\s+project_id,\s*user_id,/i', $query ) ) {
 			$rows = array_map(
 				static function ( array $row ): array {
 					$allowed = [

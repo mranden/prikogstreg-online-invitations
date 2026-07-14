@@ -62,6 +62,42 @@ final class CartPayloadValidatorTest extends TestCase {
 		$this->assertSame( [], $errors );
 	}
 
+	public function test_validate_posted_payload_rejects_tampered_size(): void {
+		$_POST['field']                    = [ 'uuid-1' => [ 'text' => 'Hello' ] ];
+		$_POST['page']                     = [ '<div>Page</div>' ];
+		$_POST['attribute_pa_bpp_size']    = 'giant';
+		$_POST['attribute_pa_bpp_format']  = 'flat';
+
+		$errors = $this->validator->validate_posted_payload( 10 );
+
+		$this->assertContains( 'bpp_size_not_permitted', $errors );
+	}
+
+	public function test_validate_posted_payload_accepts_complete_builder_keys(): void {
+		$_POST['field']                    = [ 'uuid-1' => [ 'text' => 'Hello' ] ];
+		$_POST['page']                     = [ '<div>Page</div>' ];
+		$_POST['attribute_pa_bpp_size']    = 'a5';
+		$_POST['attribute_pa_bpp_format']  = 'flat';
+
+		$errors = $this->validator->validate_posted_payload( 10 );
+
+		$this->assertSame( [], $errors );
+	}
+
+	public function test_build_state_from_request_normalizes_attributes(): void {
+		$_POST['field']                   = [ 'uuid-1' => [ 'text' => 'Hello' ] ];
+		$_POST['page']                    = [ '<div>Page</div>' ];
+		$_POST['attribute_pa_bpp_size']   = '';
+		$_POST['attribute_pa_bpp_format'] = '';
+
+		$state = $this->validator->build_state_from_request( 10 );
+
+		$this->assertSame( 'a5', $state['size'] );
+		$this->assertSame( 'flat', $state['format'] );
+		$this->assertArrayHasKey( 'field', $state );
+		$this->assertArrayHasKey( 'page', $state );
+	}
+
 	public function test_checksum_uses_manifest_not_full_payload(): void {
 		$checksum_a = $this->validator->compute_checksum(
 			[

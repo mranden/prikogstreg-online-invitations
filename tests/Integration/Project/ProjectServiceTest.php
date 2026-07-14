@@ -175,7 +175,7 @@ final class ProjectServiceTest extends TestCase {
 		$this->assertSame( 0, $this->wpdb->table_count( 'wp_pks_oi_projects' ) );
 	}
 
-	public function test_malformed_payload_records_retryable_failure(): void {
+	public function test_malformed_payload_imports_template_fallback(): void {
 		$this->adapter->with_load_state( new class() {
 			public function get_error_code(): string {
 				return 'malformed_payload';
@@ -187,8 +187,8 @@ final class ProjectServiceTest extends TestCase {
 
 		$this->assertGreaterThan( 0, $project_id );
 		$project = $this->repositories->projects()->find_by_id( $project_id );
-		$this->assertSame( 'malformed_payload', $project['last_error_code'] ?? '' );
-		$this->assertSame( ProjectStatus::DRAFT, $project['status'] ?? '' );
+		$this->assertTrue( ProjectEntitlement::is_project_usable( $project ) );
+		$this->assertSame( ProjectStatus::ACTIVE, $project['status'] ?? '' );
 	}
 
 	public function test_existing_project_relinks_order_item_meta(): void {

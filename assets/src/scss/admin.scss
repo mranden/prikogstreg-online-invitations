@@ -182,3 +182,19 @@
 .pks-oi-admin-projects__detail {
   margin-top: 1rem;
 }
+
+.pks-oi-admin-preview-iframe {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  margin-top: 1rem;
+  border: 1px solid #dcdcde;
+  border-radius: 0.35rem;
+  background: #fff;
+}
+
+.pks-oi-inline-support-form input,
+.pks-oi-inline-support-form select {
+  max-width: 10rem;
+  margin: 0.15rem 0.25rem 0.15rem 0;
+}

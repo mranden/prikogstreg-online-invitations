@@ -33,7 +33,25 @@ Registered via `MyAccountRegistrar` + `woocommerce_account_online-invitations_en
 | Photos | `photos` | `PhotoController` |
 | Settings | `settings` | Project settings |
 
-**Authorization:** `Security\Authorization` — project owner or cap `pks_oi_manage_all_projects`.
+**Authorization:** `Security\Authorization` — project owner or cap `pks_oi_support_projects` / `view_online_invitation_projects`.
+
+---
+
+## Admin support relationship
+
+Shop managers and administrators use **Online Invitations → Invitations** (`pks-online-invitations`) for the same underlying project/guest/RSVP/photo data as My Account.
+
+| My Account section | Admin detail tab | Safe support edits |
+|--------------------|------------------|-------------------|
+| Event | Event details | Event title, dates, venue, practical info, RSVP deadline via `AdminSupportService` → `ProjectEventService::save_event_details_for_support()` |
+| Guests | Guests & RSVP | Guest name/email, RSVP status, attendee count via `AdminSupportService` |
+| Photos | Photos | Approve/reject via `PhotoService::moderate()` + admin audit |
+| Publish | Tools | Publish/unpublish/restrict/restore via existing `ProjectSupportActions` (POST + nonce) |
+| Wishlist | Wishlist | View-only summary in admin V1 |
+
+**Photo moderation (global):** **Online Invitations → Photos** lists pending uploads across projects; row action links to project Photos tab.
+
+Customer My Account behaviour is unchanged — admin edits go through the same domain services with separate audit actor typing.
 
 **Assets:** `assets/build/css/account.css`, `account.js` enqueued on endpoint.
 
@@ -111,14 +129,41 @@ Generic links may require display name. External wishlist URL supported via `ext
 
 ## Guest photos
 
-**Flow:**
+Dedicated **photo share page** at `/photos/{share_token}/` — separate from the invitation envelope link.
 
-1. `POST /public/{token}/photos/intent` — signed intent (HMAC)
-2. `POST /public/{token}/photos/upload` — multipart with intent header
+### Guest flow
+
+1. Guest opens photo share URL (from envelope link, QR, or e-mail invite).
+2. Enters **fotokode** (access code) — never embedded in URL, QR, or e-mail body.
+3. `POST /wp-json/prikogstreg-online-invitations/v1/photo-share/{token}/verify` issues HttpOnly session cookie `pks_oi_photo_sess` (4h TTL).
+4. Upload: `POST .../photos/intent` → `POST .../photos/upload` (multipart, intent header) — same validation and private storage as before.
+5. Optional **public gallery** on landing page when organiser enables it: `GET .../gallery` + protected stream `/photos/{token}/stream/{id}/`.
+
+**Envelope:** `templates/public/photos.php` shows a link to the photo page when `guest_photos_enabled` — no inline upload on the invitation.
+
+### Owner (My Account → Photos)
+
+| Feature | Detail |
+|---------|--------|
+| Settings | Access code, upload close date, public gallery toggle |
+| Share tools | Copy link, native share, QR download |
+| Moderation | Thumbnail grid, bulk approve/reject, delete |
+| E-mail invites | Queues `photo_share_invite` — link + instructions only; owner shares fotokode separately |
 
 **Validation:** `PhotoImageValidator` — MIME, dimensions, size limits  
 **Storage:** `photos/pending/` until organiser approves → `photos/approved/`  
-**Moderation:** My Account photos section
+**Moderation:** My Account photos section + admin Photos submenu
+
+### Public REST (photo share)
+
+| Method | Route |
+|--------|-------|
+| POST | `/photo-share/{token}/verify` |
+| POST | `/photo-share/{token}/photos/intent` |
+| POST | `/photo-share/{token}/photos/upload` |
+| GET | `/photo-share/{token}/gallery` |
+
+Session cookie required for intent/upload; gallery respects public toggle + session.
 
 ---
 

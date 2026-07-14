@@ -141,6 +141,22 @@ final class FakeBuilderAdapter implements Builder_Adapter_Interface {
 	}
 
 	/**
+	 * @param array<string, mixed> $context
+	 * @return array<string, mixed>
+	 */
+	public function create_initial_state( int $product_id, array $context = [] ): array {
+		return [
+			'schema_version' => '1',
+			'field'          => [],
+			'page'           => [ '<section class="pks-oi-template-fallback">Default template</section>' ],
+			'size'           => 'a5',
+			'format'         => 'flat',
+			'product_id'     => $product_id,
+			'template_id'    => $product_id,
+		];
+	}
+
+	/**
 	 * @param array<string, mixed> $state
 	 * @return array<string, mixed>|object
 	 */

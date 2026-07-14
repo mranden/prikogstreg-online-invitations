@@ -11,10 +11,15 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\DemoInvitationService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoAccessCodeService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoAccessRateLimiter;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoGuestSessionService;
 use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoServiceFactory;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpService;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistReservationService;
-use PrikOgStreg\OnlineInvitations\Public\PhotoController;
+use PrikOgStreg\OnlineInvitations\Public\InvalidTokenRateLimiter;
+use PrikOgStreg\OnlineInvitations\Public\PhotoShareRestController;
 use PrikOgStreg\OnlineInvitations\Public\RsvpController;
 use PrikOgStreg\OnlineInvitations\Public\RsvpRateLimiter;
 use PrikOgStreg\OnlineInvitations\Public\TokenResolver;
@@ -89,9 +94,12 @@ final class RestRegistrar {
 			new WishlistRateLimiter()
 		) )->register_routes();
 
-		( new PhotoController(
-			new TokenResolver( $this->repositories->guests(), $this->repositories->projects() ),
-			PhotoServiceFactory::create( $this->repositories, $this->storage )
+		( new PhotoShareRestController(
+			new PhotoShareTokenService( $this->repositories->projects() ),
+			new PhotoAccessCodeService( $this->repositories->projects(), new PhotoAccessRateLimiter() ),
+			new PhotoGuestSessionService(),
+			PhotoServiceFactory::create( $this->repositories, $this->storage ),
+			new InvalidTokenRateLimiter()
 		) )->register_routes();
 	}
 }

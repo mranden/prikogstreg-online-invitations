@@ -9,7 +9,7 @@ namespace PrikOgStreg\OnlineInvitations\Database;
  */
 final class Schema {
 
-	public const CURRENT_VERSION = 2;
+	public const CURRENT_VERSION = 4;
 
 	/**
 	 * @return list<string> Ordered CREATE TABLE statements.
@@ -58,6 +58,13 @@ final class Schema {
 			rsvp_deadline_utc datetime NULL,
 			reminder_offset_days smallint(5) unsigned NOT NULL DEFAULT 5,
 			guest_photos_enabled tinyint(1) NOT NULL DEFAULT 1,
+			photo_share_token_hash char(64) NULL,
+			photo_share_token_version int(10) unsigned NOT NULL DEFAULT 1,
+			photo_access_code_hash varchar(255) NULL,
+			photo_access_code_version int(10) unsigned NOT NULL DEFAULT 0,
+			photo_auto_approve_enabled tinyint(1) NOT NULL DEFAULT 1,
+			photo_gallery_public_enabled tinyint(1) NOT NULL DEFAULT 1,
+			photo_upload_closes_at_utc datetime NULL,
 			internal_wishlist_enabled tinyint(1) NOT NULL DEFAULT 1,
 			show_reserver_identity tinyint(1) NOT NULL DEFAULT 0,
 			attendee_count_enabled tinyint(1) NOT NULL DEFAULT 1,
@@ -87,6 +94,7 @@ final class Schema {
 			UNIQUE KEY storage_uuid (storage_uuid),
 			UNIQUE KEY order_item_id (order_item_id),
 			UNIQUE KEY generic_token_hash (generic_token_hash),
+			UNIQUE KEY photo_share_token_hash (photo_share_token_hash),
 			KEY user_status (user_id, status),
 			KEY order_id (order_id),
 			KEY product_id (product_id),

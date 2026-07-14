@@ -21,9 +21,17 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublicUrlService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectFactory;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoAccessCodeService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoAccessRateLimiter;
 use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoServiceFactory;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareQrService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareSettingsService;
+use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistItemService;
+use PrikOgStreg\OnlineInvitations\Scheduling\WelcomeScheduler;
 use PrikOgStreg\OnlineInvitations\Security\Authorization;
 use PrikOgStreg\OnlineInvitations\Storage\StorageRegistry;
 use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
@@ -42,6 +50,12 @@ final class MyAccountRegistrar {
 	private TemplateLoader $templates;
 
 	private SectionNavBuilder $section_nav;
+
+	private ProjectService $project_service;
+
+	private ProjectStateService $state_service;
+
+	private Sidebar $sidebar;
 
 	public function __construct(
 		RepositoryRegistry $repositories,
@@ -99,15 +113,25 @@ final class MyAccountRegistrar {
 			$authorization,
 			$templates
 		);
+		$queue = new DeliveryQueueService( $repositories->deliveries() );
 		$photo_service = PhotoServiceFactory::create( $repositories, $storage );
+		$share_tokens  = new PhotoShareTokenService( $repositories->projects() );
 		$photos_controller = new PhotoController(
 			$photo_service,
+			new PhotoShareSettingsService(
+				$repositories->projects(),
+				$repositories->photos(),
+				$share_tokens,
+				new PhotoAccessCodeService( $repositories->projects(), new PhotoAccessRateLimiter() )
+			),
+			$share_tokens,
+			new PhotoShareQrService(),
+			$repositories->guests(),
+			$queue,
 			$authorization,
 			$templates,
 			$storage->file_streams()
 		);
-
-		$queue = new DeliveryQueueService( $repositories->deliveries() );
 		$audit = new ProjectLifecycleAudit( $repositories->events() );
 		$archive_service = new ProjectArchiveService(
 			$repositories->projects(),
@@ -123,6 +147,20 @@ final class MyAccountRegistrar {
 				$storage->project_storage()
 			)
 		);
+		$project_service = new ProjectService(
+			$repositories->projects(),
+			$repositories->events(),
+			new ProjectFactory(),
+			$builder,
+			$storage->project_storage(),
+			new WelcomeScheduler(
+				$repositories->projects(),
+				$repositories->deliveries(),
+				$queue
+			)
+		);
+		$this->project_service = $project_service;
+		$this->state_service   = $state_service;
 
 		$this->controller = new ProjectController(
 			$repositories->projects(),
@@ -142,6 +180,7 @@ final class MyAccountRegistrar {
 				$repositories->events()
 			),
 			new ProjectPublicUrlService( new GenericTokenService( $repositories->projects() ) ),
+			$project_service,
 			$guest_controller,
 			new AddressBookController(
 				$address_book_service,
@@ -158,6 +197,15 @@ final class MyAccountRegistrar {
 
 		$this->presentation = new AccountPresentation( $repositories->projects() );
 
+		$this->sidebar = new Sidebar(
+			$this->authorization,
+			new Router(),
+			$this->templates,
+			$this->section_nav,
+			$this->project_service,
+			$this->state_service
+		);
+
 		$guest_controller->register();
 		$responses_controller->register();
 		$photos_controller->register();
@@ -166,7 +214,7 @@ final class MyAccountRegistrar {
 	public function register(): void {
 		( new Endpoints() )->register();
 		$this->presentation->register();
-		( new Sidebar( $this->authorization, new Router(), $this->templates, $this->section_nav ) )->register();
+		$this->sidebar->register();
 		$this->controller->register();
 		add_action( 'woocommerce_account_' . Endpoints::SLUG . '_endpoint', [ $this->controller, 'render_endpoint' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
@@ -203,6 +251,7 @@ final class MyAccountRegistrar {
 					'save_conflict'    => __( 'Your design was changed elsewhere. Reload the page and try again.', 'prikogstreg-online-invitations' ),
 					'save_unavailable' => __( 'Save endpoint unavailable.', 'prikogstreg-online-invitations' ),
 					'invalid_payload'  => __( 'Invalid save payload from editor.', 'prikogstreg-online-invitations' ),
+					'copied'           => __( 'Link copied.', 'prikogstreg-online-invitations' ),
 				],
 			]
 		);

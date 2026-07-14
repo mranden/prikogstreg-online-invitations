@@ -595,6 +595,32 @@
   }
 }
 
+.pks-oi-photo-code-display__value {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+  background: #f6f7f7;
+  border: 1px solid #dcdcde;
+  border-radius: 0.25rem;
+}
+
+.pks-oi-photo-share-tools__qr {
+  display: inline-block;
+  margin: 0.75rem 0 0.5rem;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 0.35rem;
+}
+
+.pks-oi-photo-share-tools__qr svg {
+  display: block;
+  width: min(100%, 280px);
+  height: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pks-oi * {
     scroll-behavior: auto;

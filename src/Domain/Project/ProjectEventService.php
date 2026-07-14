@@ -65,6 +65,30 @@ final class ProjectEventService {
 	}
 
 	/**
+	 * Support/admin save — skips customer entitlement but keeps validation.
+	 *
+	 * @param array<string, mixed> $project
+	 * @param array<string, mixed> $input
+	 * @return array{success:bool,error?:string}
+	 */
+	public function save_event_details_for_support( array $project, array $input ): array {
+		$data = $this->normalize_input( $input );
+		if ( isset( $data['error'] ) ) {
+			return [ 'success' => false, 'error' => (string) $data['error'] ];
+		}
+
+		$expires_at = ProjectExpiration::recalculate_stored_expiry( array_merge( $project, $data ) );
+		if ( null !== $expires_at ) {
+			$data['expires_at_utc'] = $expires_at;
+		}
+
+		$this->projects->update( (int) $project['project_id'], $data );
+		do_action( 'pks_oi_project_event_saved', (int) $project['project_id'] );
+
+		return [ 'success' => true ];
+	}
+
+	/**
 	 * @param array<string, mixed> $input
 	 * @return array<string, mixed>
 	 */

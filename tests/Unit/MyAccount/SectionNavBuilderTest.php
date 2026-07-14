@@ -85,12 +85,57 @@ final class SectionNavBuilderTest extends TestCase {
 		$this->assertStringContainsString( '1 guest', $guest_item['meta'] );
 		$this->assertNull( $this->find_item( $nav['groups'], ProjectSections::ADDRESS_BOOK ) );
 
-		$this->assertSame( 'manage', $nav['groups'][0]['slug'] ?? '' );
-		$this->assertSame( 'setup', $nav['groups'][2]['slug'] ?? '' );
+		$this->assertSame( 'setup', $nav['groups'][0]['slug'] ?? '' );
+		$this->assertSame( 'launch', $nav['groups'][1]['slug'] ?? '' );
+		$this->assertSame( 'manage', $nav['groups'][2]['slug'] ?? '' );
 
-		$setup_items = $nav['groups'][2]['items'] ?? [];
+		$setup_items = $nav['groups'][0]['items'] ?? [];
 		$this->assertSame( ProjectSections::OVERVIEW, $setup_items[0]['slug'] ?? '' );
-		$this->assertSame( ProjectSections::GUESTS, $setup_items[ array_key_last( $setup_items ) ]['slug'] ?? '' );
+		$this->assertSame( ProjectSections::DESIGN, $setup_items[1]['slug'] ?? '' );
+		$this->assertSame( ProjectSections::EVENT, $setup_items[2]['slug'] ?? '' );
+		$this->assertSame( ProjectSections::GUESTS, $setup_items[3]['slug'] ?? '' );
+	}
+
+	public function test_build_keeps_stable_group_order_when_core_setup_complete(): void {
+		$projects = $this->registry->projects();
+		$guests   = $this->registry->guests();
+
+		$projects->insert(
+			[
+				'project_id'         => 304,
+				'storage_uuid'       => 'aaaaaaaa-bbbb-4ccc-8ddd-000000000304',
+				'user_id'            => 7,
+				'order_id'           => 1,
+				'order_item_id'      => 1,
+				'product_id'         => 10,
+				'template_id'        => '10',
+				'status'             => ProjectStatus::ACTIVE,
+				'publication_status' => PublicationStatus::PUBLISHED,
+				'state_version'      => 2,
+				'event_title'        => 'Birthday',
+				'event_start_utc'    => '2026-08-01 14:00:00',
+			]
+		);
+
+		$guests->insert(
+			[
+				'guest_id'   => 2,
+				'project_id' => 304,
+				'email'      => 'guest@example.com',
+				'first_name' => 'Ada',
+				'last_name'  => 'Lovelace',
+			]
+		);
+
+		$project = $projects->find_by_id( 304 );
+		$this->assertIsArray( $project );
+
+		$nav = $this->builder->build( $project, ProjectSections::GUESTS, 7 );
+
+		$this->assertSame( 'setup', $nav['groups'][0]['slug'] ?? '' );
+		$this->assertSame( 'launch', $nav['groups'][1]['slug'] ?? '' );
+		$this->assertSame( 'manage', $nav['groups'][2]['slug'] ?? '' );
+		$this->assertSame( ProjectSections::GUESTS, $nav['groups'][0]['items'][3]['slug'] ?? '' );
 	}
 
 	public function test_build_keeps_setup_first_when_core_setup_incomplete(): void {

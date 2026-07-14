@@ -1,6 +1,6 @@
 <?php
 /**
- * Public guest photo upload section.
+ * Public photo share link on invitation.
  *
  * @package PrikOgStreg\OnlineInvitations
  *
@@ -13,42 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$intent_url = (string) ( $photos['intent_url'] ?? '' );
-$upload_url = (string) ( $photos['upload_url'] ?? '' );
-$rest_nonce = (string) ( $photos['rest_nonce'] ?? '' );
-$requires_name = ! empty( $photos['requires_name'] );
-$max_files = (int) ( $photos['max_files'] ?? 10 );
+$share_url = (string) ( $photos['share_url'] ?? '' );
 ?>
-<div
-	class="pks-oi-photos"
-	data-pks-oi-photos
-	data-intent-url="<?php echo esc_attr( $intent_url ); ?>"
-	data-upload-url="<?php echo esc_attr( $upload_url ); ?>"
-	data-rest-nonce="<?php echo esc_attr( $rest_nonce ); ?>"
-	data-requires-name="<?php echo $requires_name ? '1' : '0'; ?>"
-	data-max-files="<?php echo esc_attr( (string) $max_files ); ?>"
->
-	<p><?php esc_html_e( 'Share photos from the event. Uploads are private until the organiser approves them.', 'prikogstreg-online-invitations' ); ?></p>
-
-	<?php if ( $requires_name ) : ?>
-		<p>
-			<label for="pks-oi-photos-name"><?php esc_html_e( 'Your name', 'prikogstreg-online-invitations' ); ?></label><br />
-			<input type="text" id="pks-oi-photos-name" data-pks-oi-photos-name />
-		</p>
-	<?php endif; ?>
-
+<?php if ( '' !== $share_url ) : ?>
+	<p><?php esc_html_e( 'Share your photos from the event on the dedicated photo page.', 'prikogstreg-online-invitations' ); ?></p>
 	<p>
-		<label for="pks-oi-photos-input"><?php esc_html_e( 'Choose photos (JPEG, PNG, or WebP)', 'prikogstreg-online-invitations' ); ?></label><br />
-		<input
-			type="file"
-			id="pks-oi-photos-input"
-			data-pks-oi-photos-input
-			accept="image/jpeg,image/png,image/webp"
-			multiple
-		/>
+		<a class="button" href="<?php echo esc_url( $share_url ); ?>">
+			<?php esc_html_e( 'Open photo sharing page', 'prikogstreg-online-invitations' ); ?>
+		</a>
 	</p>
-	<p>
-		<button type="button" class="button" data-pks-oi-photos-upload><?php esc_html_e( 'Upload photos', 'prikogstreg-online-invitations' ); ?></button>
-	</p>
-	<p class="pks-oi-photos__status pks-oi-status" data-pks-oi-photos-status role="status" aria-live="polite" hidden></p>
-</div>
+<?php endif; ?>

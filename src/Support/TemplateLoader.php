@@ -39,6 +39,8 @@ final class TemplateLoader {
 		'public/rsvp-form',
 		'public/wishlist',
 		'public/photos',
+		'public/photo-share',
+		'public/photo-wall',
 		'public/unavailable',
 		'emails/wrapper',
 		'admin/support',

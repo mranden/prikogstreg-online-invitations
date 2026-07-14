@@ -21,8 +21,20 @@ final class BuilderValidity {
 
 		$product = function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : null;
 
+		if ( ! ProductMeta::is_builder_optional_id( $product_id ) && ! class_exists( 'BPP_Product', false ) ) {
+			$errors[] = 'bpp_plugin_unavailable';
+		}
+
 		if ( ! self::has_active_builder_template( $product_id ) && ! ProductMeta::is_builder_optional_id( $product_id ) ) {
 			$errors[] = 'builder_template_missing';
+		}
+
+		if (
+			self::has_active_builder_template( $product_id )
+			&& ! self::has_template_pages( $product_id )
+			&& ! ProductMeta::is_builder_optional_id( $product_id )
+		) {
+			$errors[] = 'builder_pages_missing';
 		}
 
 		if ( ! ProductMeta::is_builder_optional_id( $product_id ) ) {
@@ -60,6 +72,25 @@ final class BuilderValidity {
 
 	public static function is_valid( int $product_id ): bool {
 		return [] === self::validation_errors( $product_id );
+	}
+
+	public static function has_template_pages( int $product_id ): bool {
+		if ( ! self::has_active_builder_template( $product_id ) ) {
+			return false;
+		}
+
+		if ( ! class_exists( 'BPP_Product', false ) ) {
+			return false;
+		}
+
+		$builder = new \BPP_Product( $product_id );
+		$pages   = $builder->pages ?? null;
+
+		if ( ! is_array( $pages ) && ! is_object( $pages ) ) {
+			return false;
+		}
+
+		return count( (array) $pages ) > 0;
 	}
 
 	public static function has_active_builder_template( int $product_id ): bool {
@@ -109,12 +140,16 @@ final class BuilderValidity {
 
 	public static function error_label( string $code ): string {
 		return match ( $code ) {
+			'bpp_plugin_unavailable'    => __( 'Activate the PDF Builder plugin before selling this product.', 'prikogstreg-online-invitations' ),
 			'builder_template_missing'  => __( 'Activate and save a PDF Builder template for this product.', 'prikogstreg-online-invitations' ),
+			'builder_pages_missing'     => __( 'Activate the PDF Builder template and ensure it has at least one design page.', 'prikogstreg-online-invitations' ),
 			'bpp_attributes_unresolved' => __( 'Configure at least one permitted PDF Builder size and format for this design.', 'prikogstreg-online-invitations' ),
+			'bpp_integration_unavailable' => __( 'The PDF Builder integration adapter is unavailable. Re-activate the PDF Builder plugin.', 'prikogstreg-online-invitations' ),
 			'envelope_preset_missing'   => __( 'Select a valid envelope preset.', 'prikogstreg-online-invitations' ),
 			'envelope_image_invalid'    => __( 'Select a valid image attachment for the envelope image field.', 'prikogstreg-online-invitations' ),
 			'background_preset_missing' => __( 'Select a valid background preset.', 'prikogstreg-online-invitations' ),
 			'price_missing'             => __( 'Set a product price before allowing purchase.', 'prikogstreg-online-invitations' ),
+			'product_not_purchasable'   => __( 'Mark the product as purchasable before allowing purchase.', 'prikogstreg-online-invitations' ),
 			'product_missing',
 			'product_type_invalid'      => __( 'Invitation configuration is incomplete.', 'prikogstreg-online-invitations' ),
 			default                     => __( 'Invitation configuration is incomplete.', 'prikogstreg-online-invitations' ),
