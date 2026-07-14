@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class GuestInvitationEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-guest-invitation';
+	protected string $oi_template = 'pks-oi-guest-invitation';
 
 	public function __construct() {
 		$this->id          = 'pks_oi_guest_invitation';

@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class RsvpReminderEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-rsvp-reminder';
+	protected string $oi_template = 'pks-oi-rsvp-reminder';
 
 	public function __construct() {
 		$this->id          = 'pks_oi_rsvp_reminder';

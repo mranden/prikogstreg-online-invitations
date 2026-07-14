@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class OrganizerRsvpEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-organizer-rsvp';
+	protected string $oi_template = 'pks-oi-organizer-rsvp';
 
 	public function __construct() {
 		$this->id             = 'pks_oi_organizer_rsvp';

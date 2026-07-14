@@ -191,6 +191,10 @@ final class CartCheckoutTest extends TestCase {
 			public function is_type( string $type ): bool {
 				return $this->type === $type;
 			}
+
+			public function get_meta( string $key, bool $single = true ): string {
+				return '';
+			}
 		};
 	}
 

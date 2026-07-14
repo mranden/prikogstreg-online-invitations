@@ -52,8 +52,21 @@ final class ProductDataPanel {
 						<?php echo esc_html( $status['label'] ); ?>
 					</span><br />
 					<span class="description"><?php echo esc_html( $status['detail'] ); ?></span><br />
-					<a href="<?php echo esc_url( $customize ); ?>"><?php esc_html_e( 'Open PDF Builder customizer', 'prikogstreg-online-invitations' ); ?></a>
+					<?php if ( ! ProductMeta::is_builder_optional_id( $product_id ) ) : ?>
+						<a href="<?php echo esc_url( $customize ); ?>"><?php esc_html_e( 'Open PDF Builder customizer', 'prikogstreg-online-invitations' ); ?></a>
+					<?php endif; ?>
 				</p>
+
+				<?php
+				woocommerce_wp_checkbox(
+					[
+						'id'          => ProductMeta::BUILDER_OPTIONAL,
+						'label'       => __( 'PDF Builder optional (testing)', 'prikogstreg-online-invitations' ),
+						'value'       => wc_bool_to_string( ProductMeta::is_builder_optional_id( $product_id ) ),
+						'description' => __( 'Allow purchase without a connected PDF Builder template. The product page shows a placeholder preview during testing.', 'prikogstreg-online-invitations' ),
+					]
+				);
+				?>
 
 				<?php
 				woocommerce_wp_select(
@@ -139,6 +152,7 @@ final class ProductDataPanel {
 			return;
 		}
 
+		ProductMeta::ensure_defaults( $product );
 		ProductMeta::save_admin_fields( $product, wp_unslash( $_POST ) );
 		$product->save();
 	}
@@ -238,9 +252,17 @@ final class ProductDataPanel {
 		wp_enqueue_script(
 			'pks-oi-admin',
 			PKS_OI_PLUGIN_URL . 'assets/build/js/admin.js',
-			[],
+			[ 'jquery', 'wc-admin-meta-boxes' ],
 			PKS_OI_VERSION,
 			true
+		);
+
+		wp_localize_script(
+			'pks-oi-admin',
+			'pksOiAdmin',
+			[
+				'productType' => ProductMeta::TYPE,
+			]
 		);
 	}
 }

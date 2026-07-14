@@ -7,6 +7,7 @@ namespace PrikOgStreg\OnlineInvitations\Tests\Unit\WooCommerce;
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Cart\CartPayload;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Cart\CartPayloadValidator;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 use PrikOgStreg\OnlineInvitations\Tests\TestCase;
 
 final class CartPayloadValidatorTest extends TestCase {
@@ -16,6 +17,18 @@ final class CartPayloadValidatorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		$this->validator = new CartPayloadValidator( new BuilderService() );
+
+		\Brain\Monkey\Functions\when( 'wc_get_product' )->justReturn(
+			new class() {
+				public function is_type( string $type ): bool {
+					return false;
+				}
+
+				public function get_meta( string $key, bool $single = true ): string {
+					return '';
+				}
+			}
+		);
 	}
 
 	public function test_structural_validation_requires_field_page_size_and_format(): void {
@@ -71,5 +84,30 @@ final class CartPayloadValidatorTest extends TestCase {
 		);
 
 		$this->assertSame( $checksum_a, $checksum_b );
+	}
+
+	public function test_builder_optional_product_skips_structural_validation(): void {
+		\Brain\Monkey\Functions\when( 'wc_get_product' )->justReturn(
+			new class() {
+				public function is_type( string $type ): bool {
+					return ProductMeta::TYPE === $type;
+				}
+
+				public function get_meta( string $key, bool $single = true ): string {
+					return ProductMeta::BUILDER_OPTIONAL === $key ? 'yes' : '';
+				}
+			}
+		);
+
+		$errors = $this->validator->validate_cart_item(
+			[
+				CartPayload::MARKER_KEY => true,
+				'product_id'            => 10,
+				'field'                 => [],
+				'page'                  => [],
+			]
+		);
+
+		$this->assertSame( [], $errors );
 	}
 }

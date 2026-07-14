@@ -15,7 +15,7 @@ final class BuilderValidity {
 	public static function validation_errors( int $product_id ): array {
 		$errors = [];
 
-		if ( ! self::has_active_builder_template( $product_id ) ) {
+		if ( ! self::has_active_builder_template( $product_id ) && ! ProductMeta::is_builder_optional_id( $product_id ) ) {
 			$errors[] = 'builder_template_missing';
 		}
 
@@ -56,6 +56,14 @@ final class BuilderValidity {
 	 */
 	public static function integration_status( int $product_id ): array {
 		if ( self::is_valid( $product_id ) ) {
+			if ( ProductMeta::is_builder_optional_id( $product_id ) && ! self::has_active_builder_template( $product_id ) ) {
+				return [
+					'status' => 'testing',
+					'label'  => __( 'Testing without PDF Builder', 'prikogstreg-online-invitations' ),
+					'detail' => __( 'PDF Builder is optional. The storefront shows a placeholder preview until a template is connected.', 'prikogstreg-online-invitations' ),
+				];
+			}
+
 			return [
 				'status' => 'ready',
 				'label'  => __( 'Ready for purchase', 'prikogstreg-online-invitations' ),

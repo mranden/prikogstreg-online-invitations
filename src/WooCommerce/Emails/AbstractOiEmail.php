@@ -17,7 +17,7 @@ abstract class AbstractOiEmail extends \WC_Email {
 	/** @var array<string, mixed> */
 	protected array $context = [];
 
-	protected string $template_base = '';
+	protected string $oi_template = '';
 
 	public function __construct() {
 		parent::__construct();
@@ -76,7 +76,7 @@ abstract class AbstractOiEmail extends \WC_Email {
 	}
 
 	public function get_content_html(): string {
-		$template = ( new TemplateLoader() )->locate( 'emails/' . $this->template_base );
+		$template = ( new TemplateLoader() )->locate( 'emails/' . $this->oi_template );
 		if ( '' === $template ) {
 			return $this->get_default_html();
 		}
@@ -90,7 +90,7 @@ abstract class AbstractOiEmail extends \WC_Email {
 	}
 
 	public function get_content_plain(): string {
-		$template = ( new TemplateLoader() )->locate( 'emails/plain/' . $this->template_base );
+		$template = ( new TemplateLoader() )->locate( 'emails/plain/' . $this->oi_template );
 		if ( '' === $template ) {
 			return wp_strip_all_tags( $this->get_default_html() );
 		}
@@ -127,9 +127,5 @@ abstract class AbstractOiEmail extends \WC_Email {
 			'{account_url}'    => (string) ( $context['account_url'] ?? '' ),
 			'{invitation_url}' => (string) ( $context['invitation_url'] ?? '' ),
 		];
-	}
-
-	protected function format_string( string $string ): string {
-		return str_replace( array_keys( $this->placeholders ), array_values( $this->placeholders ), $string );
 	}
 }

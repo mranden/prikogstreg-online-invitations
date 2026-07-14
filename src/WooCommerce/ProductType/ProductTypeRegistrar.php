@@ -14,14 +14,14 @@ final class ProductTypeRegistrar {
 		add_filter( 'woocommerce_product_class', [ $this, 'map_product_class' ], 10, 2 );
 		add_filter( 'woocommerce_product_data_tabs', [ $this, 'product_data_tabs' ] );
 		add_filter( 'woocommerce_product_supports', [ $this, 'product_supports' ], 10, 3 );
+		add_action( 'woocommerce_online_invitation_add_to_cart', 'woocommerce_simple_add_to_cart' );
 
 		require_once PKS_OI_PLUGIN_PATH . 'src/WooCommerce/ProductType/WC_Product_Online_Invitation.php';
 
 		( new ProductDataPanel() )->register();
 		( new QuantityGuard() )->register();
 		( new BuilderIntegration() )->register();
-
-		add_action( 'admin_footer', [ $this, 'admin_product_type_script' ] );
+		( new ProductPagePlaceholder() )->register();
 	}
 
 	/**
@@ -47,14 +47,18 @@ final class ProductTypeRegistrar {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public function product_data_tabs( array $tabs ): array {
-		$classes = [
-			'show_if_' . ProductMeta::TYPE,
-		];
+		$invitation_class = 'show_if_' . ProductMeta::TYPE;
 
-		foreach ( [ 'general', 'inventory', 'shipping', 'linked_product', 'attribute', 'advanced' ] as $tab_key ) {
-			if ( isset( $tabs[ $tab_key ]['class'] ) && is_array( $tabs[ $tab_key ]['class'] ) ) {
-				$tabs[ $tab_key ]['class'] = array_merge( $tabs[ $tab_key ]['class'], $classes );
+		foreach ( $tabs as $key => $tab ) {
+			$classes = (array) ( $tab['class'] ?? [] );
+			$show_keys = [ 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ];
+
+			if ( [] === array_intersect( $show_keys, $classes ) ) {
+				continue;
 			}
+
+			$classes[]               = $invitation_class;
+			$tabs[ $key ]['class'] = array_values( array_unique( $classes ) );
 		}
 
 		return $tabs;
@@ -70,24 +74,5 @@ final class ProductTypeRegistrar {
 		}
 
 		return $supports;
-	}
-
-	public function admin_product_type_script(): void {
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! $screen || 'product' !== $screen->id ) {
-			return;
-		}
-		?>
-		<script>
-			jQuery(function ($) {
-				$('.options_group').each(function () {
-					if ($(this).hasClass('show_if_simple') || $(this).hasClass('show_if_virtual')) {
-						$(this).addClass('show_if_<?php echo esc_js( ProductMeta::TYPE ); ?>');
-					}
-				});
-				$('#product-type').trigger('change');
-			});
-		</script>
-		<?php
 	}
 }

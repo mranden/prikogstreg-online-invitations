@@ -153,6 +153,13 @@ final class FakeWpdb {
 					static fn( array $row ): bool => (string) ( $row[ $matches[1] ] ?? '' ) === $matches[2]
 				)
 			);
+		} elseif ( preg_match( '/\bAND\s+(\w+)\s*=\s*\'([^\']*)\'/i', $query, $matches ) ) {
+			$rows = array_values(
+				array_filter(
+					$rows,
+					static fn( array $row ): bool => (string) ( $row[ $matches[1] ] ?? '' ) === $matches[2]
+				)
+			);
 		} elseif ( preg_match( '/WHERE\s+(\w+)\s*<\s*\'([^\']*)\'/i', $query, $matches ) ) {
 			$rows = array_values(
 				array_filter(
@@ -192,6 +199,19 @@ final class FakeWpdb {
 					static fn( array $row ): bool => null === ( $row['deleted_at_utc'] ?? null ) || '' === ( $row['deleted_at_utc'] ?? '' )
 				)
 			);
+		}
+
+		if ( preg_match( "/status IN \(([^)]+)\)/i", $query, $matches ) ) {
+			preg_match_all( "/'([^']+)'/", $matches[1], $status_matches );
+			$statuses = $status_matches[1] ?? [];
+			if ( [] !== $statuses ) {
+				$rows = array_values(
+					array_filter(
+						$rows,
+						static fn( array $row ): bool => in_array( (string) ( $row['status'] ?? '' ), $statuses, true )
+					)
+				);
+			}
 		}
 
 		if ( str_contains( $query, 'archived_at_utc IS NULL' ) ) {
@@ -254,8 +274,9 @@ final class FakeWpdb {
 			$rows = array_map(
 				static function ( array $row ): array {
 					$allowed = [
-						'project_id', 'event_title', 'status', 'publication_status', 'event_start_utc',
-						'updated_at_utc', 'order_id', 'product_id', 'expires_at_utc', 'last_error_code', 'state_version',
+						'project_id', 'user_id', 'order_id', 'order_item_id', 'product_id', 'event_title', 'status',
+						'publication_status', 'event_start_utc', 'created_at_utc', 'updated_at_utc', 'last_error_code',
+						'expires_at_utc', 'state_version',
 					];
 
 					return array_intersect_key( $row, array_flip( $allowed ) );

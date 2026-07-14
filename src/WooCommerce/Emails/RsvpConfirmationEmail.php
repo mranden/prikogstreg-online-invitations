@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class RsvpConfirmationEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-rsvp-confirmation';
+	protected string $oi_template = 'pks-oi-rsvp-confirmation';
 
 	public function __construct() {
 		$this->id          = 'pks_oi_rsvp_confirmation';

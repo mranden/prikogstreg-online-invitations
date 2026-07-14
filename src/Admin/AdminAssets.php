@@ -14,12 +14,17 @@ final class AdminAssets {
 	}
 
 	public function enqueue( string $hook ): void {
-		if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
-			return;
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_project_cpt = is_object( $screen ) && ProjectPostType::POST_TYPE === ( $screen->post_type ?? '' );
+		$is_projects_admin = 'woocommerce_page_' . ProjectAdminListViewModel::PAGE_SLUG === $hook;
+
+		if ( ! $is_project_cpt && ! $is_projects_admin ) {
+			if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
+				return;
+			}
 		}
 
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! is_object( $screen ) || ProjectPostType::POST_TYPE !== ( $screen->post_type ?? '' ) ) {
+		if ( ! $is_projects_admin && ! $is_project_cpt ) {
 			return;
 		}
 

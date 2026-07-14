@@ -52,6 +52,11 @@ final class ProjectSupportRegistrar {
 		);
 
 		( new ProjectSupportScreen( $view_model, $this->templates ) )->register();
+		( new ProjectsAdminScreen(
+			new ProjectAdminListViewModel( $this->repositories->projects() ),
+			$view_model,
+			$this->templates
+		) )->register();
 		( new AdminAssets() )->register();
 
 		$welcome = new WelcomeScheduler(

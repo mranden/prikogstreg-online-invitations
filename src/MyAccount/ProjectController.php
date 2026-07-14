@@ -6,6 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\MyAccount;
 
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\MigrationLock;
+use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
 use PrikOgStreg\OnlineInvitations\Domain\Project\DemoInvitationService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
@@ -31,6 +32,7 @@ final class ProjectController {
 
 	public function __construct(
 		private ProjectRepository $projects,
+		private GuestRepository $guests,
 		private Authorization $authorization,
 		private TemplateLoader $templates,
 		private BuilderService $builder,
@@ -356,9 +358,12 @@ final class ProjectController {
 	 * @return array<string, array{label:string,done:bool,detail:string}>
 	 */
 	private function build_checklist( array $project ): array {
-		$has_design = (int) ( $project['state_version'] ?? 0 ) >= 1 && '' === (string) ( $project['last_error_code'] ?? '' );
-		$has_event  = ProjectEntitlement::has_required_event_data( $project );
-		$published  = PublicationStatus::PUBLISHED === (string) ( $project['publication_status'] ?? '' );
+		$project_id  = (int) ( $project['project_id'] ?? 0 );
+		$has_design  = (int) ( $project['state_version'] ?? 0 ) >= 1 && '' === (string) ( $project['last_error_code'] ?? '' );
+		$has_event   = ProjectEntitlement::has_required_event_data( $project );
+		$published   = PublicationStatus::PUBLISHED === (string) ( $project['publication_status'] ?? '' );
+		$guest_count = $this->guests->count_for_project( $project_id );
+		$has_guests  = $guest_count > 0;
 
 		return [
 			'design'  => [
@@ -377,8 +382,14 @@ final class ProjectController {
 			],
 			'guests'  => [
 				'label'  => __( 'Guest list', 'prikogstreg-online-invitations' ),
-				'done'   => false,
-				'detail' => __( 'Add guests to send personal invitation links.', 'prikogstreg-online-invitations' ),
+				'done'   => $has_guests,
+				'detail' => $has_guests
+					? sprintf(
+						/* translators: %d: guest count */
+						_n( '%d guest added to this project.', '%d guests added to this project.', $guest_count, 'prikogstreg-online-invitations' ),
+						$guest_count
+					)
+					: __( 'Add guests to send personal invitation links.', 'prikogstreg-online-invitations' ),
 			],
 			'publish' => [
 				'label'  => __( 'Published', 'prikogstreg-online-invitations' ),
@@ -456,12 +467,7 @@ final class ProjectController {
 	 * @return array<string, string>
 	 */
 	private function section_urls( int $project_id ): array {
-		$urls = [];
-		foreach ( array_keys( ProjectSections::labels() ) as $section ) {
-			$urls[ $section ] = Endpoints::project_url( $project_id, $section );
-		}
-
-		return $urls;
+		return Endpoints::section_urls( $project_id );
 	}
 
 	private function order_admin_url( int $order_id ): string {

@@ -20,6 +20,10 @@ final class BuilderIntegration {
 			return $customizable;
 		}
 
+		if ( ProductMeta::is_builder_optional_id( $product_id ) ) {
+			return false;
+		}
+
 		return BuilderValidity::has_active_builder_template( $product_id );
 	}
 

@@ -24,6 +24,7 @@ use PrikOgStreg\OnlineInvitations\Public\PublicRegistrar;
 use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
 use PrikOgStreg\OnlineInvitations\WooCommerce\CartCheckoutRegistrar;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Compatibility;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductTypeRegistrar;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Orders\ProjectOrderRegistrar;
 use PrikOgStreg\OnlineInvitations\Scheduling\SchedulerRegistrar;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Emails\EmailRegistry;
@@ -68,6 +69,8 @@ final class Plugin {
 			false,
 			dirname( plugin_basename( PKS_OI_PLUGIN_FILE ) ) . '/languages'
 		);
+
+		Capabilities::register_for_roles();
 
 		$this->register_features();
 	}

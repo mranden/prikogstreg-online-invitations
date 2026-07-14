@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class PhotoNotificationEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-photo-upload';
+	protected string $oi_template = 'pks-oi-photo-upload';
 
 	public function __construct() {
 		$this->id             = 'pks_oi_photo_upload';

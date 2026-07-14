@@ -73,4 +73,42 @@ final class AccountPresentationTest extends TestCase {
 
 		$this->assertSame( 0, $presentation->filter_user_project_count( 0, 0 ) );
 	}
+
+	public function test_filter_user_projects_nav_returns_primary_and_list_urls(): void {
+		$projects = $this->registry->projects();
+
+		$projects->insert(
+			[
+				'project_id'         => 201,
+				'storage_uuid'       => 'aaaaaaaa-bbbb-4ccc-8ddd-000000000201',
+				'user_id'            => 7,
+				'order_id'           => 1,
+				'order_item_id'      => 1,
+				'product_id'         => 10,
+				'template_id'        => '10',
+				'status'             => ProjectStatus::ACTIVE,
+				'publication_status' => PublicationStatus::UNPUBLISHED,
+				'event_title'        => 'Sommerfest',
+				'updated_at_utc'     => '2026-07-14 12:00:00',
+			]
+		);
+
+		$presentation = new AccountPresentation( $projects );
+		$nav          = $presentation->filter_user_projects_nav( [], 7, 5 );
+
+		$this->assertSame( 1, $nav['count'] );
+		$this->assertStringContainsString( 'online-invitations/', $nav['list_url'] );
+		$this->assertStringContainsString( 'online-invitations/201/', $nav['primary_url'] );
+		$this->assertCount( 1, $nav['projects'] );
+		$this->assertSame( 'Sommerfest', $nav['projects'][0]['title'] );
+		$this->assertSame( 201, $nav['projects'][0]['project_id'] );
+	}
+
+	public function test_filter_user_projects_nav_returns_empty_structure_for_guest(): void {
+		$presentation = new AccountPresentation( $this->registry->projects() );
+		$nav          = $presentation->filter_user_projects_nav( [], 0, 5 );
+
+		$this->assertSame( 0, $nav['count'] );
+		$this->assertSame( [], $nav['projects'] );
+	}
 }

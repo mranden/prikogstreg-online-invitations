@@ -32,32 +32,42 @@ require __DIR__ . '/_helpers.php';
 		<ul class="pks-oi-project-list">
 			<?php foreach ( $items as $item ) : ?>
 				<li class="pks-oi-project-list__item">
-					<h3>
-						<a href="<?php echo esc_url( (string) $item['overview_url'] ); ?>">
-							<?php echo esc_html( (string) $item['title'] ); ?>
-						</a>
-					</h3>
+					<div class="pks-oi-project-list__header">
+						<h3 class="pks-oi-project-list__title">
+							<a href="<?php echo esc_url( (string) $item['overview_url'] ); ?>">
+								<?php echo esc_html( (string) $item['title'] ); ?>
+							</a>
+						</h3>
+					</div>
 					<dl class="pks-oi-project-list__meta">
-						<div>
+						<div class="pks-oi-project-list__meta-item">
 							<dt><?php esc_html_e( 'Status', 'prikogstreg-online-invitations' ); ?></dt>
-							<dd><?php echo esc_html( (string) $item['status'] ); ?></dd>
+							<dd>
+								<span class="pks-oi-badge pks-oi-badge--<?php echo esc_attr( sanitize_html_class( (string) $item['status'] ) ); ?>">
+									<?php echo esc_html( (string) $item['status'] ); ?>
+								</span>
+							</dd>
 						</div>
-						<div>
+						<div class="pks-oi-project-list__meta-item">
 							<dt><?php esc_html_e( 'Publication', 'prikogstreg-online-invitations' ); ?></dt>
-							<dd><?php echo esc_html( (string) $item['publication_status'] ); ?></dd>
+							<dd>
+								<span class="pks-oi-badge pks-oi-badge--<?php echo esc_attr( sanitize_html_class( (string) $item['publication_status'] ) ); ?>">
+									<?php echo esc_html( (string) $item['publication_status'] ); ?>
+								</span>
+							</dd>
 						</div>
 						<?php if ( '' !== (string) $item['event_date'] ) : ?>
-							<div>
+							<div class="pks-oi-project-list__meta-item">
 								<dt><?php esc_html_e( 'Event date', 'prikogstreg-online-invitations' ); ?></dt>
 								<dd><?php echo esc_html( (string) $item['event_date'] ); ?></dd>
 							</div>
 						<?php endif; ?>
 					</dl>
-					<p>
-						<a class="button" href="<?php echo esc_url( (string) $item['next_action']['url'] ); ?>">
+					<div class="pks-oi-project-list__actions">
+						<a class="button button-primary" href="<?php echo esc_url( (string) $item['next_action']['url'] ); ?>">
 							<?php echo esc_html( (string) $item['next_action']['label'] ); ?>
 						</a>
-					</p>
+					</div>
 				</li>
 			<?php endforeach; ?>
 		</ul>

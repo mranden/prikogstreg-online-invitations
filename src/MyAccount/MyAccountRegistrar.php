@@ -12,6 +12,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Delivery\InvitationSendService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestImportService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestTokenService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\DemoInvitationService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectArchiveService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectHardDeleteService;
@@ -35,13 +36,27 @@ final class MyAccountRegistrar {
 
 	private AccountPresentation $presentation;
 
+	private Authorization $authorization;
+
+	private TemplateLoader $templates;
+
+	private SectionNavBuilder $section_nav;
+
 	public function __construct(
 		RepositoryRegistry $repositories,
 		BuilderService $builder,
 		StorageRegistry $storage,
 		TemplateLoader $templates
 	) {
-		$authorization = new Authorization( $repositories->projects() );
+		$this->templates     = $templates;
+		$this->authorization = new Authorization( $repositories->projects() );
+		$this->section_nav   = new SectionNavBuilder(
+			$repositories->guests(),
+			$repositories->wishlist_items(),
+			$repositories->photos(),
+			$repositories->address_book()
+		);
+		$authorization       = $this->authorization;
 		$state_service = new ProjectStateService(
 			$builder,
 			$storage->project_storage(),
@@ -110,6 +125,7 @@ final class MyAccountRegistrar {
 
 		$this->controller = new ProjectController(
 			$repositories->projects(),
+			$repositories->guests(),
 			$authorization,
 			$templates,
 			$builder,
@@ -149,6 +165,7 @@ final class MyAccountRegistrar {
 	public function register(): void {
 		( new Endpoints() )->register();
 		$this->presentation->register();
+		( new Sidebar( $this->authorization, new Router(), $this->templates, $this->section_nav ) )->register();
 		$this->controller->register();
 		add_action( 'woocommerce_account_' . Endpoints::SLUG . '_endpoint', [ $this->controller, 'render_endpoint' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );

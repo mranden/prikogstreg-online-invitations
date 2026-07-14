@@ -18,7 +18,7 @@ This plugin requires WooCommerce, Action Scheduler (bundled with WooCommerce), a
 
 * PHP 8.1+
 * WordPress 6.5+
-* WooCommerce 8.0+ (HPOS compatible)
+* WooCommerce 8.0+ with High-Performance Order Storage (HPOS) enabled — required
 * Action Scheduler (via WooCommerce)
 * Prikogstreg PDF Builder with integration adapter
 * Private filesystem path outside the web root recommended (`PKS_OI_STORAGE_PATH` in `wp-config.php`)

@@ -74,6 +74,18 @@ final class Endpoints {
 		return $url;
 	}
 
+	/**
+	 * @return array<string, string>
+	 */
+	public static function section_urls( int $project_id ): array {
+		$urls = [];
+		foreach ( array_keys( ProjectSections::labels() ) as $section ) {
+			$urls[ $section ] = self::project_url( $project_id, $section );
+		}
+
+		return $urls;
+	}
+
 	public static function maybe_flush_rewrites(): void {
 		$stored = (string) get_option( self::REWRITE_VERSION_OPTION, '' );
 		if ( self::REWRITE_VERSION === $stored ) {

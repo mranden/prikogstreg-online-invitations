@@ -29,6 +29,15 @@
   content: '⚠ ';
 }
 
+.pks-oi-admin-status--testing {
+  color: #996800;
+  font-weight: 600;
+}
+
+.pks-oi-admin-status--testing::before {
+  content: '◦ ';
+}
+
 .pks-oi-admin-support .widefat th {
   width: 12rem;
   vertical-align: top;
@@ -73,4 +82,33 @@
 .pks-oi-admin-support ul {
   margin: 0;
   padding-left: 1.25rem;
+}
+
+.pks-oi-admin-projects__list {
+  margin-top: 1rem;
+}
+
+.pks-oi-admin-projects__empty {
+  margin: 1.5rem 0;
+}
+
+.pks-oi-admin-projects__table .column-primary {
+  width: 22%;
+}
+
+.pks-oi-admin-projects__status--active {
+  color: #007017;
+  font-weight: 600;
+}
+
+.pks-oi-admin-projects__status--restricted,
+.pks-oi-admin-projects__status--expired,
+.pks-oi-admin-projects__status--archived,
+.pks-oi-admin-projects__status--draft {
+  color: #996800;
+  font-weight: 600;
+}
+
+.pks-oi-admin-projects__detail {
+  margin-top: 1rem;
 }

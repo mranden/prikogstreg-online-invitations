@@ -18,6 +18,7 @@ final class TemplateLoader {
 	private const ALLOWLIST = [
 		'myaccount/dashboard',
 		'myaccount/project-list',
+		'myaccount/sidebar-nav',
 		'myaccount/project-overview',
 		'myaccount/project-design',
 		'myaccount/project-event',

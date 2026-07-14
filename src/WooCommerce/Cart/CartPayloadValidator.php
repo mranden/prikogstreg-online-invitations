@@ -20,6 +20,10 @@ final class CartPayloadValidator {
 	 * @return list<string>
 	 */
 	public function validate_posted_payload( int $product_id ): array {
+		if ( ProductMeta::is_builder_optional_id( $product_id ) ) {
+			return [];
+		}
+
 		$state = $this->build_state_from_request( $product_id );
 		$errors = $this->structural_errors( $state );
 
@@ -35,6 +39,11 @@ final class CartPayloadValidator {
 	 * @return list<string>
 	 */
 	public function validate_cart_item( array $cart_item ): array {
+		$product_id = (int) ( $cart_item['product_id'] ?? 0 );
+		if ( $product_id > 0 && ProductMeta::is_builder_optional_id( $product_id ) ) {
+			return [];
+		}
+
 		if ( ! CartPayload::is_invitation_line( $cart_item ) ) {
 			$product = $cart_item['data'] ?? null;
 			if ( ! $product || ! ProductMeta::is_online_invitation( $product ) ) {

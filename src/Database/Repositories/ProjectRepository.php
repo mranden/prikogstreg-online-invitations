@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Database\Repositories;
 
+use PrikOgStreg\OnlineInvitations\Admin\ProjectAdminFilter;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
@@ -208,7 +209,7 @@ final class ProjectRepository extends AbstractRepository {
 		$sql = $this->wpdb->prepare(
 			'SELECT project_id, event_title, status, publication_status, event_start_utc, updated_at_utc, order_id, product_id, expires_at_utc, last_error_code, state_version
 			FROM ' . $this->tables->projects() . '
-			WHERE user_id = %d AND (deleted_at_utc IS NULL OR deleted_at_utc = \'\')
+			WHERE user_id = %d AND deleted_at_utc IS NULL
 			ORDER BY updated_at_utc DESC
 			LIMIT %d OFFSET %d',
 			$user_id,
@@ -229,11 +230,68 @@ final class ProjectRepository extends AbstractRepository {
 
 	public function count_active_for_user( int $user_id ): int {
 		$sql = $this->wpdb->prepare(
-			'SELECT COUNT(*) FROM ' . $this->tables->projects() . ' WHERE user_id = %d AND (deleted_at_utc IS NULL OR deleted_at_utc = \'\')',
+			'SELECT COUNT(*) FROM ' . $this->tables->projects() . ' WHERE user_id = %d AND deleted_at_utc IS NULL',
 			$user_id
 		);
 
 		return (int) $this->wpdb->get_var( $sql );
+	}
+
+	/**
+	 * Admin list of purchased invitation projects.
+	 *
+	 * @return array{
+	 *     items:list<array<string,mixed>>,
+	 *     total:int,
+	 *     page:int,
+	 *     per_page:int,
+	 *     filter:string
+	 * }
+	 */
+	public function list_admin_summaries( string $filter, int $page = 1, int $per_page = 20 ): array {
+		$filter   = ProjectAdminFilter::sanitize( $filter );
+		$page     = max( 1, $page );
+		$per_page = max( 1, min( 100, $per_page ) );
+		$offset   = ( $page - 1 ) * $per_page;
+		$where    = $this->admin_filter_where_clause( $filter );
+
+		$sql = 'SELECT project_id, user_id, order_id, order_item_id, product_id, event_title, status, publication_status, event_start_utc, created_at_utc, updated_at_utc, last_error_code
+			FROM ' . $this->tables->projects() . '
+			WHERE deleted_at_utc IS NULL' . $where . '
+			ORDER BY updated_at_utc DESC
+			LIMIT %d OFFSET %d';
+
+		$items = $this->wpdb->get_results(
+			$this->wpdb->prepare( $sql, $per_page, $offset ),
+			ARRAY_A
+		);
+
+		return [
+			'items'    => is_array( $items ) ? $items : [],
+			'total'    => $this->count_admin_by_filter( $filter ),
+			'page'     => $page,
+			'per_page' => $per_page,
+			'filter'   => $filter,
+		];
+	}
+
+	public function count_admin_by_filter( string $filter ): int {
+		$filter = ProjectAdminFilter::sanitize( $filter );
+		$where  = $this->admin_filter_where_clause( $filter );
+		$sql    = 'SELECT COUNT(*) FROM ' . $this->tables->projects() . ' WHERE deleted_at_utc IS NULL' . $where;
+
+		return (int) $this->wpdb->get_var( $sql );
+	}
+
+	private function admin_filter_where_clause( string $filter ): string {
+		return match ( ProjectAdminFilter::sanitize( $filter ) ) {
+			ProjectAdminFilter::ACTIVE => $this->wpdb->prepare( ' AND status = %s', ProjectStatus::ACTIVE ),
+			ProjectAdminFilter::DEACTIVATED => $this->wpdb->prepare(
+				' AND status IN (' . implode( ', ', array_fill( 0, count( ProjectAdminFilter::deactivated_statuses() ), '%s' ) ) . ')',
+				...ProjectAdminFilter::deactivated_statuses()
+			),
+			default => '',
+		};
 	}
 
 	/**
@@ -260,7 +318,7 @@ final class ProjectRepository extends AbstractRepository {
 		$now = gmdate( 'Y-m-d H:i:s' );
 		$sql = $this->wpdb->prepare(
 			'SELECT * FROM ' . $this->tables->projects()
-			. " WHERE status = %s AND expires_at_utc IS NOT NULL AND expires_at_utc <= %s AND (deleted_at_utc IS NULL OR deleted_at_utc = '')",
+			. " WHERE status = %s AND expires_at_utc IS NOT NULL AND expires_at_utc <= %s AND deleted_at_utc IS NULL",
 			ProjectStatus::ACTIVE,
 			$now
 		);
@@ -275,7 +333,7 @@ final class ProjectRepository extends AbstractRepository {
 	public function list_for_user( int $user_id ): array {
 		$sql = $this->wpdb->prepare(
 			'SELECT * FROM ' . $this->tables->projects()
-			. " WHERE user_id = %d AND (deleted_at_utc IS NULL OR deleted_at_utc = '') ORDER BY project_id ASC",
+			. " WHERE user_id = %d AND deleted_at_utc IS NULL ORDER BY project_id ASC",
 			$user_id
 		);
 

@@ -18,17 +18,6 @@ final class ProjectSupportScreen {
 
 	public function register(): void {
 		add_action( 'add_meta_boxes', [ $this, 'register_meta_box' ] );
-		add_action( 'admin_menu', [ $this, 'register_menu' ] );
-	}
-
-	public function register_menu(): void {
-		add_submenu_page(
-			'woocommerce',
-			__( 'Invitation projects', 'prikogstreg-online-invitations' ),
-			__( 'Invitation projects', 'prikogstreg-online-invitations' ),
-			Capabilities::SUPPORT,
-			'edit.php?post_type=' . ProjectPostType::POST_TYPE
-		);
 	}
 
 	public function register_meta_box(): void {

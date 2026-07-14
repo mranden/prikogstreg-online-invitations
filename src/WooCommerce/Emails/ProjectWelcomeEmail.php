@@ -6,7 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\Emails;
 
 final class ProjectWelcomeEmail extends AbstractOiEmail {
 
-	protected string $template_base = 'pks-oi-project-welcome';
+	protected string $oi_template = 'pks-oi-project-welcome';
 
 	public function __construct() {
 		$this->id             = 'pks_oi_project_welcome';

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\Bootstrap;
 
 use PrikOgStreg\OnlineInvitations\Plugin;
+use PrikOgStreg\OnlineInvitations\WooCommerce\Compatibility;
 
 /**
  * Runtime requirement checks and safe boot entry.
@@ -28,6 +29,7 @@ final class Requirements {
 			return;
 		}
 
+		add_action( 'before_woocommerce_init', [ Compatibility::class, 'declare_hpos_compatibility' ] );
 		add_action( 'plugins_loaded', [ self::class, 'on_plugins_loaded' ], 5 );
 	}
 
@@ -59,6 +61,14 @@ final class Requirements {
 					__( 'Prikogstreg Online Invitations requires WooCommerce %s or newer.', 'prikogstreg-online-invitations' ),
 					self::MIN_WC_VERSION
 				)
+			);
+
+			return;
+		}
+
+		if ( ! Compatibility::is_hpos_enabled() ) {
+			self::register_admin_notice(
+				__( 'Prikogstreg Online Invitations requires WooCommerce High-Performance Order Storage (HPOS). Enable it under WooCommerce → Settings → Advanced → Features.', 'prikogstreg-online-invitations' )
 			);
 
 			return;

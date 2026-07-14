@@ -20,14 +20,20 @@ Rewrites flush via `Endpoints::maybe_flush_rewrites()` on activation or when `pk
 
 ## Theme integration filters
 
-Registered by `MyAccount\AccountPresentation` when My Account boots:
+Registered by `MyAccount\AccountPresentation` when My Account boots.
+
+**Full guide:** [theme-integration.md](./theme-integration.md)
 
 | Filter / function | Purpose |
 |-------------------|---------|
 | `pks_oi_user_project_count` | Active, non-deleted project count for a user ID |
-| `pks_oi_get_user_project_count( $user_id = 0 )` | Helper wrapper |
+| `pks_oi_user_projects_nav` | Count, list URL, primary URL, and recent project summaries |
+| `pks_oi_get_user_project_count()` | Helper — project count |
+| `pks_oi_get_user_projects_nav()` | Helper — nav summary for theme links |
+| `pks_oi_my_account_is_available()` | Helper — whether plugin integration is loaded |
+| `pks_oi_get_my_account_list_url()` | Helper — invitation list endpoint URL |
 
-Themes should consume these filters rather than querying `pks_oi_*` tables directly. See the Prikogstreg theme contract: `docs/my-account-online-invitations.md` in the parent theme (when present).
+Themes should consume these filters rather than querying `pks_oi_*` tables directly.
 
 ---
 

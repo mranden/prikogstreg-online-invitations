@@ -76,6 +76,30 @@ final class ProductTypeTest extends TestCase {
 		$this->assertFalse( $limits['editable'] );
 	}
 
+	public function test_product_data_tabs_only_extend_existing_show_if_classes(): void {
+		$registrar = new ProductTypeRegistrar();
+		$tabs      = $registrar->product_data_tabs(
+			[
+				'general'   => [ 'class' => [ 'hide_if_grouped' ] ],
+				'inventory' => [ 'class' => [ 'show_if_simple', 'show_if_variable' ] ],
+			]
+		);
+
+		$this->assertNotContains( 'show_if_online_invitation', $tabs['general']['class'] );
+		$this->assertContains( 'show_if_online_invitation', $tabs['inventory']['class'] );
+	}
+
+	public function test_registers_online_invitation_add_to_cart_handler(): void {
+		$source = (string) file_get_contents(
+			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductTypeRegistrar.php'
+		);
+
+		$this->assertStringContainsString(
+			"add_action( 'woocommerce_online_invitation_add_to_cart', 'woocommerce_simple_add_to_cart' )",
+			$source
+		);
+	}
+
 	public function test_bpp_customizable_filter_for_online_invitation_with_active_builder(): void {
 		$integration = new \PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\BuilderIntegration();
 		$product     = $this->make_product( 10, ProductMeta::TYPE, true );
@@ -86,12 +110,41 @@ final class ProductTypeTest extends TestCase {
 		$this->assertTrue( $integration->filter_product_customizable( false, 10 ) );
 	}
 
-	private function make_product( int $id, string $type, bool $valid_config ): object {
-		return new class( $id, $type, $valid_config ) {
+	public function test_bpp_customizable_filter_false_when_builder_optional(): void {
+		$integration = new \PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\BuilderIntegration();
+		$product     = $this->make_product( 10, ProductMeta::TYPE, true, true );
+
+		Functions\when( 'wc_get_product' )->justReturn( $product );
+		Functions\when( 'get_post_meta' )->justReturn( (object) [ 'active' => true ] );
+
+		$this->assertFalse( $integration->filter_product_customizable( false, 10 ) );
+	}
+
+	public function test_quantity_guard_allows_purchase_when_builder_optional(): void {
+		$invitation = $this->make_product( 10, ProductMeta::TYPE, true, true );
+
+		Functions\when( 'wc_get_product' )->justReturn( $invitation );
+		Functions\when( 'get_post_meta' )->alias(
+			static function ( int $post_id, string $key, bool $single ) {
+				return match ( $key ) {
+					ProductMeta::ENVELOPE_PRESET => 'classic',
+					ProductMeta::BACKGROUND_PRESET => 'neutral',
+					default => '',
+				};
+			}
+		);
+
+		$guard = new QuantityGuard();
+		$this->assertTrue( $guard->validate_add_to_cart( true, 10, 1 ) );
+	}
+
+	private function make_product( int $id, string $type, bool $valid_config, bool $builder_optional = false ): object {
+		return new class( $id, $type, $valid_config, $builder_optional ) {
 			public function __construct(
 				private int $id,
 				private string $type,
-				private bool $valid_config
+				private bool $valid_config,
+				private bool $builder_optional
 			) {}
 
 			public function get_id(): int {
@@ -103,6 +156,10 @@ final class ProductTypeTest extends TestCase {
 			}
 
 			public function get_meta( string $key, bool $single = true ): mixed {
+				if ( ProductMeta::BUILDER_OPTIONAL === $key ) {
+					return $this->builder_optional ? 'yes' : '';
+				}
+
 				if ( ! $this->valid_config ) {
 					return '';
 				}
