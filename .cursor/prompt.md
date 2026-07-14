@@ -17,7 +17,7 @@ Read in this order:
 2. `.cursor/agent.md`
 3. `online-invitation-integration-audit.md`
 4. `online-invitation-integration-contract.json`
-5. `docs/technical-plan.md` when it exists
+5. `docs/01-project-overview.md` through `docs/10-testing-release-operations-and-roadmap.md`
 6. Relevant architecture/security/database documents
 7. The complete current code for both affected plugins
 8. Theme integration files only when the task depends on them

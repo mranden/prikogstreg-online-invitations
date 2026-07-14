@@ -167,7 +167,8 @@ final class ProjectService {
 		do_action( 'pks_oi_project_creation_started', $order_id, $order_item_id );
 
 		$storage_uuid = $this->factory->generate_storage_uuid();
-		$token_hash   = $this->factory->generate_generic_token_hash();
+		$token_pair   = $this->factory->generate_generic_token_pair();
+		$token_hash   = $token_pair['hash'];
 		$project_id   = 0;
 
 		try {
@@ -217,6 +218,8 @@ final class ProjectService {
 			if ( ! is_array( $project ) ) {
 				throw new \RuntimeException( 'Project row missing after insert.' );
 			}
+
+			update_post_meta( $project_id, ProjectPublicUrlService::META_KEY, $token_pair['raw'] );
 
 			if ( ! $this->import_for_project( $project, $order, $item ) ) {
 				return $project_id;

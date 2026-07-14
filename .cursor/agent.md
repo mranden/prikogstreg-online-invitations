@@ -150,7 +150,7 @@ Do not place the Online Invitations plugin inside the PDF Builder plugin.
 
 ## 6. Recommended Online Invitations file tree
 
-This is the target direction. Cursor may refine filenames in `docs/technical-plan.md`, but responsibilities must remain separated.
+This is the target direction. Canonical architecture lives in `docs/03-architecture-and-responsibilities.md`; responsibilities must remain separated.
 
 ```text
 prikogstreg-online-invitations/
@@ -338,7 +338,7 @@ Register the service once from the PDF Builder bootstrap/provider.
 
 ### Required interface
 
-The implementation must match the supplied integration contract unless `docs/architecture-decisions.md` records a reviewed change:
+The implementation must match the supplied integration contract unless `docs/03-architecture-and-responsibilities.md` or `docs/10-testing-release-operations-and-roadmap.md` records a reviewed change:
 
 ```php
 namespace BPP\Integration;
@@ -689,7 +689,7 @@ The title must be escaped and regenerated through a domain service when referenc
 
 Use `utf8mb4` and the site's WordPress collation.
 
-Exact SQL belongs in `docs/database-schema.md`. The following logical schema is required.
+Exact SQL belongs in `docs/04-domain-and-data-model.md`. The following logical schema is required.
 
 ### 14.1 `pks_oi_projects`
 
@@ -1915,7 +1915,7 @@ Never accept user ID as authorization input.
 
 ## 35. Privacy and retention matrix
 
-`docs/privacy-retention.md` must define at least:
+`docs/09-security-privacy-and-permissions.md` must define at least:
 
 | Data | Owner/subject | V1 retention direction |
 |---|---|---|

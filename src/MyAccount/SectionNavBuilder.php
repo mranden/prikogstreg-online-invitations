@@ -34,7 +34,6 @@ final class SectionNavBuilder {
 			'label'    => 'Launch',
 			'sections' => [
 				ProjectSections::PREVIEW,
-				ProjectSections::PUBLISH,
 			],
 		],
 		'manage'  => [
@@ -62,7 +61,6 @@ final class SectionNavBuilder {
 		ProjectSections::DESIGN,
 		ProjectSections::EVENT,
 		ProjectSections::GUESTS,
-		ProjectSections::PUBLISH,
 	];
 
 	public function __construct(
@@ -101,25 +99,7 @@ final class SectionNavBuilder {
 			];
 		}
 
-		$groups = [];
-		foreach ( self::GROUPS as $group_slug => $group ) {
-			$group_items = [];
-			foreach ( $group['sections'] as $section_slug ) {
-				if ( isset( $items[ $section_slug ] ) ) {
-					$group_items[] = $items[ $section_slug ];
-				}
-			}
-
-			if ( [] === $group_items ) {
-				continue;
-			}
-
-			$groups[] = [
-				'slug'  => $group_slug,
-				'label' => $this->group_label( (string) $group['label'] ),
-				'items' => $group_items,
-			];
-		}
+		$groups = $this->build_groups( $items );
 
 		return [
 			'progress'     => $this->progress( $items ),
@@ -187,10 +167,8 @@ final class SectionNavBuilder {
 		switch ( $slug ) {
 			case ProjectSections::OVERVIEW:
 				return [
-					'status' => 'neutral',
-					'meta'   => $stats['is_published']
-						? \__( 'Published', 'prikogstreg-online-invitations' )
-						: \__( 'In progress', 'prikogstreg-online-invitations' ),
+					'status' => 'complete',
+					'meta'   => '',
 				];
 
 			case ProjectSections::DESIGN:
@@ -245,8 +223,15 @@ final class SectionNavBuilder {
 				];
 
 			case ProjectSections::PREVIEW:
+				if ( $stats['is_published'] ) {
+					return [
+						'status' => 'complete',
+						'meta'   => \__( 'Live', 'prikogstreg-online-invitations' ),
+					];
+				}
+
 				return [
-					'status' => $stats['has_design'] ? 'complete' : 'pending',
+					'status' => $stats['has_design'] ? 'pending' : 'pending',
 					'meta'   => $stats['has_design']
 						? \__( 'Preview available', 'prikogstreg-online-invitations' )
 						: \__( 'Complete design first', 'prikogstreg-online-invitations' ),
@@ -254,10 +239,8 @@ final class SectionNavBuilder {
 
 			case ProjectSections::PUBLISH:
 				return [
-					'status' => $stats['is_published'] ? 'complete' : 'pending',
-					'meta'   => $stats['is_published']
-						? \__( 'Live', 'prikogstreg-online-invitations' )
-						: \__( 'Not published', 'prikogstreg-online-invitations' ),
+					'status' => 'neutral',
+					'meta'   => '',
 				];
 
 			case ProjectSections::RESPONSES:
@@ -339,6 +322,105 @@ final class SectionNavBuilder {
 			'status' => 'neutral',
 			'meta'   => '',
 		];
+	}
+
+	/**
+	 * @param array<string, array<string, mixed>> $items
+	 * @return list<array{slug:string,label:string,items:list<array<string,mixed>>}>
+	 */
+	private function build_groups( array $items ): array {
+		$core_setup_complete = $this->is_core_setup_complete( $items );
+		$groups              = [];
+
+		foreach ( $this->group_order( $core_setup_complete ) as $group_slug ) {
+			$group = self::GROUPS[ $group_slug ] ?? null;
+			if ( ! is_array( $group ) ) {
+				continue;
+			}
+
+			$group_items = [];
+			foreach ( $group['sections'] as $section_slug ) {
+				if ( isset( $items[ $section_slug ] ) ) {
+					$group_items[] = $items[ $section_slug ];
+				}
+			}
+
+			if ( [] === $group_items ) {
+				continue;
+			}
+
+			if ( 'setup' === $group_slug ) {
+				$group_items = $this->sort_setup_group_items( $group_items, $core_setup_complete );
+			}
+
+			$groups[] = [
+				'slug'  => $group_slug,
+				'label' => $this->group_label( (string) $group['label'] ),
+				'items' => $group_items,
+			];
+		}
+
+		return $groups;
+	}
+
+	/**
+	 * @param array<string, array<string, mixed>> $items
+	 */
+	private function is_core_setup_complete( array $items ): bool {
+		foreach ( [ ProjectSections::DESIGN, ProjectSections::EVENT, ProjectSections::GUESTS ] as $slug ) {
+			if ( 'complete' !== (string) ( $items[ $slug ]['status'] ?? '' ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private function group_order( bool $core_setup_complete ): array {
+		if ( $core_setup_complete ) {
+			return [ 'manage', 'launch', 'setup', 'settings' ];
+		}
+
+		return [ 'setup', 'launch', 'manage', 'settings' ];
+	}
+
+	/**
+	 * @param list<array<string, mixed>> $group_items
+	 * @return list<array<string, mixed>>
+	 */
+	private function sort_setup_group_items( array $group_items, bool $core_setup_complete ): array {
+		if ( ! $core_setup_complete ) {
+			return $group_items;
+		}
+
+		$overview  = [];
+		$pending   = [];
+		$completed = [];
+
+		foreach ( $group_items as $item ) {
+			$slug = (string) ( $item['slug'] ?? '' );
+
+			if ( ProjectSections::OVERVIEW === $slug ) {
+				$overview[] = $item;
+				continue;
+			}
+
+			if ( in_array( $slug, [ ProjectSections::DESIGN, ProjectSections::EVENT, ProjectSections::GUESTS ], true ) ) {
+				if ( 'complete' === (string) ( $item['status'] ?? '' ) ) {
+					$completed[] = $item;
+				} else {
+					$pending[] = $item;
+				}
+				continue;
+			}
+
+			$overview[] = $item;
+		}
+
+		return array_merge( $overview, $pending, $completed );
 	}
 
 	/**

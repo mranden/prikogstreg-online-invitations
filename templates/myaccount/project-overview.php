@@ -34,11 +34,9 @@ $expires_label = '' !== (string) ( $project['expires_at_utc'] ?? '' )
 	pks_oi_section_open(
 		'pks-oi-overview-title',
 		__( 'Overview', 'prikogstreg-online-invitations' ),
-		__( 'Track setup progress and jump to the next step for this invitation.', 'prikogstreg-online-invitations' )
+		__( 'Summary information for this invitation project.', 'prikogstreg-online-invitations' )
 	);
 	?>
-
-	<?php pks_oi_render_stats( $overview_stats ?? [] ); ?>
 
 	<dl class="pks-oi-meta-grid">
 		<div class="pks-oi-meta-grid__item">
@@ -60,18 +58,6 @@ $expires_label = '' !== (string) ( $project['expires_at_utc'] ?? '' )
 			</div>
 		<?php endif; ?>
 	</dl>
-
-	<?php pks_oi_render_card_open( __( 'Setup checklist', 'prikogstreg-online-invitations' ) ); ?>
-		<?php pks_oi_render_checklist_cards( $checklist ); ?>
-	<?php pks_oi_render_card_close(); ?>
-
-	<div class="pks-oi-hero-cta">
-		<h4 class="pks-oi-hero-cta__title"><?php esc_html_e( 'Next step', 'prikogstreg-online-invitations' ); ?></h4>
-		<p class="pks-oi-hero-cta__text"><?php echo esc_html( (string) ( $next_action['label'] ?? '' ) ); ?></p>
-		<a class="button button-primary" href="<?php echo esc_url( (string) ( $next_action['url'] ?? '#' ) ); ?>">
-			<?php echo esc_html( (string) ( $next_action['label'] ?? __( 'Continue', 'prikogstreg-online-invitations' ) ) ); ?>
-		</a>
-	</div>
 
 	<?php pks_oi_section_close(); ?>
 <?php pks_oi_project_close(); ?>

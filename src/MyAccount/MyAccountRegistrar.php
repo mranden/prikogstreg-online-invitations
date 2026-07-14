@@ -12,13 +12,14 @@ use PrikOgStreg\OnlineInvitations\Domain\Delivery\InvitationSendService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestImportService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestService;
 use PrikOgStreg\OnlineInvitations\Domain\Guest\GuestTokenService;
-use PrikOgStreg\OnlineInvitations\Domain\Project\DemoInvitationService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\GenericTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectArchiveService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectHardDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectLifecycleAudit;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublicUrlService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
 use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoServiceFactory;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
@@ -140,7 +141,7 @@ final class MyAccountRegistrar {
 				$state_service,
 				$repositories->events()
 			),
-			new DemoInvitationService( $repositories->events(), $queue ),
+			new ProjectPublicUrlService( new GenericTokenService( $repositories->projects() ) ),
 			$guest_controller,
 			new AddressBookController(
 				$address_book_service,

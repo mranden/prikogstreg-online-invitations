@@ -64,7 +64,7 @@ final class PublishedHtmlSanitizerTest extends TestCase {
 	 * @return list<array{0:string,1:string,2:bool}>
 	 */
 	public static function oi_fixture_provider(): array {
-		$path = PKS_OI_PLUGIN_PATH . 'docs/fixtures/public-html-sanitizer-fixtures.json';
+		$path = PKS_OI_PLUGIN_PATH . 'tests/Fixtures/public-html-sanitizer-fixtures.json';
 		if ( ! is_readable( $path ) ) {
 			return [];
 		}

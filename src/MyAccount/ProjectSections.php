@@ -52,6 +52,7 @@ final class ProjectSections {
 	public static function hidden(): array {
 		return [
 			self::ADDRESS_BOOK,
+			self::PUBLISH,
 		];
 	}
 

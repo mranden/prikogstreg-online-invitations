@@ -40,8 +40,8 @@ Compiled CSS/JS are shipped in `assets/build/`. Rebuild after source changes wit
 
 1. Create a WooCommerce product using the **Online invitation** product type (`WC_Product_Online_Invitation`).
 2. Assign a PDF Builder template (`_bpp_product` meta via PDF Builder admin).
-3. Configure invitation limits on the product (guest cap, delivery options) per product meta documented in `docs/product-type.md`.
-4. Theme must render PDF Builder customiser on single product (see `docs/builder-integration.md`).
+3. Configure envelope and feature defaults on the product tab (see `docs/05-pdf-builder-and-envelope-integration.md`).
+4. Theme must render PDF Builder canvas on single product; Online Invitations adds the field form on simple products (see `docs/05-pdf-builder-and-envelope-integration.md`).
 
 == Customer flow ==
 
@@ -58,7 +58,7 @@ Endpoint: `/my-account/online-invitations/` (rewrite slug `online-invitations`).
 
 Per-project sections include overview, design editor, event, guests, address book, delivery, wishlist, photos, and settings. URLs: `/my-account/online-invitations/{project_id}/{section}/`.
 
-See `docs/my-account.md` for section behaviour and authorization.
+See `docs/08-my-account-guests-rsvp-wishlist-and-photos.md` for section behaviour and authorization.
 
 == Public links ==
 
@@ -66,16 +66,16 @@ See `docs/my-account.md` for section behaviour and authorization.
 * Generic link: `/invitation/{generic_token}/` — shared link with generic RSVP (when enabled).
 * Tokens are opaque, hashed at rest, rotatable from My Account or admin support.
 
-See `docs/public-invitation.md`.
+See `docs/07-storage-publishing-and-public-rendering.md`.
 
 == Guests and address book ==
 
 * CSV import with injection neutralisation.
 * Private address book (per user, not per project) for re-use across projects.
 * Per-guest invitation status, token rotation, and delivery queue.
-* Open tracking when guest loads invitation (privacy-conscious; see `docs/privacy-retention.md`).
+* Open tracking when guest loads invitation (privacy-conscious; see `docs/09-security-privacy-and-permissions.md`).
 
-See `docs/guest-management.md`.
+See `docs/08-my-account-guests-rsvp-wishlist-and-photos.md`.
 
 == RSVP and reminders ==
 
@@ -83,7 +83,7 @@ See `docs/guest-management.md`.
 * Organiser receives notification e-mail; guest receives confirmation.
 * Reminders scheduled via Action Scheduler when event date and reminder settings apply.
 
-See `docs/rsvp.md` and `docs/email-delivery.md`.
+See `docs/08-my-account-guests-rsvp-wishlist-and-photos.md` and `docs/09-security-privacy-and-permissions.md`.
 
 == Wishlist ==
 
@@ -91,7 +91,7 @@ See `docs/rsvp.md` and `docs/email-delivery.md`.
 * Guests reserve/release items on the public invitation via REST.
 * Images stored in private project storage.
 
-See `docs/wishlist.md`.
+See `docs/08-my-account-guests-rsvp-wishlist-and-photos.md`.
 
 == Photos ==
 
@@ -99,21 +99,21 @@ See `docs/wishlist.md`.
 * Server-side validation (MIME, dimensions, size), moderation workflow, organiser notification.
 * Rate limits and cleanup of abandoned temp files.
 
-See `docs/photo-uploads.md`.
+See `docs/08-my-account-guests-rsvp-wishlist-and-photos.md` (photos section).
 
 == Privacy ==
 
 * Data minimisation, retention schedules, hard delete on customer request (where allowed).
 * Event logs and delivery logs pruned on schedule.
 * No public URLs for private files; streaming only after authorization.
-* GDPR-oriented flows documented in `docs/privacy-retention.md` and `docs/lifecycle.md`.
+* GDPR-oriented flows documented in `docs/09-security-privacy-and-permissions.md`.
 
 == Build and development ==
 
 Development:
 
 `composer install`
-`composer test` (249 PHPUnit tests)
+`composer test` (328 PHPUnit tests)
 `npm install && npm run build`
 
 Production package:
@@ -124,13 +124,13 @@ Include `vendor/` (autoload only — no runtime Composer packages), `assets/buil
 
 Exclude: `node_modules/`, `tests/`, `.phpunit.cache/`, dev-only vendor packages, source maps (none in current build), secrets, customer project data.
 
-Developer reference: `docs/developer-guide.md`. Operations: `docs/operations-runbook.md`.
+Developer reference: `docs/02-codebase-map-and-bootstrap.md`. Operations and release: `docs/10-testing-release-operations-and-roadmap.md`.
 
 == Known limitations ==
 
 * Classic WooCommerce checkout only — Checkout Blocks not tested.
 * Danish translation partial (`languages/prikogstreg-online-invitations-da_DK.po`); `.pot` not generated in repo.
-* No browser E2E automation (Playwright/Cypress) — manual test matrix in `docs/test-plan.md`.
+* No browser E2E automation (Playwright/Cypress) — manual QA in `docs/10-testing-release-operations-and-roadmap.md`.
 * PDF Builder adapter integration tests use stubs until `pdf-plugin/src/Integration/` ships.
 * Published HTML sanitizer blocks script/event handlers; deep pen-test of builder output (`iframe`, SVG) remains manual.
 * E-mail rendering across clients requires staging SMTP verification.

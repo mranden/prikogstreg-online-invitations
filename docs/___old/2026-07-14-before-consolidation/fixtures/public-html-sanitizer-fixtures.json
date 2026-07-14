@@ -1,0 +1,47 @@
+{
+  "description": "Malicious HTML fixtures for Public_Html_Renderer tests (pdf-plugin Prompt 6)",
+  "fixtures": [
+    {
+      "id": "script-tag",
+      "input": "<div class=\"customizer-page-content\"><script>alert(1)</script><span>Safe</span></div>",
+      "must_not_contain": ["<script", "alert("]
+    },
+    {
+      "id": "onerror-attribute",
+      "input": "<div class=\"customizer-page-content\"><img src=\"x\" onerror=\"alert(1)\" alt=\"\"></div>",
+      "must_not_contain": ["onerror", "alert("]
+    },
+    {
+      "id": "javascript-url",
+      "input": "<div class=\"customizer-page-content\"><a href=\"javascript:alert(1)\">Click</a></div>",
+      "must_not_contain": ["javascript:"]
+    },
+    {
+      "id": "malicious-style-expression",
+      "input": "<div class=\"customizer-page-content\" style=\"width:expression(alert(1))\">X</div>",
+      "must_not_contain": ["expression(", "alert("]
+    },
+    {
+      "id": "malicious-style-import",
+      "input": "<style>@import url('https://evil.test/x.css');</style><div class=\"customizer-page-content\">X</div>",
+      "must_not_contain": ["@import", "evil.test"]
+    },
+    {
+      "id": "external-iframe",
+      "input": "<div class=\"customizer-page-content\"><iframe src=\"https://evil.test/\"></iframe></div>",
+      "must_not_contain": ["<iframe", "evil.test"]
+    },
+    {
+      "id": "malformed-html",
+      "input": "<div class=\"customizer-page-content\"><p>Unclosed<div><span>Broken</div>",
+      "must_contain": ["customizer-page-content"],
+      "must_not_contain": ["<script", "javascript:"]
+    },
+    {
+      "id": "legitimate-builder-markup",
+      "input": "<div class=\"customizer-page-content page-0 front\" data-page=\"0\"><div id=\"bpp-drag-element-550e8400-e29b-41d4-a716-446655440000\" class=\"bpp-text-field bpp-text-field-align-horizontal-center\" style=\"font-family:script-font;font-size:24px;color:#333\">Anna &amp; Bo</div><img class=\"bpp-image-field\" src=\"https://example.test/safe.jpg\" alt=\"\"></div>",
+      "must_contain": ["customizer-page-content", "bpp-drag-element-", "Anna &amp; Bo", "bpp-image-field"],
+      "must_not_contain": ["<script", "onerror", "javascript:"]
+    }
+  ]
+}

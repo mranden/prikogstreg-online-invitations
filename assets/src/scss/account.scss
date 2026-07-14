@@ -11,7 +11,7 @@
 .pks-oi *,
 .pks-oi *::before,
 .pks-oi *::after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 .pks-oi-myaccount {

@@ -45,6 +45,10 @@ final class Router {
 			$section = ProjectSections::default_section();
 		}
 
+		if ( ProjectSections::PUBLISH === $section ) {
+			$section = ProjectSections::PREVIEW;
+		}
+
 		if ( ! ProjectSections::is_visible( $section ) ) {
 			$section = ProjectSections::GUESTS;
 		}

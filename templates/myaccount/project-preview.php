@@ -1,6 +1,6 @@
 <?php
 /**
- * Authenticated draft preview (no open tracking).
+ * Invitation preview, public link, and design access.
  *
  * @package PrikOgStreg\OnlineInvitations
  */
@@ -15,6 +15,10 @@ require __DIR__ . '/_helpers.php';
 
 use PrikOgStreg\OnlineInvitations\MyAccount\Endpoints;
 use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
+
+$public_url     = (string) ( $public_url ?? '' );
+$is_public_live = ! empty( $is_public_live );
+$design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN );
 ?>
 <?php pks_oi_project_open(); ?>
 	<?php pks_oi_render_notices( $notices ); ?>
@@ -24,19 +28,39 @@ use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
 	pks_oi_section_open(
 		'pks-oi-preview-title',
 		__( 'Preview', 'prikogstreg-online-invitations' ),
-		__( 'Private draft preview — opens are not tracked.', 'prikogstreg-online-invitations' )
+		__( 'Preview your invitation, open the public link, or edit the design.', 'prikogstreg-online-invitations' )
 	);
 	?>
 
 	<div class="pks-oi-preview__toolbar">
-		<?php pks_oi_render_badge( __( 'Draft preview', 'prikogstreg-online-invitations' ), 'neutral' ); ?>
-		<?php if ( '' !== $envelope_preset ) : ?>
-			<?php pks_oi_render_badge( sprintf( __( 'Envelope: %s', 'prikogstreg-online-invitations' ), $envelope_preset ), 'neutral' ); ?>
+		<?php if ( '' !== $public_url ) : ?>
+			<div class="pks-oi-field pks-oi-field--wide">
+				<label class="pks-oi-field__label" for="pks-oi-public-url"><?php esc_html_e( 'Public URL', 'prikogstreg-online-invitations' ); ?></label>
+				<input
+					id="pks-oi-public-url"
+					type="text"
+					readonly
+					class="pks-oi-field__control"
+					value="<?php echo esc_attr( $public_url ); ?>"
+					onclick="this.select();"
+				/>
+			</div>
+			<a class="button button-primary" href="<?php echo esc_url( $public_url ); ?>" target="_blank" rel="noopener noreferrer">
+				<?php esc_html_e( 'Preview invitation', 'prikogstreg-online-invitations' ); ?>
+			</a>
+		<?php elseif ( $is_public_live ) : ?>
+			<p class="pks-oi-field__hint"><?php esc_html_e( 'Your public link is being prepared. Refresh this page in a moment.', 'prikogstreg-online-invitations' ); ?></p>
+		<?php else : ?>
+			<p class="pks-oi-field__hint"><?php esc_html_e( 'Complete your design and event details to activate your public invitation link.', 'prikogstreg-online-invitations' ); ?></p>
 		<?php endif; ?>
-		<a class="button" href="<?php echo esc_url( Endpoints::project_url( $project_id, ProjectSections::DESIGN ) ); ?>"><?php esc_html_e( 'Edit design', 'prikogstreg-online-invitations' ); ?></a>
-		<a class="button" href="<?php echo esc_url( Endpoints::project_url( $project_id, ProjectSections::PUBLISH ) ); ?>"><?php esc_html_e( 'Go to publish', 'prikogstreg-online-invitations' ); ?></a>
+
+		<a class="button" href="<?php echo esc_url( $design_url ); ?>"><?php esc_html_e( 'Edit design', 'prikogstreg-online-invitations' ); ?></a>
 		<button type="button" class="button" data-pks-oi-preview-toggle><?php esc_html_e( 'Toggle full width', 'prikogstreg-online-invitations' ); ?></button>
 	</div>
+
+	<?php if ( '' !== $envelope_preset ) : ?>
+		<p class="pks-oi-preview__meta"><?php printf( esc_html__( 'Envelope: %s', 'prikogstreg-online-invitations' ), esc_html( (string) $envelope_preset ) ); ?></p>
+	<?php endif; ?>
 
 	<div class="pks-oi-preview__device" data-pks-oi-preview-device>
 		<?php if ( '' === $preview_html ) : ?>
@@ -44,7 +68,7 @@ use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
 			pks_oi_render_empty_state(
 				__( 'Preview not ready', 'prikogstreg-online-invitations' ),
 				__( 'Complete your design and event details to generate a preview.', 'prikogstreg-online-invitations' ),
-				[ 'label' => __( 'Go to design', 'prikogstreg-online-invitations' ), 'url' => Endpoints::project_url( $project_id, ProjectSections::DESIGN ) ]
+				[ 'label' => __( 'Edit design', 'prikogstreg-online-invitations' ), 'url' => $design_url ]
 			);
 			?>
 		<?php else : ?>

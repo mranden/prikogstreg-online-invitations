@@ -69,11 +69,7 @@ final class WishlistController {
 
 		if ( 'save_wishlist_item' === $action ) {
 			$result = $this->wishlist->save_item( $project, wp_unslash( $_POST ) );
-			$args   = [ 'pks_oi_saved' => '1' ];
-			if ( ! empty( $result['item_id'] ) ) {
-				$args['pks_oi_edit_item'] = (int) $result['item_id'];
-			}
-			wp_safe_redirect( add_query_arg( $args, $redirect_url ) );
+			wp_safe_redirect( add_query_arg( 'pks_oi_saved', '1', $redirect_url ) );
 			exit;
 		}
 

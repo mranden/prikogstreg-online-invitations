@@ -32,6 +32,8 @@ final class GenericTokenService {
 			]
 		);
 
+		update_post_meta( (int) $project['project_id'], ProjectPublicUrlService::META_KEY, $pair['raw'] );
+
 		do_action( 'pks_oi_generic_token_rotated', (int) $project['project_id'], $version );
 
 		return [

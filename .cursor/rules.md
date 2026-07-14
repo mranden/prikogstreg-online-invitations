@@ -13,11 +13,11 @@ Use this order when requirements conflict:
 1. The user's latest explicit instruction.
 2. This `.cursor/rules.md`.
 3. `.cursor/agent.md`.
-4. `docs/technical-plan.md` and accepted architecture-decision records.
+4. `docs/01-project-overview.md` through `docs/10-testing-release-operations-and-roadmap.md`.
 5. `.cursor/prompt.md`.
 6. Existing implementation conventions that do not conflict with the above.
 
-Do not silently resolve a material contradiction. Record it in `docs/technical-plan.md` under **Open decisions** and stop before implementing the affected behavior when the answer changes data ownership, billing, privacy, security, or public URLs.
+Do not silently resolve a material contradiction. Record it in `docs/10-testing-release-operations-and-roadmap.md` (roadmap section) and stop before implementing the affected behavior when the answer changes data ownership, billing, privacy, security, or public URLs.
 
 ---
 
@@ -56,7 +56,7 @@ Before changing code, locate and read:
 - `.cursor/agent.md`
 - `.cursor/prompt.md`
 - `build-prompts.md`
-- `docs/technical-plan.md` when it exists
+- `docs/01-project-overview.md` through `docs/10-testing-release-operations-and-roadmap.md`
 - `online-invitation-integration-audit.md`
 - `online-invitation-integration-contract.json`
 - The complete `pdf-plugin` repository

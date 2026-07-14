@@ -15,6 +15,8 @@ abstract class TestCase extends PHPUnitTestCase {
 		OptionsStore::reset();
 		$GLOBALS['pks_oi_test_transients'] = [];
 		Monkey\setUp();
+		Monkey\Functions\when( 'update_post_meta' )->justReturn( true );
+		Monkey\Functions\when( 'get_post_meta' )->justReturn( '' );
 	}
 
 	protected function tearDown(): void {

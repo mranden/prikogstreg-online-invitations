@@ -12,7 +12,7 @@
 .pks-oi-public *,
 .pks-oi-public *::before,
 .pks-oi-public *::after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 .pks-oi-public__main {

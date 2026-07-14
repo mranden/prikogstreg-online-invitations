@@ -474,6 +474,10 @@ a.pks-oi-checklist-cards__link:focus-visible {
   gap: 0.35rem 0.65rem;
 }
 
+.pks-oi-table__muted {
+  color: #9a9288;
+}
+
 .pks-oi-bulk-bar {
   display: none;
   flex-wrap: wrap;
@@ -520,36 +524,24 @@ a.pks-oi-checklist-cards__link:focus-visible {
   gap: 0.5rem;
 }
 
-// Wishlist cards
-.pks-oi-wishlist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 1rem;
+// Wishlist list
+.pks-oi-wishlist-list td strong {
+  font-weight: 600;
 }
 
-.pks-oi-wishlist-card {
-  border: 1px solid #e4ddd2;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  background: #fff;
+.pks-oi-wishlist-list tr.is-hidden td {
+  color: #6b6560;
 }
 
-.pks-oi-wishlist-card__title {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
+.pks-oi-wishlist-reservers {
+  margin: 0.35rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  color: #6b6560;
 }
 
-.pks-oi-wishlist-card__progress {
-  height: 0.35rem;
-  border-radius: 999px;
-  background: #e8e2d8;
-  overflow: hidden;
-}
-
-.pks-oi-wishlist-card__progress span {
-  display: block;
-  height: 100%;
-  background: #2f5d50;
+.pks-oi-form__secondary-action {
+  margin: 0.75rem 0 0;
 }
 
 // Preview frame

@@ -8,10 +8,11 @@ use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\MigrationLock;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
-use PrikOgStreg\OnlineInvitations\Domain\Project\DemoInvitationService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublicUrlService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectArchiveService;
@@ -41,7 +42,7 @@ final class ProjectController {
 		private ProjectEventService $event_service,
 		private ProjectPreviewService $preview_service,
 		private ProjectPublishService $publish_service,
-		private DemoInvitationService $demo_service,
+		private ProjectPublicUrlService $public_url_service,
 		private GuestController $guest_controller,
 		private AddressBookController $address_book_controller,
 		private ResponsesController $responses_controller,
@@ -114,24 +115,6 @@ final class ProjectController {
 		if ( 'save_event' === $action && ProjectSections::EVENT === $route['section'] ) {
 			$this->event_service->save_event_details( $project, wp_unslash( $_POST ) );
 			wp_safe_redirect( add_query_arg( 'pks_oi_saved', '1', $url ) );
-			exit;
-		}
-
-		if ( 'publish' === $action && ProjectSections::PUBLISH === $route['section'] ) {
-			$this->publish_service->publish( $project );
-			wp_safe_redirect( add_query_arg( 'pks_oi_published', '1', $url ) );
-			exit;
-		}
-
-		if ( 'unpublish' === $action && ProjectSections::PUBLISH === $route['section'] ) {
-			$this->publish_service->unpublish( $project );
-			wp_safe_redirect( add_query_arg( 'pks_oi_unpublished', '1', $url ) );
-			exit;
-		}
-
-		if ( 'send_demo' === $action && ProjectSections::PUBLISH === $route['section'] ) {
-			$this->demo_service->send_demo( $project, $this->authorization->current_user_id() );
-			wp_safe_redirect( add_query_arg( 'pks_oi_demo', '1', $url ) );
 			exit;
 		}
 
@@ -210,8 +193,8 @@ final class ProjectController {
 				$this->render_preview( $context, $project );
 				return;
 			case ProjectSections::PUBLISH:
-				$this->templates->render( 'myaccount/project-publish', $context );
-				return;
+				wp_safe_redirect( Endpoints::project_url( $project_id, ProjectSections::PREVIEW ) );
+				exit;
 			case ProjectSections::GUESTS:
 				$this->guest_controller->render( $project, $context );
 				return;
@@ -277,10 +260,32 @@ final class ProjectController {
 	 * @param array<string, mixed> $context
 	 */
 	private function render_preview( array $context, array $project ): void {
+		$project_id = (int) ( $project['project_id'] ?? 0 );
+
+		if (
+			$this->authorization->can_edit_project( $project )
+			&& ProjectEntitlement::can_publish_project( $project )
+			&& PublicationStatus::PUBLISHED !== (string) ( $project['publication_status'] ?? '' )
+		) {
+			$this->publish_service->publish( $project );
+			$refreshed = $this->projects->find_by_id( $project_id );
+			if ( is_array( $refreshed ) ) {
+				$project = $refreshed;
+			}
+		}
+
+		$public_url = '';
+		if ( PublicEntitlement::is_publicly_available( $project ) ) {
+			$public_url = $this->public_url_service->resolve_url( $project ) ?? '';
+		}
+
 		$preview = $this->preview_service->render_preview( $project );
-		$context['preview_html']       = $preview['html'];
-		$context['envelope_preset']    = $preview['envelope_preset'];
-		$context['track_opens']        = false;
+		$context['project']            = $project;
+		$context['preview_html']     = $preview['html'];
+		$context['envelope_preset']  = $preview['envelope_preset'];
+		$context['track_opens']      = false;
+		$context['public_url']       = $public_url;
+		$context['is_public_live']   = PublicEntitlement::is_publicly_available( $project );
 		$this->templates->render( 'myaccount/project-preview', $context );
 	}
 
@@ -377,7 +382,6 @@ final class ProjectController {
 	private function build_checklist( array $project, int $project_id ): array {
 		$has_design  = (int) ( $project['state_version'] ?? 0 ) >= 1 && '' === (string) ( $project['last_error_code'] ?? '' );
 		$has_event   = ProjectEntitlement::has_required_event_data( $project );
-		$published   = PublicationStatus::PUBLISHED === (string) ( $project['publication_status'] ?? '' );
 		$guest_count = $this->guests->count_for_project( $project_id );
 		$has_guests  = $guest_count > 0;
 
@@ -410,14 +414,6 @@ final class ProjectController {
 					: __( 'Add guests to send personal invitation links.', 'prikogstreg-online-invitations' ),
 				'url'    => Endpoints::project_url( $project_id, ProjectSections::GUESTS ),
 			],
-			'publish' => [
-				'label'  => __( 'Published', 'prikogstreg-online-invitations' ),
-				'done'   => $published,
-				'detail' => $published
-					? __( 'Your invitation is published.', 'prikogstreg-online-invitations' )
-					: __( 'Publish when your project is ready to share.', 'prikogstreg-online-invitations' ),
-				'url'    => Endpoints::project_url( $project_id, ProjectSections::PUBLISH ),
-			],
 		];
 	}
 
@@ -441,8 +437,8 @@ final class ProjectController {
 
 		if ( PublicationStatus::PUBLISHED !== (string) ( $project['publication_status'] ?? '' ) ) {
 			return [
-				'label' => __( 'Continue setup', 'prikogstreg-online-invitations' ),
-				'url'   => Endpoints::project_url( (int) ( $project['project_id'] ?? 0 ), ProjectSections::OVERVIEW ),
+				'label' => __( 'Preview invitation', 'prikogstreg-online-invitations' ),
+				'url'   => Endpoints::project_url( (int) ( $project['project_id'] ?? 0 ), ProjectSections::PREVIEW ),
 			];
 		}
 
