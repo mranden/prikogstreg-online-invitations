@@ -1,0 +1,76 @@
+@use 'shared';
+
+.pks-oi-admin,
+.pks-oi-admin-support {
+  box-sizing: border-box;
+  max-width: 64rem;
+}
+
+.pks-oi-admin *,
+.pks-oi-admin-support * {
+  box-sizing: inherit;
+}
+
+.pks-oi-admin-status--ready {
+  color: #007017;
+  font-weight: 600;
+}
+
+.pks-oi-admin-status--ready::before {
+  content: '✓ ';
+}
+
+.pks-oi-admin-status--incomplete {
+  color: #b32d2e;
+  font-weight: 600;
+}
+
+.pks-oi-admin-status--incomplete::before {
+  content: '⚠ ';
+}
+
+.pks-oi-admin-support .widefat th {
+  width: 12rem;
+  vertical-align: top;
+}
+
+.pks-oi-support-form {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #dcdcde;
+  border-radius: 0.35rem;
+  background: #fff;
+}
+
+.pks-oi-support-form label {
+  display: block;
+  font-weight: 600;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.pks-oi-support-form input[type='text'] {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.pks-oi-support-form .button {
+  @include shared.pks-oi-touch-target;
+  margin: 0.5rem 0.5rem 0 0;
+}
+
+.pks-oi-support-form .button:focus-visible {
+  @include shared.pks-oi-focus-ring;
+}
+
+.pks-oi-support-form .button-link-delete {
+  color: #b32d2e;
+}
+
+.pks-oi-admin-support h4 {
+  margin: 1.5rem 0 0.5rem;
+}
+
+.pks-oi-admin-support ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}

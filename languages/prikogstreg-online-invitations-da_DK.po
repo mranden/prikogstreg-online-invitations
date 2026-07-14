@@ -1,0 +1,67 @@
+# Danish translations for Prikogstreg Online Invitations.
+# Copyright (C) 2026 Prik & Streg
+msgid ""
+msgstr ""
+"Project-Id-Version: Prikogstreg Online Invitations 0.1.0\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: prikogstreg-online-invitations\n"
+
+msgid "Open invitation"
+msgstr "Åbn invitation"
+
+msgid "Will you attend?"
+msgstr "Deltager du?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "Send response"
+msgstr "Send svar"
+
+msgid "Saving your response…"
+msgstr "Gemmer dit svar…"
+
+msgid "Your response has been saved."
+msgstr "Dit svar er gemt."
+
+msgid "We could not save your response. Please try again."
+msgstr "Vi kunne ikke gemme dit svar. Prøv igen."
+
+msgid "Reserve"
+msgstr "Reserver"
+
+msgid "Release my reservation"
+msgstr "Frigiv min reservation"
+
+msgid "Wishlist updated."
+msgstr "Ønskeliste opdateret."
+
+msgid "Upload photos"
+msgstr "Upload billeder"
+
+msgid "Uploading photos…"
+msgstr "Uploader billeder…"
+
+msgid "Photos uploaded. They will appear after organiser approval."
+msgstr "Billeder uploadet. De vises efter arrangørens godkendelse."
+
+msgid "Privacy and project lifecycle"
+msgstr "Privatliv og projektlivscyklus"
+
+msgid "Archive project"
+msgstr "Arkiver projekt"
+
+msgid "Delete permanently"
+msgstr "Slet permanent"
+
+msgid "Invitation"
+msgstr "Invitation"
+
+msgid "This invitation is not available."
+msgstr "Denne invitation er ikke tilgængelig."

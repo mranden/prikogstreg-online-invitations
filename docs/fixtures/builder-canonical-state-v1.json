@@ -1,0 +1,29 @@
+{
+  "schema_version": "1",
+  "template_id": 456,
+  "product_id": 456,
+  "size": "a5",
+  "format": "flat",
+  "field": {
+    "550e8400-e29b-41d4-a716-446655440000": {
+      "text": "Anna & Bo",
+      "font": "script-font"
+    },
+    "660e8400-e29b-41d4-a716-446655440001": {
+      "data": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD",
+      "visible": true
+    },
+    "770e8400-e29b-41d4-a716-446655440002": {
+      "visible": true
+    }
+  },
+  "page": [
+    "<div class=\"customizer-page-content page-0 active front\" data-page=\"0\"><div id=\"bpp-drag-element-550e8400-e29b-41d4-a716-446655440000\" class=\"bpp-text-field\">Anna &amp; Bo</div></div>"
+  ],
+  "_pages_thumbnails": [
+    {
+      "thumbnail": "https://example.test/uploads/thumb-page-0.jpg",
+      "page_name": "Forside"
+    }
+  ]
+}

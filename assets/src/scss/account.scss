@@ -1,0 +1,249 @@
+@use 'shared';
+
+.pks-oi {
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  max-width: 72rem;
+}
+
+.pks-oi *,
+.pks-oi *::before,
+.pks-oi *::after {
+  box-sizing: inherit;
+}
+
+.pks-oi-myaccount {
+  margin-block: 1.5rem;
+}
+
+.pks-oi-header h2 {
+  margin: 0 0 0.5rem;
+}
+
+.pks-oi-support-banner {
+  padding: 0.75rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 0.35rem;
+}
+
+.pks-oi-section-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 1rem 0 1.5rem;
+  padding: 0;
+}
+
+.pks-oi-section-nav a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 0.35rem 0.15rem;
+  @include shared.pks-oi-touch-target;
+  line-height: 1.2;
+}
+
+.pks-oi-section-nav a:focus-visible {
+  @include shared.pks-oi-focus-ring;
+}
+
+.pks-oi-section-nav a[aria-current='page'] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.pks-oi-project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.pks-oi-project-list__item {
+  border: 1px solid #ddd;
+  border-radius: 0.35rem;
+  padding: 1rem;
+}
+
+.pks-oi-project-list__meta {
+  display: grid;
+  gap: 0.5rem 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  margin: 0.75rem 0;
+}
+
+.pks-oi-checklist {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.pks-oi-checklist li {
+  margin-bottom: 0.5rem;
+}
+
+.pks-oi-checklist li.is-done strong::before {
+  content: '✓ ';
+  color: #14532d;
+}
+
+.pks-oi-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pks-oi-notice {
+  margin-bottom: 1rem;
+}
+
+.pks-oi-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.pks-oi-form .description {
+  margin: 0.25rem 0 0.75rem;
+  color: #555;
+  font-size: 0.95em;
+}
+
+.pks-oi-form input[type='text'],
+.pks-oi-form input[type='email'],
+.pks-oi-form input[type='number'],
+.pks-oi-form input[type='file'],
+.pks-oi-form textarea,
+.pks-oi-form select {
+  width: 100%;
+  max-width: 28rem;
+  margin-bottom: 0.75rem;
+}
+
+.pks-oi-form button,
+.pks-oi-form .button {
+  @include shared.pks-oi-touch-target;
+}
+
+.pks-oi-form button:focus-visible,
+.pks-oi-form .button:focus-visible {
+  @include shared.pks-oi-focus-ring;
+}
+
+.pks-oi-form button[disabled],
+.pks-oi-form .button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pks-oi-danger-zone {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #fecaca;
+  border-radius: 0.35rem;
+  background: #fffafa;
+}
+
+.pks-oi-guest-table,
+.pks-oi-address-book table,
+.pks-oi-responses table,
+.pks-oi-photos table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.pks-oi-guest-table th,
+.pks-oi-address-book th,
+.pks-oi-responses th,
+.pks-oi-photos th,
+.pks-oi-guest-table td,
+.pks-oi-address-book td,
+.pks-oi-responses td,
+.pks-oi-photos td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+}
+
+.pks-oi-response-history {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.pks-oi-response-history li {
+  margin-bottom: 0.5rem;
+}
+
+.pks-oi-badge {
+  display: inline-block;
+  font-size: 0.85em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.pks-oi-inline-actions {
+  margin: 0.25rem 0;
+}
+
+.pks-oi-inline-actions .button-link {
+  margin-right: 0.75rem;
+}
+
+.pks-oi-editor {
+  margin-block: 1rem;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.pks-oi-design__save-status,
+.pks-oi-design__error {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.35rem;
+}
+
+.pks-oi-design__save-status.is-error,
+.pks-oi-design__error {
+  color: #7f1d1d;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.pks-oi-preview__frame {
+  border: 1px solid #ddd;
+  border-radius: 0.35rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .pks-oi-guest-table thead,
+  .pks-oi-responses thead {
+    display: none;
+  }
+
+  .pks-oi-guest-table tr,
+  .pks-oi-responses tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #eee;
+    padding: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pks-oi * {
+    scroll-behavior: auto;
+    transition: none !important;
+    animation: none !important;
+  }
+}

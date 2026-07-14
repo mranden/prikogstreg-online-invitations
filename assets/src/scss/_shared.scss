@@ -1,0 +1,55 @@
+// Shared tokens and patterns — scoped under .pks-oi* roots only.
+
+@mixin pks-oi-focus-ring {
+  outline: 3px solid #2f5d50;
+  outline-offset: 2px;
+}
+
+@mixin pks-oi-touch-target {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.65rem 1.1rem;
+}
+
+.pks-oi-sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.pks-oi-status {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.35rem;
+  border: 1px solid transparent;
+}
+
+.pks-oi-status.is-error {
+  color: #7f1d1d;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.pks-oi-status.is-error::before {
+  content: '⚠ ';
+}
+
+.pks-oi-status.is-success {
+  color: #14532d;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.pks-oi-status.is-success::before {
+  content: '✓ ';
+}
+
+.pks-oi-status[aria-busy='true']::after {
+  content: ' …';
+}

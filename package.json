@@ -1,0 +1,17 @@
+{
+  "name": "prikogstreg-online-invitations",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Asset build for Prikogstreg Online Invitations",
+  "scripts": {
+    "build:js": "esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js --bundle --minify --outdir=assets/build/js",
+    "build:css": "sass assets/src/scss:assets/build/css --style=compressed --no-source-map",
+    "build": "npm run build:css && npm run build:js",
+    "dev": "concurrently \"sass assets/src/scss:assets/build/css --watch\" \"esbuild assets/src/js/account.js assets/src/js/public.js assets/src/js/admin.js --bundle --outdir=assets/build/js --watch\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "esbuild": "^0.24.0",
+    "sass": "1.69.5"
+  }
+}
