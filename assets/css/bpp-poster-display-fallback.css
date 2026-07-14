@@ -9,6 +9,13 @@
 	margin: 0 auto;
 	overflow: hidden;
 	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+}
+
+.pks-oi-poster-viewport .pks-oi-poster-page {
+	width: 100%;
+	height: 100%;
 }
 
 .pks-oi-poster-viewport .bpp-drag-element,
@@ -17,9 +24,8 @@
 	box-sizing: border-box;
 }
 
-.pks-oi-poster-viewport .bpp-image-field,
-.pks-oi-poster-viewport .bpp-text-field,
-.pks-oi-poster-viewport img {
+.pks-oi-poster-viewport .bpp-image-field img,
+.pks-oi-poster-viewport .bpp-text-field img {
 	max-width: 100%;
 	height: auto;
 }

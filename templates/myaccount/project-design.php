@@ -1,6 +1,6 @@
 <?php
 /**
- * Project design editor section.
+ * Project design preview (read-only).
  *
  * @package PrikOgStreg\OnlineInvitations
  */
@@ -12,6 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require __DIR__ . '/_helpers.php';
+
+$design_html                   = (string) ( $design_html ?? '' );
+$design_error                  = (string) ( $design_error ?? '' );
+$design_uses_template_fallback = ! empty( $design_uses_template_fallback );
+$preview_html                  = (string) ( $preview_html ?? $design_html );
 ?>
 <?php pks_oi_project_open( 'pks-oi-project--design' ); ?>
 	<?php pks_oi_render_notices( $notices ); ?>
@@ -21,34 +26,29 @@ require __DIR__ . '/_helpers.php';
 	pks_oi_section_open(
 		'pks-oi-design-title',
 		__( 'Design', 'prikogstreg-online-invitations' ),
-		__( 'Customise your invitation. Changes save automatically when you use the editor save action.', 'prikogstreg-online-invitations' )
+		__( 'Your invitation design from your order. To change text or images, use the order customizer in the shop admin.', 'prikogstreg-online-invitations' )
 	);
 	?>
 
-	<?php if ( ! empty( $editor_error ) ) : ?>
+	<?php if ( '' !== $design_error ) : ?>
 		<div class="pks-oi-empty-state" role="alert">
 			<h4 class="pks-oi-empty-state__title"><?php esc_html_e( 'Design needs attention', 'prikogstreg-online-invitations' ); ?></h4>
-			<p class="pks-oi-empty-state__message"><?php echo esc_html( (string) $editor_error ); ?></p>
+			<p class="pks-oi-empty-state__message"><?php echo esc_html( $design_error ); ?></p>
 		</div>
-	<?php elseif ( '' === $editor_html ) : ?>
+	<?php elseif ( '' === $preview_html ) : ?>
 		<?php
 		pks_oi_render_empty_state(
-			__( 'Design editor unavailable', 'prikogstreg-online-invitations' ),
-			__( 'The PDF Builder integration is not active for this product. Contact support if you expected a design editor here.', 'prikogstreg-online-invitations' )
+			__( 'Design preview unavailable', 'prikogstreg-online-invitations' ),
+			__( 'We could not load a preview for this design. Contact support if you expected to see your invitation here.', 'prikogstreg-online-invitations' )
 		);
 		?>
 	<?php else : ?>
-		<div
-			id="pks-oi-editor"
-			class="pks-oi-editor"
-			data-pks-oi-rest-url="<?php echo esc_url( $rest_save_url ); ?>"
-			data-pks-oi-rest-nonce="<?php echo esc_attr( $rest_nonce ); ?>"
-			data-pks-oi-state-version="<?php echo esc_attr( (string) $state_version ); ?>"
-			data-pks-oi-project-id="<?php echo esc_attr( (string) $project_id ); ?>"
-		>
-			<?php echo $editor_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div>
-		<p class="pks-oi-design__save-status" id="pks-oi-save-status" aria-live="polite" hidden></p>
+		<?php if ( $design_uses_template_fallback ) : ?>
+			<p class="pks-oi-field__hint" role="status">
+				<?php esc_html_e( 'No custom design was saved with your order. This preview uses the default template.', 'prikogstreg-online-invitations' ); ?>
+			</p>
+		<?php endif; ?>
+		<?php require __DIR__ . '/partials/poster-preview-frame.php'; ?>
 	<?php endif; ?>
 
 	<?php pks_oi_section_close(); ?>

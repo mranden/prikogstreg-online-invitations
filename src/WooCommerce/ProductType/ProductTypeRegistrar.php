@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\WooCommerce\ProductType;
 
 use PrikOgStreg\OnlineInvitations\Plugin;
+use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\BuilderFrontendBridge;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\EnvelopeFrontend;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\OnlineInvitationProductFrontend;
@@ -33,12 +34,17 @@ final class ProductTypeRegistrar {
 
 		( new OnlineInvitationProductFrontend(
 			new ProductReadiness( $builder_bridge ),
-			new EnvelopeFrontend(),
+			new EnvelopeFrontend( $builder_bridge ),
 			$builder_bridge,
 			new ProductFrontendAssets()
 		) )->register();
 		( new ProductBodyClass( $builder_bridge ) )->register();
 		( new ProductPagePlaceholder() )->register();
+
+		( new ProductDummyPreviewController(
+			Plugin::instance()->builder(),
+			new TemplateLoader()
+		) )->register();
 	}
 
 	/**

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-14T11:18:11+00:00\n"
+"POT-Creation-Date: 2026-07-14T14:36:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: prikogstreg-online-invitations\n"
@@ -40,7 +40,8 @@ msgid "Prikogstreg Online Invitations is missing Composer dependencies. Run comp
 msgstr ""
 
 #: src/Admin/DeliveryFailures.php:28
-#: templates/admin/project-detail.php:63
+#: templates/admin/partials/detail-delivery.php:7
+#: templates/admin/project-detail.php:64
 #: templates/admin/support.php:87
 msgid "Delivery failures"
 msgstr ""
@@ -56,6 +57,300 @@ msgstr ""
 
 #: src/Admin/DeliveryFailures.php:68
 msgid "“Sent” means accepted by wp_mail/mailer, not inbox delivery."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:42
+#: src/Admin/Invitations/InvitationPreviewController.php:42
+#: src/Admin/ProjectSupportActions.php:50
+msgid "Project not found."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:51
+msgid "Unknown action."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:64
+#: templates/admin/partials/detail-event.php:11
+msgid "You do not have permission to edit event details."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:79
+#: templates/myaccount/project-event.php:21
+msgid "Event details saved."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:80
+msgid "Event details could not be saved."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:90
+msgid "You do not have permission to edit guests."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:96
+msgid "Guest not found."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:111
+msgid "Guest updated."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:112
+msgid "Guest could not be updated."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:122
+#: src/Admin/Photos/PhotosAdminPage.php:26
+#: templates/admin/partials/detail-photos.php:12
+msgid "You do not have permission to moderate photos."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:134
+msgid "Invalid photo action."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:152
+msgid "Photo moderation updated."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationAdminActions.php:153
+msgid "Photo moderation failed."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:43
+msgid "You do not have permission to view this project."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:49
+msgid "Invitation project"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:50
+#: src/Admin/ProjectsAdminScreen.php:71
+#: src/MyAccount/ProjectController.php:345
+msgid "This invitation project could not be found."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:51
+#: src/Admin/ProjectsAdminScreen.php:72
+msgid "Back to all projects"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:92
+#: src/MyAccount/ProjectSections.php:85
+#: templates/myaccount/project-overview.php:36
+msgid "Overview"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:93
+#: src/Admin/Invitations/InvitationListTable.php:34
+#: templates/myaccount/project-guests.php:156
+#: templates/myaccount/project-guests.php:181
+#: templates/public/envelope.php:94
+#: templates/public/invitation.php:22
+msgid "Invitation"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:94
+#: src/MyAccount/ProjectController.php:410
+#: src/Public/EnvelopeViewModel.php:119
+#: templates/myaccount/project-event.php:28
+msgid "Event details"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:95
+msgid "Guests & RSVP"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:96
+#: src/MyAccount/ProjectSections.php:93
+#: src/Public/EnvelopeViewModel.php:133
+#: templates/myaccount/project-wishlist.php:33
+msgid "Wishlist"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:97
+#: src/Admin/Invitations/InvitationListTable.php:41
+#: src/Admin/Menu/AdminMenu.php:53
+#: src/Admin/Menu/AdminMenu.php:54
+#: src/MyAccount/ProjectSections.php:94
+#: src/Public/EnvelopeViewModel.php:141
+#: templates/admin/partials/detail-overview.php:14
+msgid "Photos"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:98
+msgid "Delivery"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:99
+msgid "Diagnostics"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationDetailPage.php:100
+msgid "Tools"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:35
+#: src/Domain/Project/ProjectService.php:619
+#: templates/admin/partials/detail-overview.php:8
+msgid "Customer"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:36
+#: templates/admin/partials/detail-overview.php:9
+#: templates/admin/project-detail.php:38
+#: templates/admin/projects-list.php:58
+#: templates/admin/projects-list.php:88
+#: templates/admin/support.php:40
+#: templates/myaccount/project-overview.php:56
+msgid "Order"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:37
+#: templates/admin/partials/detail-overview.php:10
+#: templates/admin/project-detail.php:39
+#: templates/admin/projects-list.php:59
+#: templates/admin/projects-list.php:95
+#: templates/admin/support.php:41
+msgid "Product"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:38
+#: templates/admin/partials/list-filters.php:56
+#: templates/myaccount/project-list.php:61
+msgid "Event date"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:39
+#: templates/admin/partials/detail-delivery.php:8
+#: templates/admin/partials/detail-overview.php:11
+#: templates/admin/project-detail.php:40
+#: templates/admin/projects-list.php:60
+#: templates/admin/projects-list.php:101
+#: templates/admin/support.php:42
+#: templates/myaccount/project-list.php:44
+#: templates/myaccount/project-settings.php:56
+msgid "Status"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:40
+#: src/MyAccount/ProjectController.php:320
+#: src/MyAccount/ProjectSections.php:88
+#: templates/admin/partials/detail-overview.php:13
+#: templates/myaccount/project-guests.php:34
+#: templates/myaccount/project-guests.php:48
+#: templates/myaccount/project-guests.php:154
+#: templates/myaccount/project-guests.php:170
+#: templates/myaccount/project-responses.php:56
+msgid "Guests"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:42
+#: templates/admin/partials/detail-overview.php:15
+#: templates/admin/project-detail.php:48
+#: templates/admin/projects-list.php:61
+#: templates/admin/projects-list.php:110
+msgid "Updated"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:64
+msgid "No invitation projects match your search or filter."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:126
+msgid "View"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:130
+msgid "Edit support fields"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:136
+#: src/MyAccount/ProjectSections.php:90
+#: templates/myaccount/project-preview.php:30
+#: templates/product/add-to-cart-online-invitation.php:63
+msgid "Preview"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:141
+msgid "Open public invitation"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:145
+msgid "Open order"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:151
+msgid "Open customer"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationListTable.php:156
+msgid "Open photos"
+msgstr ""
+
+#. translators: 1: total guests, 2: attending, 3: declined, 4: pending
+#: src/Admin/Invitations/InvitationListTable.php:245
+#, php-format
+msgid "%1$d · %2$d / %3$d / %4$d"
+msgstr ""
+
+#. translators: 1: pending photos, 2: approved photos, 3: total photos
+#: src/Admin/Invitations/InvitationListTable.php:259
+#, php-format
+msgid "%1$d / %2$d / %3$d"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationPreviewController.php:33
+msgid "You do not have permission to preview invitations."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationPreviewController.php:46
+msgid "Published preview is only available for published projects."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationPreviewController.php:54
+msgid "Published preview (admin)"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationPreviewController.php:55
+msgid "Draft preview (admin)"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationPreviewController.php:63
+msgid "No preview content is available for this project."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationsPage.php:24
+#: src/Admin/ProjectsAdminScreen.php:37
+msgid "You do not have permission to view invitation projects."
+msgstr ""
+
+#: src/Admin/Invitations/InvitationsPage.php:46
+#: src/Admin/Menu/AdminMenu.php:44
+#: src/Admin/Menu/AdminMenu.php:45
+msgid "Invitations"
+msgstr ""
+
+#: src/Admin/Invitations/InvitationsPage.php:52
+msgid "Search invitations"
+msgstr ""
+
+#: src/Admin/Menu/AdminMenu.php:33
+#: src/Admin/Menu/AdminMenu.php:34
+#: src/Admin/ProjectsAdminScreen.php:27
+#: src/Admin/ProjectsAdminScreen.php:28
+#: src/Admin/ProjectsAdminScreen.php:60
+#: src/Admin/ProjectsAdminScreen.php:70
+#: src/Privacy/EraserRegistrar.php:26
+#: src/Privacy/ExporterRegistrar.php:26
+msgid "Online Invitations"
+msgstr ""
+
+#: src/Admin/Menu/AdminMenu.php:62
+#: src/Admin/Menu/AdminMenu.php:63
+#: src/MyAccount/ProjectSections.php:95
+msgid "Settings"
 msgstr ""
 
 #: src/Admin/Notices.php:38
@@ -78,8 +373,11 @@ msgstr ""
 msgid "Prikogstreg Online Invitations could not complete a database migration. Online invitation data may be unavailable until the migration succeeds."
 msgstr ""
 
+#: src/Admin/Photos/PhotosAdminPage.php:48
+msgid "Photo moderation"
+msgstr ""
+
 #: src/Admin/ProjectAdminFilter.php:37
-#: templates/myaccount/project-wishlist.php:88
 #: templates/myaccount/_section-ui.php:66
 msgid "Active"
 msgstr ""
@@ -89,16 +387,17 @@ msgid "Deactivated"
 msgstr ""
 
 #: src/Admin/ProjectAdminFilter.php:39
-#: templates/myaccount/project-photos.php:27
+#: templates/myaccount/project-photos.php:32
 #: templates/myaccount/project-responses.php:34
 msgid "All"
 msgstr ""
 
 #. translators: %d: project ID
-#: src/Admin/ProjectAdminListViewModel.php:82
+#: src/Admin/ProjectAdminListViewModel.php:140
 #: src/MyAccount/AccountPresentation.php:131
-#: src/MyAccount/ProjectController.php:368
-#: src/MyAccount/Sidebar.php:102
+#: src/MyAccount/ProjectController.php:380
+#: src/MyAccount/Sidebar.php:114
+#: templates/admin/invitation-detail.php:35
 #: templates/myaccount/project-overview.php:23
 #, php-format
 msgid "Invitation project #%d"
@@ -124,43 +423,19 @@ msgstr ""
 msgid "Invitation Project"
 msgstr ""
 
-#: src/Admin/ProjectsAdminScreen.php:27
-#: src/Admin/ProjectsAdminScreen.php:28
-#: src/Admin/ProjectsAdminScreen.php:60
-#: src/Admin/ProjectsAdminScreen.php:70
-#: src/Privacy/EraserRegistrar.php:26
-#: src/Privacy/ExporterRegistrar.php:26
-msgid "Online Invitations"
-msgstr ""
-
-#: src/Admin/ProjectsAdminScreen.php:37
-msgid "You do not have permission to view invitation projects."
-msgstr ""
-
-#: src/Admin/ProjectsAdminScreen.php:71
-#: src/MyAccount/ProjectController.php:333
-msgid "This invitation project could not be found."
-msgstr ""
-
-#: src/Admin/ProjectsAdminScreen.php:72
-msgid "Back to all projects"
-msgstr ""
-
 #: src/Admin/ProjectsAdminScreen.php:82
 msgid "Invitation project details"
 msgstr ""
 
 #: src/Admin/ProjectsAdminScreen.php:83
-#: templates/admin/project-detail.php:59
+#: templates/admin/invitation-detail.php:39
+#: templates/admin/project-detail.php:60
 msgid "Back to list"
 msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:39
+#: src/Domain/Project/ProjectCustomerDeleteService.php:51
 msgid "You do not have permission to perform this action."
-msgstr ""
-
-#: src/Admin/ProjectSupportActions.php:50
-msgid "Project not found."
 msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:67
@@ -173,6 +448,18 @@ msgstr ""
 
 #: src/Admin/ProjectSupportScreen.php:26
 msgid "Invitation project support"
+msgstr ""
+
+#: src/Admin/Settings/SettingsPage.php:37
+msgid "You do not have permission to manage settings."
+msgstr ""
+
+#: src/Admin/Settings/SettingsPage.php:44
+msgid "Settings saved."
+msgstr ""
+
+#: src/Admin/Settings/SettingsPage.php:56
+msgid "Online Invitations settings"
 msgstr ""
 
 #. translators: %s: minimum PHP version
@@ -219,14 +506,31 @@ msgstr ""
 msgid "Another guest on this project already uses this e-mail address."
 msgstr ""
 
+#: src/Domain/Project/ProjectCustomerDeleteService.php:50
+msgid "Type DELETE to confirm permanent deletion."
+msgstr ""
+
+#: src/Domain/Project/ProjectCustomerDeleteService.php:52
+msgid "This project could not be deleted. Please try again or contact support."
+msgstr ""
+
 #. translators: 1: order ID, 2: product name, 3: customer name
-#: src/Domain/Project/ProjectFactory.php:29
+#: src/Domain/Project/ProjectFactory.php:30
 #, php-format
 msgid "Invitation #%1$d — %2$s — %3$s"
 msgstr ""
 
-#: src/Domain/Project/ProjectService.php:535
-msgid "Customer"
+#: src/Domain/Project/ProjectTemplateFallback.php:159
+msgid "Your invitation design will appear here."
+msgstr ""
+
+#: src/Domain/Project/PublicationStatus.php:21
+#: templates/myaccount/_section-ui.php:80
+msgid "Published"
+msgstr ""
+
+#: src/Domain/Project/PublicationStatus.php:22
+msgid "Unpublished"
 msgstr ""
 
 #: src/Domain/Rsvp/RsvpService.php:442
@@ -243,45 +547,40 @@ msgstr ""
 msgid "Online invitations"
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:199
+#: src/MyAccount/MyAccountRegistrar.php:257
 msgid "Saving…"
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:200
+#: src/MyAccount/MyAccountRegistrar.php:258
 msgid "Saved."
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:201
+#: src/MyAccount/MyAccountRegistrar.php:259
 msgid "Save failed. Check your connection and try again."
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:202
+#: src/MyAccount/MyAccountRegistrar.php:260
 msgid "Your design was changed elsewhere. Reload the page and try again."
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:203
+#: src/MyAccount/MyAccountRegistrar.php:261
 msgid "Save endpoint unavailable."
 msgstr ""
 
-#: src/MyAccount/MyAccountRegistrar.php:204
+#: src/MyAccount/MyAccountRegistrar.php:262
 msgid "Invalid save payload from editor."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:245
-msgid "Design editing is not available for this project."
+#: src/MyAccount/MyAccountRegistrar.php:263
+#: src/Public/PhotoSharePublicController.php:256
+msgid "Link copied."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:308
-#: src/MyAccount/ProjectSections.php:87
-#: templates/myaccount/project-guests.php:34
-#: templates/myaccount/project-guests.php:48
-#: templates/myaccount/project-guests.php:154
-#: templates/myaccount/project-guests.php:170
-#: templates/myaccount/project-responses.php:56
-msgid "Guests"
+#: src/MyAccount/ProjectController.php:257
+msgid "Your design preview is not available yet. Contact support if this persists."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:313
+#: src/MyAccount/ProjectController.php:325
 #: templates/myaccount/project-guests.php:35
 #: templates/myaccount/project-responses.php:35
 #: templates/myaccount/project-responses.php:57
@@ -290,7 +589,7 @@ msgstr ""
 msgid "Attending"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:318
+#: src/MyAccount/ProjectController.php:330
 #: templates/myaccount/project-guests.php:36
 #: templates/myaccount/project-responses.php:84
 #: templates/myaccount/project-responses.php:99
@@ -298,220 +597,193 @@ msgstr ""
 msgid "Opened"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:386
+#: src/MyAccount/ProjectController.php:399
+msgid "Default template loaded"
+msgstr ""
+
+#: src/MyAccount/ProjectController.php:400
 msgid "Design imported"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:389
-msgid "Your customised design is ready to edit."
+#: src/MyAccount/ProjectController.php:404
+msgid "No custom design was saved with your order. The default template is shown in preview."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:390
+#: src/MyAccount/ProjectController.php:405
+msgid "Your customised design was imported from your order."
+msgstr ""
+
+#: src/MyAccount/ProjectController.php:406
 msgid "Import is pending or failed — contact support if this persists."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:394
-#: templates/myaccount/project-event.php:28
-msgid "Event details"
-msgstr ""
-
-#: src/MyAccount/ProjectController.php:397
+#: src/MyAccount/ProjectController.php:413
 msgid "Event title and date are set."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:398
+#: src/MyAccount/ProjectController.php:414
 msgid "Add your event title and date before publishing."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:402
+#: src/MyAccount/ProjectController.php:418
 msgid "Guest list"
 msgstr ""
 
 #. translators: %d: guest count
-#: src/MyAccount/ProjectController.php:407
+#: src/MyAccount/ProjectController.php:423
 #, php-format
 msgid "%d guest added to this project."
 msgid_plural "%d guests added to this project."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/MyAccount/ProjectController.php:410
+#: src/MyAccount/ProjectController.php:426
 msgid "Add guests to send personal invitation links."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:414
-#: src/MyAccount/SectionNavBuilder.php:192
-#: templates/myaccount/_section-ui.php:80
-msgid "Published"
-msgstr ""
-
-#: src/MyAccount/ProjectController.php:417
-#: templates/myaccount/project-publish.php:27
-msgid "Your invitation is published."
-msgstr ""
-
-#: src/MyAccount/ProjectController.php:418
-msgid "Publish when your project is ready to share."
-msgstr ""
-
-#: src/MyAccount/ProjectController.php:430
+#: src/MyAccount/ProjectController.php:438
 msgid "Import needs attention"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:437
+#: src/MyAccount/ProjectController.php:445
 msgid "Finish setup"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:444
-msgid "Continue setup"
+#: src/MyAccount/ProjectController.php:452
+#: templates/myaccount/project-preview.php:49
+msgid "Preview invitation"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:450
+#: src/MyAccount/ProjectController.php:458
 msgid "View project"
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:465
+#: src/MyAccount/ProjectController.php:473
 msgid "A database update is in progress. Some invitation features may be temporarily unavailable."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:472
+#: src/MyAccount/ProjectController.php:480
 msgid "The PDF Builder integration is unavailable. Design editing is disabled until the adapter is active."
 msgstr ""
 
-#: src/MyAccount/ProjectController.php:479
+#: src/MyAccount/ProjectController.php:487
 msgid "This project import failed and needs support attention before you can continue."
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:84
-#: templates/myaccount/project-overview.php:36
-msgid "Overview"
+#: src/MyAccount/ProjectController.php:495
+msgid "No custom design was saved with your order. We loaded the default template for preview."
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:85
-#: templates/myaccount/project-design.php:23
-msgid "Design"
+#: src/MyAccount/ProjectController.php:507
+msgid "Your order design could not be imported. Please contact support so we can restore your invitation."
+msgstr ""
+
+#: src/MyAccount/ProjectController.php:510
+msgid "Design preview is not available for this project."
 msgstr ""
 
 #: src/MyAccount/ProjectSections.php:86
+#: templates/myaccount/project-design.php:28
+msgid "Design"
+msgstr ""
+
+#: src/MyAccount/ProjectSections.php:87
+#: templates/admin/partials/detail-overview.php:12
 #: templates/admin/project-detail.php:41
 #: templates/admin/support.php:43
 msgid "Event"
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:88
+#: src/MyAccount/ProjectSections.php:89
 #: templates/myaccount/project-address-book.php:29
 msgid "Address book"
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:89
-#: templates/myaccount/project-preview.php:26
-msgid "Preview"
-msgstr ""
-
-#: src/MyAccount/ProjectSections.php:90
+#: src/MyAccount/ProjectSections.php:91
+#: templates/admin/partials/detail-tools.php:29
 #: templates/admin/support.php:76
 #: templates/myaccount/project-publish.php:41
 msgid "Publish"
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:91
+#: src/MyAccount/ProjectSections.php:92
 #: templates/myaccount/project-responses.php:48
 msgid "Responses"
 msgstr ""
 
-#: src/MyAccount/ProjectSections.php:92
-#: src/Public/EnvelopeViewModel.php:67
-#: templates/myaccount/project-wishlist.php:26
-msgid "Wishlist"
-msgstr ""
-
-#: src/MyAccount/ProjectSections.php:93
-#: src/Public/EnvelopeViewModel.php:75
-msgid "Photos"
-msgstr ""
-
-#: src/MyAccount/ProjectSections.php:94
-msgid "Settings"
-msgstr ""
-
-#: src/MyAccount/SectionNavBuilder.php:193
-msgid "In progress"
-msgstr ""
-
-#: src/MyAccount/SectionNavBuilder.php:200
+#: src/MyAccount/SectionNavBuilder.php:190
 #: templates/myaccount/_helpers.php:164
 msgid "Needs attention"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:207
-msgid "Ready to edit"
+#: src/MyAccount/SectionNavBuilder.php:197
+msgid "Default template"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:208
+#: src/MyAccount/SectionNavBuilder.php:204
+msgid "Imported"
+msgstr ""
+
+#: src/MyAccount/SectionNavBuilder.php:205
 msgid "Import pending"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:216
+#: src/MyAccount/SectionNavBuilder.php:213
 msgid "Add title and date"
 msgstr ""
 
 #. translators: %d: guest count
-#: src/MyAccount/SectionNavBuilder.php:227
+#: src/MyAccount/SectionNavBuilder.php:224
 #, php-format
 msgid "%d guest"
 msgid_plural "%d guests"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/MyAccount/SectionNavBuilder.php:230
+#: src/MyAccount/SectionNavBuilder.php:227
 msgid "Add guests"
 msgstr ""
 
 #. translators: %d: contact count
-#: src/MyAccount/SectionNavBuilder.php:241
+#: src/MyAccount/SectionNavBuilder.php:238
 #, php-format
 msgid "%d contact"
 msgid_plural "%d contacts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/MyAccount/SectionNavBuilder.php:244
-#: src/MyAccount/SectionNavBuilder.php:296
-#: src/MyAccount/SectionNavBuilder.php:306
+#: src/MyAccount/SectionNavBuilder.php:241
+#: src/MyAccount/SectionNavBuilder.php:298
+#: src/MyAccount/SectionNavBuilder.php:308
 #: templates/myaccount/_helpers.php:165
 msgid "Optional"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:251
-msgid "Preview available"
-msgstr ""
-
-#: src/MyAccount/SectionNavBuilder.php:252
-msgid "Complete design first"
-msgstr ""
-
-#: src/MyAccount/SectionNavBuilder.php:259
+#: src/MyAccount/SectionNavBuilder.php:248
 msgid "Live"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:260
-#: templates/myaccount/_section-ui.php:83
-msgid "Not published"
+#: src/MyAccount/SectionNavBuilder.php:255
+msgid "Preview available"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:271
+#: src/MyAccount/SectionNavBuilder.php:256
+msgid "Complete design first"
+msgstr ""
+
+#: src/MyAccount/SectionNavBuilder.php:273
 #: templates/myaccount/project-responses.php:72
 msgid "No responses yet"
 msgstr ""
 
 #. translators: 1: attending count, 2: declined count
-#: src/MyAccount/SectionNavBuilder.php:279
+#: src/MyAccount/SectionNavBuilder.php:281
 #, php-format
 msgid "%1$d yes · %2$d no"
 msgstr ""
 
 #. translators: %d: wishlist item count
-#: src/MyAccount/SectionNavBuilder.php:293
+#: src/MyAccount/SectionNavBuilder.php:295
 #, php-format
 msgid "%d gift"
 msgid_plural "%d gifts"
@@ -519,33 +791,34 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: photo count, 2: pending moderation count
-#: src/MyAccount/SectionNavBuilder.php:315
+#: src/MyAccount/SectionNavBuilder.php:317
 #, php-format
 msgid "%1$d photos · %2$d pending"
 msgstr ""
 
 #. translators: %d: photo count
-#: src/MyAccount/SectionNavBuilder.php:326
+#: src/MyAccount/SectionNavBuilder.php:328
+#: templates/admin/photos-list.php:47
 #, php-format
 msgid "%d photo"
 msgid_plural "%d photos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/MyAccount/SectionNavBuilder.php:377
-#: src/MyAccount/SectionNavBuilder.php:382
+#: src/MyAccount/SectionNavBuilder.php:413
+#: src/MyAccount/SectionNavBuilder.php:418
 msgid "Details saved"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:398
+#: src/MyAccount/SectionNavBuilder.php:434
 msgid "Setup"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:399
+#: src/MyAccount/SectionNavBuilder.php:435
 msgid "Launch"
 msgstr ""
 
-#: src/MyAccount/SectionNavBuilder.php:400
+#: src/MyAccount/SectionNavBuilder.php:436
 msgid "Manage"
 msgstr ""
 
@@ -653,16 +926,18 @@ msgstr ""
 msgid "Rate-limiting identifiers are stored briefly using hashed values and expire automatically."
 msgstr ""
 
-#: src/Public/EnvelopeViewModel.php:51
+#: src/Public/EnvelopeViewModel.php:106
 msgid "Dear guest"
 msgstr ""
 
-#: src/Public/EnvelopeViewModel.php:54
+#: src/Public/EnvelopeViewModel.php:109
 #: src/WooCommerce/Emails/GuestInvitationEmail.php:16
+#: src/WooCommerce/ProductType/ProductDataPanel.php:136
 msgid "You are invited"
 msgstr ""
 
-#: src/Public/EnvelopeViewModel.php:60
+#: src/Public/EnvelopeViewModel.php:126
+#: templates/admin/partials/detail-guests.php:16
 #: templates/myaccount/project-guests.php:152
 #: templates/myaccount/project-guests.php:168
 #: templates/myaccount/project-responses.php:82
@@ -671,10 +946,12 @@ msgid "RSVP"
 msgstr ""
 
 #: src/Public/PhotoController.php:185
+#: src/Public/PhotoShareRestController.php:377
 msgid "Please enter your name before uploading photos."
 msgstr ""
 
 #: src/Public/PhotoController.php:186
+#: src/Public/PhotoShareRestController.php:378
 #: src/Public/RsvpController.php:132
 #: src/Public/WishlistController.php:211
 msgid "Too many requests. Please wait a moment and try again."
@@ -685,54 +962,166 @@ msgid "Photo uploads are not available for this invitation."
 msgstr ""
 
 #: src/Public/PhotoController.php:188
+#: src/Public/PhotoShareRestController.php:380
 msgid "Your upload session expired. Please try again."
 msgstr ""
 
 #: src/Public/PhotoController.php:189
-#: src/Public/PublicController.php:137
+#: src/Public/PhotoSharePublicController.php:255
+#: src/Public/PhotoShareRestController.php:381
+#: src/Public/PublicController.php:350
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:109
 msgid "We could not upload your photos. Please try again."
 msgstr ""
 
 #: src/Public/PhotoController.php:196
-#: src/Public/PublicController.php:90
+#: src/Public/PublicController.php:255
 #: src/Public/RsvpController.php:131
 #: src/Public/RsvpController.php:143
 #: src/Public/WishlistController.php:219
 msgid "This invitation is not available."
 msgstr ""
 
-#: src/Public/PublicController.php:130
+#: src/Public/PhotoSharePublicController.php:124
+#: templates/public/photo-share.php:52
+#: templates/public/photo-wall.php:40
+msgid "Event photos"
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:143
+msgid "Uploaded photos appear on the photo wall right away."
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:144
+msgid "Uploaded photos are reviewed by the organiser before they may appear in the gallery."
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:165
+#: src/Public/PhotoShareRestController.php:203
+msgid "The photo wall is not available."
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:177
+#: src/Public/PhotoSharePublicController.php:178
+#: templates/public/photo-share.php:154
+#: templates/public/photo-wall.php:36
+msgid "Photo wall"
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:220
+#: src/Public/PhotoShareRestController.php:388
+msgid "Photo sharing is not available."
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:251
+#: src/Public/PhotoShareRestController.php:110
+msgid "The photo code is incorrect. Please try again."
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:252
+msgid "Checking code…"
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:253
+msgid "Uploading…"
+msgstr ""
+
+#: src/Public/PhotoSharePublicController.php:254
+msgid "Photos uploaded."
+msgstr ""
+
+#: src/Public/PhotoShareRestController.php:183
+msgid "Thank you! Your photos were uploaded and added to the photo wall."
+msgstr ""
+
+#: src/Public/PhotoShareRestController.php:184
+msgid "Thank you! Your photos were uploaded and are awaiting organiser approval."
+msgstr ""
+
+#: src/Public/PhotoShareRestController.php:224
+msgid "The photo gallery is not available."
+msgstr ""
+
+#: src/Public/PhotoShareRestController.php:306
+msgid "Please enter the photo code to continue."
+msgstr ""
+
+#: src/Public/PhotoShareRestController.php:379
+msgid "Photo uploads are not available for this event."
+msgstr ""
+
+#: src/Public/PublicController.php:287
+msgid "The invitation design could not be displayed. Open My Account, review your design, and republish the project."
+msgstr ""
+
+#: src/Public/PublicController.php:292
+msgid "This invitation is temporarily unavailable. Please try again later or contact the organiser."
+msgstr ""
+
+#: src/Public/PublicController.php:343
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:102
 msgid "Saving your response…"
 msgstr ""
 
-#: src/Public/PublicController.php:131
+#: src/Public/PublicController.php:344
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:103
 msgid "Your response has been saved."
 msgstr ""
 
-#: src/Public/PublicController.php:132
+#: src/Public/PublicController.php:345
 #: src/Public/RsvpController.php:135
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:104
 msgid "We could not save your response. Please try again."
 msgstr ""
 
-#: src/Public/PublicController.php:133
+#: src/Public/PublicController.php:346
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:105
 msgid "Wishlist updated."
 msgstr ""
 
-#: src/Public/PublicController.php:134
+#: src/Public/PublicController.php:347
 #: src/Public/WishlistController.php:212
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:106
 msgid "We could not update the wishlist. Please try again."
 msgstr ""
 
-#: src/Public/PublicController.php:135
+#: src/Public/PublicController.php:348
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:107
 msgid "Photos uploaded. They will appear after organiser approval."
 msgstr ""
 
-#: src/Public/PublicController.php:136
+#: src/Public/PublicController.php:349
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:108
 msgid "Uploading photos…"
 msgstr ""
 
-#: src/Public/PublicController.php:138
+#: src/Public/PublicController.php:351
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:110
 msgid "Personal link (save for later):"
+msgstr ""
+
+#: src/Public/PublicController.php:352
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:111
+#: templates/public/poster.php:33
+#: templates/public/poster.php:36
+msgid "Previous page"
+msgstr ""
+
+#: src/Public/PublicController.php:353
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:112
+#: templates/public/poster.php:52
+#: templates/public/poster.php:55
+msgid "Next page"
+msgstr ""
+
+#. translators: 1: current page number, 2: total pages
+#: src/Public/PublicController.php:354
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:113
+#: templates/myaccount/project-list.php:84
+#: templates/myaccount/project-responses.php:116
+#: templates/public/poster.php:42
+#, php-format
+msgid "Page %1$d of %2$d"
 msgstr ""
 
 #: src/Public/RsvpController.php:125
@@ -771,7 +1160,7 @@ msgstr ""
 msgid "The wishlist is not available for this invitation."
 msgstr ""
 
-#: src/WooCommerce/Cart/InvitationCart.php:40
+#: src/WooCommerce/Cart/InvitationCart.php:55
 msgid "Please customise the invitation in the PDF Builder before adding it to your cart."
 msgstr ""
 
@@ -791,7 +1180,7 @@ msgstr ""
 msgid "Online invitations are not supported via the Checkout Block in this release."
 msgstr ""
 
-#: src/WooCommerce/Checkout/OrderItemPayload.php:40
+#: src/WooCommerce/Checkout/OrderItemPayload.php:42
 msgid "Invitation builder data is missing or invalid. Please return to the cart and customise the product again."
 msgstr ""
 
@@ -857,6 +1246,22 @@ msgstr ""
 msgid "New guest photo"
 msgstr ""
 
+#: src/WooCommerce/Emails/PhotoShareInviteEmail.php:13
+msgid "Photo share invitation"
+msgstr ""
+
+#: src/WooCommerce/Emails/PhotoShareInviteEmail.php:14
+msgid "Invites guests to upload event photos via the dedicated photo page."
+msgstr ""
+
+#: src/WooCommerce/Emails/PhotoShareInviteEmail.php:15
+msgid "Share your photos from {event_title}"
+msgstr ""
+
+#: src/WooCommerce/Emails/PhotoShareInviteEmail.php:16
+msgid "Share event photos"
+msgstr ""
+
 #: src/WooCommerce/Emails/ProjectWelcomeEmail.php:13
 msgid "Project welcome"
 msgstr ""
@@ -902,128 +1307,388 @@ msgstr ""
 msgid "Reminder: please respond to {event_title}"
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:62
+#: src/WooCommerce/ProductFrontend/BuilderFrontendBridge.php:141
+msgid "This invitation is temporarily unavailable. Please try again later or contact the shop."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/BuilderFrontendBridge.php:143
+msgid "This invitation is not available for purchase yet."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/BuilderFrontendBridge.php:144
+msgid "This invitation design is missing a valid size or format configuration."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/BuilderFrontendBridge.php:145
+#: src/WooCommerce/ProductFrontend/ProductReadiness.php:147
+msgid "This invitation cannot be purchased right now."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:67
+#: src/WooCommerce/ProductType/ProductDataPanel.php:128
+msgid "Envelope preview"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:71
+msgid "Envelope artwork preview"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:99
+#: templates/admin/partials/detail-invitation.php:5
+msgid "Invitation preview"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:104
+msgid "Your designed invitation goes inside"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:113
+msgid "Guests receive your invitation inside this envelope when you share it online."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:121
+msgid "Style:"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:131
+msgid "Background:"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/EnvelopeFrontend.php:144
+msgid "See sample invitation"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/OnlineInvitationProductFrontend.php:85
+msgid "Invitation design canvas"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/OnlineInvitationProductFrontend.php:89
+msgid "Use the design preview beside this panel to see your invitation update as you edit the fields below."
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/OnlineInvitationProductFrontend.php:106
+msgid "Invitation options"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/ProductReadiness.php:92
+msgid "Product availability"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/ProductReadiness.php:115
+#: src/WooCommerce/ProductFrontend/ProductReadiness.php:119
+msgid "Administrator diagnostics"
+msgstr ""
+
+#: src/WooCommerce/ProductFrontend/ProductReadiness.php:146
+msgid "This invitation is not fully set up for purchase yet."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BppAttributeDefaults.php:151
+msgid "This invitation design does not have a valid print size configured. Please contact the shop for help."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BppAttributeDefaults.php:154
+msgid "This invitation design does not have a valid print format configured. Please contact the shop for help."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BppAttributeDefaults.php:156
+msgid "The PDF Builder is not available for this product."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BppAttributeDefaults.php:157
+msgid "This invitation cannot be added to the cart until the PDF Builder configuration is complete."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:119
 msgid "Testing without PDF Builder"
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:63
+#: src/WooCommerce/ProductType/BuilderValidity.php:120
 msgid "PDF Builder is optional. The storefront shows a placeholder preview until a template is connected."
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:69
+#: src/WooCommerce/ProductType/BuilderValidity.php:126
 msgid "Ready for purchase"
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:70
-msgid "Builder template and invitation presets are configured."
+#: src/WooCommerce/ProductType/BuilderValidity.php:127
+msgid "PDF Builder, envelope design, background, and price are configured."
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:79
+#: src/WooCommerce/ProductType/BuilderValidity.php:136
 msgid "Configuration incomplete"
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:86
+#: src/WooCommerce/ProductType/BuilderValidity.php:143
+msgid "Activate the PDF Builder plugin before selling this product."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:144
 msgid "Activate and save a PDF Builder template for this product."
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:87
+#: src/WooCommerce/ProductType/BuilderValidity.php:145
+msgid "Activate the PDF Builder template and ensure it has at least one design page."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:146
+msgid "Configure at least one permitted PDF Builder size and format for this design."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:147
+msgid "The PDF Builder integration adapter is unavailable. Re-activate the PDF Builder plugin."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:148
 msgid "Select a valid envelope preset."
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:88
+#: src/WooCommerce/ProductType/BuilderValidity.php:149
+msgid "Select a valid image attachment for the envelope image field."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:150
 msgid "Select a valid background preset."
 msgstr ""
 
-#: src/WooCommerce/ProductType/BuilderValidity.php:89
+#: src/WooCommerce/ProductType/BuilderValidity.php:151
+msgid "Set a product price before allowing purchase."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:152
+msgid "Mark the product as purchasable before allowing purchase."
+msgstr ""
+
+#: src/WooCommerce/ProductType/BuilderValidity.php:154
+#: src/WooCommerce/ProductType/BuilderValidity.php:155
 msgid "Invitation configuration is incomplete."
+msgstr ""
+
+#: src/WooCommerce/ProductType/EnvelopeDesign.php:106
+msgid "Explicit envelope image"
+msgstr ""
+
+#: src/WooCommerce/ProductType/EnvelopeDesign.php:107
+msgid "Product gallery fallback (first image)"
+msgstr ""
+
+#: src/WooCommerce/ProductType/EnvelopeDesign.php:108
+msgid "Preset style only"
 msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:27
 msgid "Online Invitation"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:50
+#: src/WooCommerce/ProductType/ProductDataPanel.php:65
 msgid "Builder integration status"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:56
+#: src/WooCommerce/ProductType/ProductDataPanel.php:71
 msgid "Open PDF Builder customizer"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:64
+#: src/WooCommerce/ProductType/ProductDataPanel.php:79
 msgid "PDF Builder optional (testing)"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:66
+#: src/WooCommerce/ProductType/ProductDataPanel.php:81
 msgid "Allow purchase without a connected PDF Builder template. The product page shows a placeholder preview during testing."
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:75
+#: src/WooCommerce/ProductType/ProductDataPanel.php:90
+#: templates/admin/partials/detail-invitation.php:18
 msgid "Envelope preset"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:76
-#: src/WooCommerce/ProductType/ProductDataPanel.php:97
+#: src/WooCommerce/ProductType/ProductDataPanel.php:91
+#: src/WooCommerce/ProductType/ProductDataPanel.php:157
 msgid "Select a preset…"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:79
+#: src/WooCommerce/ProductType/ProductDataPanel.php:94
 msgid "Controls the animated envelope style on the public invitation."
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:86
-msgid "Envelope preview reference"
+#: src/WooCommerce/ProductType/ProductDataPanel.php:101
+msgid "Envelope image"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:89
-msgid "Optional admin reference for preview assets (slug, note, or internal asset key)."
+#: src/WooCommerce/ProductType/ProductDataPanel.php:110
+msgid "Optional custom image for the closed envelope card. When empty, the first product gallery image may be used as a fallback. The featured image remains the shop thumbnail."
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:96
+#: src/WooCommerce/ProductType/ProductDataPanel.php:114
+msgid "Select image"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:117
+msgid "Remove image"
+msgstr ""
+
+#. translators: %s: image source label
+#: src/WooCommerce/ProductType/ProductDataPanel.php:144
+#, php-format
+msgid "Resolved image source: %s"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:156
 msgid "Generic background preset"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:105
+#: src/WooCommerce/ProductType/ProductDataPanel.php:165
 msgid "Default locale"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:113
+#: src/WooCommerce/ProductType/ProductDataPanel.php:173
 msgid "RSVP reminder offset (days)"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:127
+#: src/WooCommerce/ProductType/ProductDataPanel.php:187
 msgid "Guest photo uploads enabled by default"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:135
+#: src/WooCommerce/ProductType/ProductDataPanel.php:195
 msgid "Internal wishlist enabled by default"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductDataPanel.php:188
+#: src/WooCommerce/ProductType/ProductDataPanel.php:203
+msgid "Sample invitation preview"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:205
+msgid "Configure dummy data for the storefront sample link. Opens the full guest invitation experience in a new tab."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:213
+msgid "Enable sample preview link"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:221
+msgid "Sample event title"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:225
+msgid "Leave empty to use the product name."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:232
+msgid "Sample event date (days ahead)"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:246
+msgid "Sample guest party size"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:255
+msgid "Used for the addressee RSVP party size hint."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:262
+msgid "Sample wishlist gifts"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:282
+msgid "Open sample preview"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDataPanel.php:334
 msgid "Online Invitation product is incomplete:"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductMeta.php:35
-msgid "Classic envelope"
+#: src/WooCommerce/ProductType/ProductDataPanel.php:414
+msgid "Select envelope image"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductMeta.php:36
-msgid "Modern envelope"
+#: src/WooCommerce/ProductType/ProductDataPanel.php:415
+msgid "Use image"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductMeta.php:37
-msgid "Minimal envelope"
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:114
+msgid "This is a sample preview with dummy data. Responses are not saved."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewController.php:136
+msgid "This sample preview is not available."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:39
+msgid "Flowers in a vase"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:40
+msgid "Gift card"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:41
+msgid "Lego set"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:42
+msgid "Books"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:43
+msgid "Candles"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:44
+msgid "Kitchenware"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:45
+msgid "Teddy bear"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:46
+msgid "Puzzle"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:134
+msgid "The Event Hall"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:135
+msgid "12 Main Street"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:138
+msgid "Copenhagen East"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:139
+msgid "Denmark"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:140
+msgid "Parking is available in the courtyard behind the building. Children are welcome."
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductDummyPreviewService.php:237
+msgid "Sample wishlist item for preview purposes."
 msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:46
-msgid "Neutral background"
+msgid "Classic envelope"
 msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:47
-msgid "Floral background"
+msgid "Modern envelope"
 msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:48
+msgid "Minimal envelope"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductMeta.php:57
+msgid "Neutral background"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductMeta.php:58
+msgid "Floral background"
+msgstr ""
+
+#: src/WooCommerce/ProductType/ProductMeta.php:59
 msgid "Geometric background"
 msgstr ""
 
@@ -1031,7 +1696,7 @@ msgstr ""
 msgid "PDF / Online invitation will show here"
 msgstr ""
 
-#: src/WooCommerce/ProductType/ProductTypeRegistrar.php:32
+#: src/WooCommerce/ProductType/ProductTypeRegistrar.php:55
 msgid "Online invitation"
 msgstr ""
 
@@ -1047,9 +1712,379 @@ msgstr ""
 msgid "Online invitation quantity cannot be changed."
 msgstr ""
 
+#: templates/admin/invitation-detail.php:41
+msgid "My Account"
+msgstr ""
+
+#: templates/admin/invitation-detail.php:45
+#: templates/myaccount/_helpers.php:86
+msgid "Project sections"
+msgstr ""
+
+#: templates/admin/invitation-detail.php:58
+msgid "This section is not available."
+msgstr ""
+
+#: templates/admin/partials/detail-delivery.php:5
+#, php-format
+msgid "%d delivery records tracked for this project."
+msgstr ""
+
+#: templates/admin/partials/detail-delivery.php:8
+#: templates/admin/partials/detail-diagnostics.php:21
+#: templates/admin/project-detail.php:70
+#: templates/admin/support.php:93
+msgid "Type"
+msgstr ""
+
+#: templates/admin/partials/detail-delivery.php:8
+msgid "Error"
+msgstr ""
+
+#: templates/admin/partials/detail-delivery.php:18
+msgid "No delivery failures recorded."
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:7
+msgid "Order item ID"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:8
+msgid "Import error"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:9
+#: templates/admin/partials/detail-invitation.php:16
+msgid "State version"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:10
+#: templates/admin/partials/detail-invitation.php:17
+msgid "Published version"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:11
+msgid "Generic token"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:11
+msgid "Present (hash redacted)"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:11
+msgid "Not set"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:12
+#: templates/admin/partials/detail-invitation.php:19
+#: templates/admin/project-detail.php:52
+#: templates/admin/support.php:51
+msgid "Storage health"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:12
+#: templates/admin/partials/detail-invitation.php:19
+#: templates/admin/project-detail.php:53
+#: templates/admin/support.php:52
+msgid "Healthy"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:12
+#: templates/admin/partials/detail-invitation.php:19
+#: templates/admin/project-detail.php:53
+#: templates/admin/support.php:52
+msgid "Issues detected"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:20
+msgid "Recent audit events"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:21
+#: templates/admin/project-detail.php:70
+#: templates/admin/support.php:93
+#: templates/myaccount/project-event.php:77
+msgid "When"
+msgstr ""
+
+#: templates/admin/partials/detail-diagnostics.php:21
+#: templates/admin/project-detail.php:70
+#: templates/admin/support.php:93
+msgid "Actor"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:13
+#: templates/admin/partials/detail-event.php:29
+#: templates/myaccount/project-event.php:51
+msgid "Event title"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:14
+msgid "Start"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:15
+#: templates/admin/partials/detail-event.php:32
+msgid "Venue"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:30
+msgid "Start (UTC)"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:31
+msgid "End (UTC)"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:33
+#: templates/public/partials/event-details.php:48
+msgid "Address"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:34
+#: templates/myaccount/project-event.php:147
+#: templates/public/partials/event-details.php:72
+msgid "Practical information"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:35
+msgid "RSVP deadline (UTC)"
+msgstr ""
+
+#: templates/admin/partials/detail-event.php:37
+#: templates/myaccount/project-event.php:157
+msgid "Save event details"
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:10
+#, php-format
+msgid "%1$d guests · %2$d attending · %3$d declined · %4$d pending RSVP"
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:13
+msgid "No guests on this project."
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:16
+#: templates/myaccount/project-responses.php:81
+#: templates/myaccount/project-responses.php:91
+msgid "Guest"
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:16
+#: templates/myaccount/project-responses.php:83
+#: templates/myaccount/project-responses.php:98
+#: templates/public/rsvp-form.php:53
+msgid "Attendees"
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:16
+msgid "Support edit"
+msgstr ""
+
+#: templates/admin/partials/detail-guests.php:40
+msgid "Save"
+msgstr ""
+
+#: templates/admin/partials/detail-invitation.php:7
+msgid "Draft preview"
+msgstr ""
+
+#: templates/admin/partials/detail-invitation.php:9
+msgid "Published preview"
+msgstr ""
+
+#: templates/admin/partials/detail-invitation.php:15
+msgid "Builder schema"
+msgstr ""
+
+#: templates/admin/partials/detail-invitation.php:24
+msgid "Draft invitation preview"
+msgstr ""
+
+#: templates/admin/partials/detail-overview.php:7
 #: templates/admin/project-detail.php:36
-#: templates/myaccount/project-settings.php:42
+#: templates/myaccount/project-settings.php:52
 msgid "Project ID"
+msgstr ""
+
+#: templates/admin/partials/detail-overview.php:8
+msgid "Open profile"
+msgstr ""
+
+#: templates/admin/partials/detail-overview.php:13
+#, php-format
+msgid "%1$d total · %2$d attending · %3$d declined · %4$d pending"
+msgstr ""
+
+#: templates/admin/partials/detail-overview.php:14
+#: templates/admin/partials/detail-photos.php:9
+#, php-format
+msgid "%1$d pending · %2$d approved · %3$d total"
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:14
+msgid "No pending photos."
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:17
+msgid "File"
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:17
+#: templates/admin/photos-list.php:31
+msgid "Uploaded"
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:17
+#: templates/admin/photos-list.php:32
+#: templates/myaccount/project-guests.php:157
+#: templates/myaccount/project-guests.php:183
+#: templates/myaccount/project-wishlist.php:99
+#: templates/myaccount/project-wishlist.php:149
+msgid "Actions"
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:24
+#: templates/myaccount/project-photos.php:215
+#: templates/myaccount/project-photos.php:284
+msgid "Approve"
+msgstr ""
+
+#: templates/admin/partials/detail-photos.php:24
+#: templates/myaccount/project-photos.php:216
+#: templates/myaccount/project-photos.php:290
+msgid "Reject"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:8
+msgid "You do not have permission to run support tools."
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:12
+#: templates/admin/support.php:58
+msgid "Retry import"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:19
+#: templates/admin/support.php:66
+msgid "Audit reason (optional)"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:23
+#: templates/admin/support.php:70
+msgid "Expiry override (UTC Y-m-d H:i:s)"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:27
+#: templates/admin/support.php:74
+msgid "Restrict"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:28
+#: templates/admin/support.php:75
+msgid "Restore"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:30
+#: templates/admin/support.php:77
+#: templates/myaccount/project-publish.php:80
+msgid "Unpublish"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:31
+#: templates/admin/support.php:78
+msgid "Set expiry override"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:32
+#: templates/admin/support.php:79
+msgid "Clear expiry override"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:33
+#: templates/admin/support.php:80
+msgid "Rotate generic token"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:34
+#: templates/admin/support.php:81
+msgid "Resend welcome"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:35
+#: templates/admin/support.php:82
+msgid "Permanently delete this project and all data?"
+msgstr ""
+
+#: templates/admin/partials/detail-tools.php:35
+#: templates/admin/support.php:82
+msgid "Hard delete"
+msgstr ""
+
+#: templates/admin/partials/detail-wishlist.php:5
+#, php-format
+msgid "%d wishlist items configured for this project."
+msgstr ""
+
+#: templates/admin/partials/detail-wishlist.php:7
+msgid "External wishlist URL is configured."
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:48
+msgid "Publication status"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:50
+msgid "All publication states"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:58
+msgid "All event dates"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:59
+msgid "Upcoming"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:60
+msgid "Past"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:61
+msgid "No date"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:64
+#: templates/admin/partials/list-filters.php:65
+msgid "Product ID"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:69
+msgid "Pending photos only"
+msgstr ""
+
+#: templates/admin/partials/list-filters.php:72
+#: templates/myaccount/_section-ui.php:277
+msgid "Filter"
+msgstr ""
+
+#: templates/admin/photos-list.php:25
+msgid "No pending photos across invitation projects."
+msgstr ""
+
+#: templates/admin/photos-list.php:29
+msgid "Photo"
+msgstr ""
+
+#: templates/admin/photos-list.php:30
+#: templates/admin/projects-list.php:56
+#: templates/admin/projects-list.php:67
+msgid "Project"
+msgstr ""
+
+#: templates/admin/photos-list.php:40
+msgid "Moderate"
 msgstr ""
 
 #: templates/admin/project-detail.php:37
@@ -1060,32 +2095,8 @@ msgid "Owner"
 msgstr ""
 
 #: templates/admin/project-detail.php:38
-#: templates/admin/projects-list.php:58
-#: templates/admin/projects-list.php:88
-#: templates/admin/support.php:40
-#: templates/myaccount/project-overview.php:58
-msgid "Order"
-msgstr ""
-
-#: templates/admin/project-detail.php:38
 #: templates/admin/support.php:40
 msgid "item"
-msgstr ""
-
-#: templates/admin/project-detail.php:39
-#: templates/admin/projects-list.php:59
-#: templates/admin/projects-list.php:95
-#: templates/admin/support.php:41
-msgid "Product"
-msgstr ""
-
-#: templates/admin/project-detail.php:40
-#: templates/admin/projects-list.php:60
-#: templates/admin/projects-list.php:101
-#: templates/admin/support.php:42
-#: templates/myaccount/project-list.php:44
-#: templates/myaccount/project-settings.php:46
-msgid "Status"
 msgstr ""
 
 #: templates/admin/project-detail.php:42
@@ -1135,62 +2146,50 @@ msgid "Guests: %1$d · Wishlist: %2$d · Photos: %3$d · Deliveries: %4$d"
 msgstr ""
 
 #: templates/admin/project-detail.php:46
-msgid "Created"
+#: templates/myaccount/project-photos.php:67
+#: templates/public/photo-share.php:48
+msgid "Guest photos"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Enabled"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Disabled"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Public gallery on"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Public gallery off"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Photo code set"
+msgstr ""
+
+#: templates/admin/project-detail.php:46
+msgid "Photo code missing"
 msgstr ""
 
 #: templates/admin/project-detail.php:47
-#: templates/admin/projects-list.php:61
-#: templates/admin/projects-list.php:110
-msgid "Updated"
+msgid "Created"
 msgstr ""
 
-#: templates/admin/project-detail.php:51
-#: templates/admin/support.php:51
-msgid "Storage health"
-msgstr ""
-
-#: templates/admin/project-detail.php:52
-#: templates/admin/support.php:52
-msgid "Healthy"
-msgstr ""
-
-#: templates/admin/project-detail.php:52
-#: templates/admin/support.php:52
-msgid "Issues detected"
-msgstr ""
-
-#: templates/admin/project-detail.php:58
+#: templates/admin/project-detail.php:59
 msgid "Open in My Account"
 msgstr ""
 
-#: templates/admin/project-detail.php:68
+#: templates/admin/project-detail.php:69
 #: templates/admin/support.php:92
 msgid "Recent events"
 msgstr ""
 
-#: templates/admin/project-detail.php:69
-#: templates/admin/support.php:93
-msgid "Type"
-msgstr ""
-
-#: templates/admin/project-detail.php:69
-#: templates/admin/support.php:93
-#: templates/myaccount/project-event.php:77
-msgid "When"
-msgstr ""
-
-#: templates/admin/project-detail.php:69
-#: templates/admin/support.php:93
-msgid "Actor"
-msgstr ""
-
 #: templates/admin/projects-list.php:51
 msgid "No invitation projects match this filter."
-msgstr ""
-
-#: templates/admin/projects-list.php:56
-#: templates/admin/projects-list.php:67
-msgid "Project"
 msgstr ""
 
 #: templates/admin/projects-list.php:75
@@ -1209,61 +2208,63 @@ msgid_plural "%d projects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/admin/support.php:57
-msgid "Open support view in My Account"
+#: templates/admin/settings.php:22
+msgid "Plugin version"
 msgstr ""
 
-#: templates/admin/support.php:58
-msgid "Retry import"
+#: templates/admin/settings.php:23
+msgid "Database version"
+msgstr ""
+
+#: templates/admin/settings.php:24
+msgid "HPOS enabled"
+msgstr ""
+
+#: templates/admin/settings.php:24
+#: templates/myaccount/project-responses.php:99
+#: templates/public/rsvp-form.php:76
+msgid "Yes"
+msgstr ""
+
+#: templates/admin/settings.php:24
+#: templates/myaccount/project-responses.php:99
+#: templates/public/rsvp-form.php:80
+msgid "No"
+msgstr ""
+
+#: templates/admin/settings.php:26
+msgid "Storefront diagnostics"
+msgstr ""
+
+#: templates/admin/settings.php:30
+msgid "Show product-page readiness diagnostics to shop managers (no secrets)."
+msgstr ""
+
+#: templates/admin/settings.php:35
+#: templates/myaccount/project-photos.php:132
+msgid "Save settings"
+msgstr ""
+
+#: templates/admin/support.php:57
+msgid "Open support view in My Account"
 msgstr ""
 
 #: templates/admin/support.php:60
 msgid "Support actions"
 msgstr ""
 
-#: templates/admin/support.php:66
-msgid "Audit reason (optional)"
+#: templates/emails/pks-oi-photo-share-invite.php:22
+#: templates/emails/plain/pks-oi-photo-share-invite.php:14
+msgid "You are invited to share photos from the event."
 msgstr ""
 
-#: templates/admin/support.php:70
-msgid "Expiry override (UTC Y-m-d H:i:s)"
+#: templates/emails/pks-oi-photo-share-invite.php:28
+msgid "Open the photo sharing page"
 msgstr ""
 
-#: templates/admin/support.php:74
-msgid "Restrict"
-msgstr ""
-
-#: templates/admin/support.php:75
-msgid "Restore"
-msgstr ""
-
-#: templates/admin/support.php:77
-#: templates/myaccount/project-publish.php:80
-msgid "Unpublish"
-msgstr ""
-
-#: templates/admin/support.php:78
-msgid "Set expiry override"
-msgstr ""
-
-#: templates/admin/support.php:79
-msgid "Clear expiry override"
-msgstr ""
-
-#: templates/admin/support.php:80
-msgid "Rotate generic token"
-msgstr ""
-
-#: templates/admin/support.php:81
-msgid "Resend welcome"
-msgstr ""
-
-#: templates/admin/support.php:82
-msgid "Permanently delete this project and all data?"
-msgstr ""
-
-#: templates/admin/support.php:82
-msgid "Hard delete"
+#: templates/emails/pks-oi-photo-share-invite.php:31
+#: templates/emails/plain/pks-oi-photo-share-invite.php:16
+msgid "You will need the photo code from the organiser to upload photos."
 msgstr ""
 
 #: templates/myaccount/dashboard.php:14
@@ -1362,24 +2363,24 @@ msgstr ""
 msgid "Add selected to this project"
 msgstr ""
 
-#: templates/myaccount/project-design.php:24
-msgid "Customise your invitation. Changes save automatically when you use the editor save action."
+#: templates/myaccount/project-design.php:29
+msgid "Your invitation design from your order. To change text or images, use the order customizer in the shop admin."
 msgstr ""
 
-#: templates/myaccount/project-design.php:30
+#: templates/myaccount/project-design.php:35
 msgid "Design needs attention"
 msgstr ""
 
-#: templates/myaccount/project-design.php:36
-msgid "Design editor unavailable"
+#: templates/myaccount/project-design.php:41
+msgid "Design preview unavailable"
 msgstr ""
 
-#: templates/myaccount/project-design.php:37
-msgid "The PDF Builder integration is not active for this product. Contact support if you expected a design editor here."
+#: templates/myaccount/project-design.php:42
+msgid "We could not load a preview for this design. Contact support if you expected to see your invitation here."
 msgstr ""
 
-#: templates/myaccount/project-event.php:21
-msgid "Event details saved."
+#: templates/myaccount/project-design.php:48
+msgid "No custom design was saved with your order. This preview uses the default template."
 msgstr ""
 
 #: templates/myaccount/project-event.php:29
@@ -1400,10 +2401,6 @@ msgstr ""
 
 #: templates/myaccount/project-event.php:45
 msgid "How your event appears to guests."
-msgstr ""
-
-#: templates/myaccount/project-event.php:51
-msgid "Event title"
 msgstr ""
 
 #: templates/myaccount/project-event.php:61
@@ -1452,14 +2449,6 @@ msgstr ""
 
 #: templates/myaccount/project-event.php:141
 msgid "Extra information"
-msgstr ""
-
-#: templates/myaccount/project-event.php:147
-msgid "Practical information"
-msgstr ""
-
-#: templates/myaccount/project-event.php:157
-msgid "Save event details"
 msgstr ""
 
 #: templates/myaccount/project-guests.php:37
@@ -1550,19 +2539,8 @@ msgstr ""
 msgid "Select all guests"
 msgstr ""
 
-#: templates/myaccount/project-guests.php:156
-#: templates/myaccount/project-guests.php:181
-#: templates/public/invitation.php:22
-msgid "Invitation"
-msgstr ""
-
-#: templates/myaccount/project-guests.php:157
-#: templates/myaccount/project-guests.php:183
-msgid "Actions"
-msgstr ""
-
 #: templates/myaccount/project-guests.php:185
-#: templates/myaccount/project-wishlist.php:118
+#: templates/myaccount/project-wishlist.php:151
 msgid "Edit"
 msgstr ""
 
@@ -1587,12 +2565,8 @@ msgid "You do not have any invitation projects yet."
 msgstr ""
 
 #: templates/myaccount/project-list.php:52
-#: templates/myaccount/project-overview.php:49
+#: templates/myaccount/project-overview.php:47
 msgid "Publication"
-msgstr ""
-
-#: templates/myaccount/project-list.php:61
-msgid "Event date"
 msgstr ""
 
 #: templates/myaccount/project-list.php:80
@@ -1602,12 +2576,6 @@ msgstr ""
 #: templates/myaccount/project-list.php:82
 #: templates/myaccount/project-responses.php:114
 msgid "Previous"
-msgstr ""
-
-#: templates/myaccount/project-list.php:84
-#: templates/myaccount/project-responses.php:116
-#, php-format
-msgid "Page %1$d of %2$d"
 msgstr ""
 
 #: templates/myaccount/project-list.php:86
@@ -1624,35 +2592,24 @@ msgid "Support view — you are viewing this project as shop staff."
 msgstr ""
 
 #: templates/myaccount/project-overview.php:37
-msgid "Track setup progress and jump to the next step for this invitation."
+msgid "Summary information for this invitation project."
 msgstr ""
 
-#: templates/myaccount/project-overview.php:45
+#: templates/myaccount/project-overview.php:43
 msgid "Project status"
 msgstr ""
 
-#: templates/myaccount/project-overview.php:53
+#: templates/myaccount/project-overview.php:51
 msgid "Expires"
 msgstr ""
 
-#: templates/myaccount/project-overview.php:59
+#: templates/myaccount/project-overview.php:57
 #, php-format
 msgid "View order #%d"
 msgstr ""
 
-#: templates/myaccount/project-overview.php:64
-msgid "Setup checklist"
-msgstr ""
-
-#: templates/myaccount/project-overview.php:69
-msgid "Next step"
-msgstr ""
-
-#: templates/myaccount/project-overview.php:72
-msgid "Continue"
-msgstr ""
-
-#: templates/myaccount/project-photos.php:24
+#: templates/myaccount/project-photos.php:29
+#: templates/myaccount/project-photos.php:199
 #: templates/myaccount/project-responses.php:37
 #: templates/myaccount/project-responses.php:59
 #: templates/myaccount/_helpers.php:163
@@ -1661,81 +2618,205 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: templates/myaccount/project-photos.php:25
+#: templates/myaccount/project-photos.php:30
+#: templates/myaccount/project-photos.php:200
 msgid "Approved"
 msgstr ""
 
-#: templates/myaccount/project-photos.php:26
+#: templates/myaccount/project-photos.php:31
 msgid "Rejected"
 msgstr ""
 
-#: templates/myaccount/project-photos.php:41
-msgid "Guest photos"
+#: templates/myaccount/project-photos.php:44
+msgid "Photo settings saved."
 msgstr ""
 
-#: templates/myaccount/project-photos.php:42
-msgid "Optional — review uploads from guests. Approved photos are not shown in a public gallery."
+#: templates/myaccount/project-photos.php:49
+msgid "The photo code must be at least 4 characters."
 msgstr ""
 
-#: templates/myaccount/project-photos.php:51
+#: templates/myaccount/project-photos.php:50
+msgid "The photo codes did not match."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:56
+msgid "Photo settings could not be saved."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:68
+msgid "Configure photo sharing, share the link with guests, and review uploads."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:73
+msgid "Photo sharing settings"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:80
+msgid "Enable guest photo sharing"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:86
+msgid "Auto-approve uploads (photos appear on the wall immediately)"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:92
+msgid "Enable public photo wall"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:98
+msgid "Close uploads at"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:102
+msgid "Optional. Leave empty to keep uploads open until project expiry."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:106
+#: templates/public/photo-share.php:79
+msgid "Photo code"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:109
+msgid "Your photo code"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:112
+msgid "Share this code with guests separately from the link. Enter a new code below to change it."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:114
+msgid "Enter a photo code guests must use to upload. It will be shown here after you save."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:119
+msgid "New photo code"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:126
+msgid "Confirm photo code"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:137
+msgid "Share tools"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:140
+msgid "Upload link (guests enter photo code)"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:145
+msgid "Photo wall link (view all photos)"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:150
+msgid "QR code for photo sharing link"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:155
+msgid "Copy upload link"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:157
+msgid "Copy photo wall link"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:158
+#: templates/public/photo-share.php:156
+msgid "Open photo wall"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:160
+msgid "Share"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:162
+msgid "Preview guest page"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:165
+msgid "Download QR code"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:168
+msgid "Share the upload link and photo code with guests. Share the photo wall link for everyone to view photos."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:174
+msgid "Rotate share link"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:180
+msgid "Email photo link to guests"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:181
+msgid "The email includes the photo page link and instructions. Share the photo code separately."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:189
+msgid "Send email"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:194
+msgid "Set a photo code and save settings to unlock the share link and QR code."
+msgstr ""
+
+#: templates/myaccount/project-photos.php:201
+msgid "Storage used"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:211
+msgid "Select all"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:217
+#: templates/myaccount/project-photos.php:297
+msgid "Delete"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:219
+msgid "Apply to selected"
+msgstr ""
+
+#: templates/myaccount/project-photos.php:226
 msgid "No photos in this view"
 msgstr ""
 
-#: templates/myaccount/project-photos.php:52
+#: templates/myaccount/project-photos.php:227
 msgid "Guest photo uploads will appear here for moderation."
 msgstr ""
 
-#: templates/myaccount/project-photos.php:59
-msgid "Photo"
-msgstr ""
-
-#: templates/myaccount/project-photos.php:84
+#: templates/myaccount/project-photos.php:278
 msgid "Download"
 msgstr ""
 
-#: templates/myaccount/project-photos.php:90
-msgid "Approve"
+#: templates/myaccount/project-preview.php:31
+msgid "Open your public invitation link or view your imported design."
 msgstr ""
 
-#: templates/myaccount/project-photos.php:96
-msgid "Reject"
+#: templates/myaccount/project-preview.php:38
+msgid "Public URL"
 msgstr ""
 
-#: templates/myaccount/project-preview.php:27
-msgid "Private draft preview — opens are not tracked."
+#: templates/myaccount/project-preview.php:52
+msgid "Your public link is being prepared. Refresh this page in a moment."
 msgstr ""
 
-#: templates/myaccount/project-preview.php:32
-msgid "Draft preview"
+#: templates/myaccount/project-preview.php:54
+msgid "Complete your design and event details to activate your public invitation link."
 msgstr ""
 
-#: templates/myaccount/project-preview.php:34
+#: templates/myaccount/project-preview.php:57
+msgid "View design"
+msgstr ""
+
+#: templates/myaccount/project-preview.php:61
 #, php-format
 msgid "Envelope: %s"
 msgstr ""
 
-#: templates/myaccount/project-preview.php:36
-msgid "Edit design"
-msgstr ""
-
-#: templates/myaccount/project-preview.php:37
-msgid "Go to publish"
-msgstr ""
-
-#: templates/myaccount/project-preview.php:38
-msgid "Toggle full width"
-msgstr ""
-
-#: templates/myaccount/project-preview.php:45
-msgid "Preview not ready"
-msgstr ""
-
-#: templates/myaccount/project-preview.php:46
-msgid "Complete your design and event details to generate a preview."
-msgstr ""
-
-#: templates/myaccount/project-preview.php:47
-msgid "Go to design"
+#: templates/myaccount/project-publish.php:27
+msgid "Your invitation is published."
 msgstr ""
 
 #: templates/myaccount/project-publish.php:30
@@ -1809,17 +2890,6 @@ msgstr ""
 msgid "Responses appear here when guests RSVP to your invitation."
 msgstr ""
 
-#: templates/myaccount/project-responses.php:81
-#: templates/myaccount/project-responses.php:91
-msgid "Guest"
-msgstr ""
-
-#: templates/myaccount/project-responses.php:83
-#: templates/myaccount/project-responses.php:98
-#: templates/public/rsvp-form.php:53
-msgid "Attendees"
-msgstr ""
-
 #: templates/myaccount/project-responses.php:85
 #: templates/myaccount/project-responses.php:100
 msgid "Responded"
@@ -1827,16 +2897,6 @@ msgstr ""
 
 #: templates/myaccount/project-responses.php:94
 msgid "Generic link"
-msgstr ""
-
-#: templates/myaccount/project-responses.php:99
-#: templates/public/rsvp-form.php:76
-msgid "Yes"
-msgstr ""
-
-#: templates/myaccount/project-responses.php:99
-#: templates/public/rsvp-form.php:80
-msgid "No"
 msgstr ""
 
 #: templates/myaccount/project-responses.php:108
@@ -1868,121 +2928,153 @@ msgstr ""
 msgid "This project has been restored from archive."
 msgstr ""
 
-#: templates/myaccount/project-settings.php:52
-#: templates/myaccount/project-settings.php:58
+#: templates/myaccount/project-settings.php:62
+#: templates/myaccount/project-settings.php:68
 msgid "Archive project"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:53
+#: templates/myaccount/project-settings.php:63
 msgid "Archiving stops public access and pending deliveries. Your data is kept until you delete the project."
 msgstr ""
 
-#: templates/myaccount/project-settings.php:62
+#: templates/myaccount/project-settings.php:72
 msgid "Restore project"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:67
+#: templates/myaccount/project-settings.php:77
 msgid "Restore from archive"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:73
+#: templates/myaccount/project-settings.php:83
 msgid "Delete project permanently"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:74
+#: templates/myaccount/project-settings.php:84
 msgid "Permanent deletion removes invitation files, guests, photos, and related records. Your WooCommerce order may still be retained for legal purposes."
 msgstr ""
 
 #. translators: %s: confirmation word
-#: templates/myaccount/project-settings.php:85
+#: templates/myaccount/project-settings.php:95
 #, php-format
 msgid "Type %s to confirm permanent deletion"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:95
+#: templates/myaccount/project-settings.php:105
 msgid "This cannot be undone. Delete this project and all related data?"
 msgstr ""
 
-#: templates/myaccount/project-settings.php:95
+#: templates/myaccount/project-settings.php:105
 msgid "Delete permanently"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:27
+#: templates/myaccount/project-wishlist.php:34
 msgid "Optional — let guests reserve gifts or link to an external wishlist."
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:32
+#: templates/myaccount/project-wishlist.php:39
 msgid "Wishlist settings"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:41
+#: templates/myaccount/project-wishlist.php:48
 msgid "External Ønskeskyen URL (optional)"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:52
+#: templates/myaccount/project-wishlist.php:59
 msgid "Enable internal wishlist"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:61
+#: templates/myaccount/project-wishlist.php:68
 msgid "Show who reserved each gift (off preserves surprise)"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:67
+#: templates/myaccount/project-wishlist.php:74
 msgid "Save wishlist settings"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:71
-msgid "Edit gift"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:71
-msgid "Add gift"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:78
-msgid "Title"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:79
-msgid "Description"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:80
-msgid "Product URL (optional)"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:81
-msgid "Image URL (optional)"
-msgstr ""
-
 #: templates/myaccount/project-wishlist.php:82
-msgid "Quantity requested"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:86
-msgid "Visibility"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:89
-msgid "Hidden"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:92
-msgid "Save item"
-msgstr ""
-
-#: templates/myaccount/project-wishlist.php:100
 msgid "No gifts yet"
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:101
+#: templates/myaccount/project-wishlist.php:83
 msgid "Add gifts to your wishlist or link an external Ønskeskyen list."
 msgstr ""
 
-#: templates/myaccount/project-wishlist.php:114
-#: templates/public/wishlist.php:52
+#: templates/myaccount/project-wishlist.php:87
+msgid "Your gifts"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:92
+#: templates/myaccount/project-wishlist.php:112
+#: templates/myaccount/project-wishlist.php:175
+msgid "Title"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:93
+#: templates/myaccount/project-wishlist.php:115
+#: templates/myaccount/project-wishlist.php:185
+msgid "Description"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:94
+#: templates/myaccount/project-wishlist.php:118
+#: templates/myaccount/project-wishlist.php:195
+msgid "Link"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:95
+#: templates/myaccount/project-wishlist.php:125
+msgid "Qty"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:96
+#: templates/myaccount/project-wishlist.php:128
+msgid "Reserved"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:97
+#: templates/myaccount/project-wishlist.php:138
+#: templates/myaccount/project-wishlist.php:218
+msgid "Visibility"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:129
 #, php-format
-msgid "%1$d of %2$d reserved"
+msgid "%1$d of %2$d"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:142
+#: templates/myaccount/project-wishlist.php:221
+msgid "Hidden"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:143
+#: templates/myaccount/project-wishlist.php:220
+msgid "Visible"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:164
+msgid "Edit gift"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:164
+#: templates/myaccount/project-wishlist.php:224
+msgid "Add gift"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:206
+msgid "Quantity (optional)"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:212
+msgid "Leave empty for a single gift."
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:224
+msgid "Save changes"
+msgstr ""
+
+#: templates/myaccount/project-wishlist.php:227
+msgid "Cancel edit"
 msgstr ""
 
 #: templates/myaccount/section-placeholder.php:22
@@ -2007,10 +3099,6 @@ msgstr ""
 msgid "%1$d of %2$d ready"
 msgstr ""
 
-#: templates/myaccount/_helpers.php:86
-msgid "Project sections"
-msgstr ""
-
 #: templates/myaccount/_helpers.php:162
 msgid "Complete"
 msgstr ""
@@ -2031,6 +3119,10 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
+#: templates/myaccount/_section-ui.php:83
+msgid "Not published"
+msgstr ""
+
 #: templates/myaccount/_section-ui.php:92
 msgid "Maybe"
 msgstr ""
@@ -2047,35 +3139,145 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: templates/myaccount/_section-ui.php:277
-msgid "Filter"
+#: templates/product/add-to-cart-online-invitation.php:29
+msgid "Design your invitation, preview it, then add it to your cart."
 msgstr ""
 
-#: templates/public/envelope.php:36
-#: templates/public/envelope.php:38
+#: templates/product/add-to-cart-online-invitation.php:46
+msgid "Customize your invitation"
+msgstr ""
+
+#: templates/product/add-to-cart-online-invitation.php:69
+msgid "Adding your invitation to the cart…"
+msgstr ""
+
+#: templates/product/add-to-cart-online-invitation.php:78
+msgid "Purchase"
+msgstr ""
+
+#: templates/public/envelope.php:34
+msgid "A digital invitation envelope. Use the button below to open it and read the invitation."
+msgstr ""
+
+#: templates/public/envelope.php:80
+#: templates/public/envelope.php:82
 msgid "Open invitation"
 msgstr ""
 
-#: templates/public/envelope.php:74
-msgid "This section will be available in a later update."
+#: templates/public/invitation.php:28
+msgid "Sample preview with dummy data — responses are not saved."
 msgstr ""
 
-#: templates/public/photos.php:31
-msgid "Share photos from the event. Uploads are private until the organiser approves them."
+#: templates/public/partials/event-details.php:24
+msgid "Date"
 msgstr ""
 
-#: templates/public/photos.php:35
+#: templates/public/partials/event-details.php:31
+msgid "Time"
+msgstr ""
+
+#: templates/public/partials/event-details.php:38
+msgid "Location"
+msgstr ""
+
+#: templates/public/partials/event-details.php:61
+msgid "Directions"
+msgstr ""
+
+#: templates/public/partials/event-details.php:64
+msgid "Open in Google Maps"
+msgstr ""
+
+#: templates/public/photo-share.php:28
+msgid "Approved photos appear on the photo wall immediately."
+msgstr ""
+
+#: templates/public/photo-share.php:29
+msgid "Photos are reviewed by the organiser before they appear on the wall."
+msgstr ""
+
+#. translators: %s: organiser display name
+#: templates/public/photo-share.php:59
+#: templates/public/photo-wall.php:47
+#, php-format
+msgid "Hosted by %s"
+msgstr ""
+
+#: templates/public/photo-share.php:68
+msgid "Share your photos from the event. Enter the photo code from the organiser to upload."
+msgstr ""
+
+#: templates/public/photo-share.php:75
+msgid "Enter photo code"
+msgstr ""
+
+#: templates/public/photo-share.php:76
+msgid "Use the photo code shared by the organiser to unlock uploads."
+msgstr ""
+
+#: templates/public/photo-share.php:85
+msgid "Enter code"
+msgstr ""
+
+#: templates/public/photo-share.php:90
+msgid "Continue"
+msgstr ""
+
+#: templates/public/photo-share.php:97
+#: templates/public/photo-share.php:128
+msgid "Upload photos"
+msgstr ""
+
+#: templates/public/photo-share.php:107
+#: templates/public/photo-share.php:108
 #: templates/public/rsvp-form.php:63
 #: templates/public/wishlist.php:37
 msgid "Your name"
 msgstr ""
 
-#: templates/public/photos.php:41
+#: templates/public/photo-share.php:111
 msgid "Choose photos (JPEG, PNG, or WebP)"
 msgstr ""
 
-#: templates/public/photos.php:51
-msgid "Upload photos"
+#: templates/public/photo-share.php:124
+msgid "I confirm that I may share these photos and understand the organiser may approve, reject, or delete them."
+msgstr ""
+
+#: templates/public/photo-share.php:133
+msgid "Photo uploads are closed for this event."
+msgstr ""
+
+#: templates/public/photo-share.php:139
+msgid "Event photo gallery"
+msgstr ""
+
+#: templates/public/photo-share.php:147
+#: templates/public/photo-wall.php:64
+msgid "Load more"
+msgstr ""
+
+#: templates/public/photo-share.php:155
+msgid "View all shared photos — no code needed."
+msgstr ""
+
+#: templates/public/photo-wall.php:55
+msgid "Photos shared by guests at this event."
+msgstr ""
+
+#: templates/public/photo-wall.php:65
+msgid "No photos yet. Check back soon."
+msgstr ""
+
+#: templates/public/photos.php:19
+msgid "Share your photos from the event on the dedicated photo page."
+msgstr ""
+
+#: templates/public/photos.php:22
+msgid "Open photo sharing page"
+msgstr ""
+
+#: templates/public/poster.php:28
+msgid "Invitation pages"
 msgstr ""
 
 #: templates/public/rsvp-form.php:30
@@ -2129,6 +3331,11 @@ msgstr ""
 
 #: templates/public/wishlist.php:50
 msgid "View product"
+msgstr ""
+
+#: templates/public/wishlist.php:52
+#, php-format
+msgid "%1$d of %2$d reserved"
 msgstr ""
 
 #: templates/public/wishlist.php:54

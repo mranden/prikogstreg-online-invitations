@@ -11,6 +11,7 @@ use PrikOgStreg\OnlineInvitations\Public\PublishedPosterAssetSnapshotter;
 use PrikOgStreg\OnlineInvitations\Security\PublishedHtmlSanitizer;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
+use PrikOgStreg\OnlineInvitations\Support\BuilderPageHtmlNormalizer;
 use PrikOgStreg\OnlineInvitations\Support\PublishedHtmlValidator;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
@@ -150,7 +151,7 @@ final class ProjectPublishService {
 
 		foreach ( array_values( $raw_pages ) as $index => $html ) {
 			try {
-				$sanitized = PublishedHtmlSanitizer::sanitize( (string) $html );
+				$sanitized = PublishedHtmlSanitizer::sanitize( BuilderPageHtmlNormalizer::normalize( (string) $html ) );
 			} catch ( \InvalidArgumentException $exception ) {
 				return [ 'error' => 'published_html_unsafe' ];
 			}

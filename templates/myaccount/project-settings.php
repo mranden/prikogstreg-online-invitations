@@ -34,7 +34,17 @@ $is_archived = ! empty( $is_archived );
 		<?php pks_oi_render_notices( [ [ 'type' => 'success', 'message' => __( 'This project has been restored from archive.', 'prikogstreg-online-invitations' ) ] ] ); ?>
 	<?php endif; ?>
 	<?php if ( isset( $_GET['pks_oi_delete_error'] ) ) : ?>
-		<?php pks_oi_render_notices( [ [ 'type' => 'error', 'message' => sanitize_text_field( wp_unslash( (string) $_GET['pks_oi_delete_error'] ) ) ] ] ); ?>
+		<?php
+		$delete_error_code = sanitize_key( wp_unslash( (string) $_GET['pks_oi_delete_error'] ) );
+		pks_oi_render_notices(
+			[
+				[
+					'type'    => 'error',
+					'message' => \PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService::customer_error_message( $delete_error_code ),
+				],
+			]
+		);
+		?>
 	<?php endif; ?>
 
 	<dl class="pks-oi-meta-grid">

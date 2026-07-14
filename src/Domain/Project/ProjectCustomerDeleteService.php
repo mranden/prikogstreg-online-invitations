@@ -46,4 +46,12 @@ final class ProjectCustomerDeleteService {
 			'errors'  => $result->errors,
 		];
 	}
+
+	public static function customer_error_message( string $code ): string {
+		return match ( $code ) {
+			'confirmation_required' => __( 'Type DELETE to confirm permanent deletion.', 'prikogstreg-online-invitations' ),
+			'forbidden'             => __( 'You do not have permission to perform this action.', 'prikogstreg-online-invitations' ),
+			default                 => __( 'This project could not be deleted. Please try again or contact support.', 'prikogstreg-online-invitations' ),
+		};
+	}
 }

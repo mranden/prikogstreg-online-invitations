@@ -201,7 +201,7 @@ final class SectionNavBuilder {
 				return [
 					'status' => $stats['has_design'] ? 'complete' : 'pending',
 					'meta'   => $stats['has_design']
-						? \__( 'Ready to edit', 'prikogstreg-online-invitations' )
+						? \__( 'Imported', 'prikogstreg-online-invitations' )
 						: \__( 'Import pending', 'prikogstreg-online-invitations' ),
 				];
 

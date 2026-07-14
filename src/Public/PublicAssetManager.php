@@ -137,7 +137,7 @@ final class PublicAssetManager {
 	}
 
 	private function is_public_shell_page(): bool {
-		return $this->is_invitation_page() || $this->is_photo_share_page();
+		return $this->is_invitation_page() || $this->is_photo_share_page() || $this->is_product_sample_page();
 	}
 
 	/**
@@ -208,5 +208,11 @@ final class PublicAssetManager {
 		$token = get_query_var( PhotoShareEndpoints::QUERY_VAR );
 
 		return is_string( $token ) && '' !== $token;
+	}
+
+	private function is_product_sample_page(): bool {
+		$product_id = get_query_var( Endpoints::PRODUCT_SAMPLE_QUERY_VAR );
+
+		return is_numeric( $product_id ) && (int) $product_id > 0;
 	}
 }

@@ -318,10 +318,12 @@ final class PublicController {
 	 * @param array<string, mixed> $project
 	 */
 	private function enqueue_assets( array $project, string $raw_token ): void {
+		PublicThemeFonts::enqueue();
+
 		wp_enqueue_style(
 			'pks-oi-public',
 			PKS_OI_PLUGIN_URL . 'assets/build/css/public.css',
-			[],
+			[ 'pks-oi-theme-fonts' ],
 			PKS_OI_VERSION
 		);
 

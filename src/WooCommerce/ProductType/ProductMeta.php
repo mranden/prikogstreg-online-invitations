@@ -21,6 +21,11 @@ final class ProductMeta {
 	public const GUEST_PHOTOS_DEFAULT  = '_pks_oi_guest_photos_default';
 	public const WISHLIST_DEFAULT      = '_pks_oi_wishlist_default';
 	public const BUILDER_OPTIONAL        = '_pks_oi_builder_optional';
+	public const DUMMY_PREVIEW_ENABLED   = '_pks_oi_dummy_preview_enabled';
+	public const DUMMY_GUEST_COUNT       = '_pks_oi_dummy_guest_count';
+	public const DUMMY_GIFT_COUNT        = '_pks_oi_dummy_gift_count';
+	public const DUMMY_EVENT_DAYS_AHEAD  = '_pks_oi_dummy_event_days_ahead';
+	public const DUMMY_EVENT_TITLE       = '_pks_oi_dummy_event_title';
 
 	public const BUILDER_META_KEY = '_bpp_product';
 
@@ -28,6 +33,10 @@ final class ProductMeta {
 	public const DEFAULT_REMINDER_OFFSET    = 5;
 	public const DEFAULT_GUEST_PHOTOS       = 'yes';
 	public const DEFAULT_WISHLIST           = 'yes';
+	public const DEFAULT_DUMMY_PREVIEW      = 'yes';
+	public const DEFAULT_DUMMY_GUEST_COUNT  = 2;
+	public const DEFAULT_DUMMY_GIFT_COUNT   = 3;
+	public const DEFAULT_DUMMY_EVENT_DAYS   = 30;
 
 	/**
 	 * @return array<string, string>
@@ -184,6 +193,50 @@ final class ProductMeta {
 		return wc_string_to_bool( (string) $value );
 	}
 
+	public static function read_dummy_preview_enabled( object $product ): bool {
+		$value = $product->get_meta( self::DUMMY_PREVIEW_ENABLED, true );
+
+		if ( '' === $value || null === $value ) {
+			return true;
+		}
+
+		return wc_string_to_bool( (string) $value );
+	}
+
+	public static function read_dummy_guest_count( object $product ): int {
+		$value = $product->get_meta( self::DUMMY_GUEST_COUNT, true );
+
+		if ( '' === $value || null === $value ) {
+			return self::DEFAULT_DUMMY_GUEST_COUNT;
+		}
+
+		return max( 1, min( 20, (int) $value ) );
+	}
+
+	public static function read_dummy_gift_count( object $product ): int {
+		$value = $product->get_meta( self::DUMMY_GIFT_COUNT, true );
+
+		if ( '' === $value || null === $value ) {
+			return self::DEFAULT_DUMMY_GIFT_COUNT;
+		}
+
+		return max( 1, min( 20, (int) $value ) );
+	}
+
+	public static function read_dummy_event_days_ahead( object $product ): int {
+		$value = $product->get_meta( self::DUMMY_EVENT_DAYS_AHEAD, true );
+
+		if ( '' === $value || null === $value ) {
+			return self::DEFAULT_DUMMY_EVENT_DAYS;
+		}
+
+		return max( 1, min( 365, (int) $value ) );
+	}
+
+	public static function read_dummy_event_title( object $product ): string {
+		return trim( (string) $product->get_meta( self::DUMMY_EVENT_TITLE, true ) );
+	}
+
 	/**
 	 * @param object               $product WooCommerce product object.
 	 * @param array<string, mixed> $data    Posted admin form values.
@@ -228,5 +281,20 @@ final class ProductMeta {
 
 		$builder_optional = isset( $data[ self::BUILDER_OPTIONAL ] ) ? 'yes' : 'no';
 		$product->update_meta_data( self::BUILDER_OPTIONAL, $builder_optional );
+
+		$dummy_preview = isset( $data[ self::DUMMY_PREVIEW_ENABLED ] ) ? 'yes' : 'no';
+		$product->update_meta_data( self::DUMMY_PREVIEW_ENABLED, $dummy_preview );
+
+		$dummy_guests = max( 1, min( 20, (int) ( $data[ self::DUMMY_GUEST_COUNT ] ?? self::DEFAULT_DUMMY_GUEST_COUNT ) ) );
+		$product->update_meta_data( self::DUMMY_GUEST_COUNT, $dummy_guests );
+
+		$dummy_gifts = max( 1, min( 20, (int) ( $data[ self::DUMMY_GIFT_COUNT ] ?? self::DEFAULT_DUMMY_GIFT_COUNT ) ) );
+		$product->update_meta_data( self::DUMMY_GIFT_COUNT, $dummy_gifts );
+
+		$dummy_days = max( 1, min( 365, (int) ( $data[ self::DUMMY_EVENT_DAYS_AHEAD ] ?? self::DEFAULT_DUMMY_EVENT_DAYS ) ) );
+		$product->update_meta_data( self::DUMMY_EVENT_DAYS_AHEAD, $dummy_days );
+
+		$dummy_title = sanitize_text_field( (string) ( $data[ self::DUMMY_EVENT_TITLE ] ?? '' ) );
+		$product->update_meta_data( self::DUMMY_EVENT_TITLE, $dummy_title );
 	}
 }

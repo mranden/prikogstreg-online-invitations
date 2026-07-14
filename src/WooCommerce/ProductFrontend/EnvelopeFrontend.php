@@ -6,12 +6,17 @@ namespace PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend;
 
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\AttachmentValidator;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\EnvelopeDesign;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductDummyPreviewController;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 /**
  * Storefront envelope preview for online_invitation products.
  */
 final class EnvelopeFrontend {
+
+	public function __construct(
+		private ?BuilderFrontendBridge $builder_bridge = null
+	) {}
 
 	public function render( object $product ): void {
 		if ( ! ProductMeta::is_online_invitation( $product ) ) {
@@ -33,6 +38,10 @@ final class EnvelopeFrontend {
 
 		$preset_label     = $presets[ $preset ] ?? $preset;
 		$background_label = $backgrounds[ $background ] ?? $background;
+		$product_id       = (int) $product->get_id();
+		$page_thumbnails  = $this->builder_bridge?->get_page_thumbnail_map( $product_id ) ?? [];
+		$active_page      = $this->builder_bridge?->get_storefront_active_page_index( $product_id ) ?? 0;
+		$active_thumbnail = (string) ( $page_thumbnails[ $active_page ] ?? $this->builder_bridge?->get_page_thumbnail( $product_id, $active_page ) ?? '' );
 
 		$envelope_classes = array_filter(
 			[
@@ -59,30 +68,43 @@ final class EnvelopeFrontend {
 		);
 
 		echo '<div class="pks-oi-product-envelope-preview__stage">';
-		echo '<div class="pks-oi-product-envelope-preview__shell">';
-
-		printf(
-			'<div class="pks-oi-envelope__card" role="img" aria-label="%s">',
-			esc_attr( __( 'Envelope artwork preview', 'prikogstreg-online-invitations' ) )
-		);
+		echo '<div class="pks-oi-product-envelope-preview__shell" role="img" aria-label="' . esc_attr( __( 'Envelope artwork preview', 'prikogstreg-online-invitations' ) ) . '"';
 
 		if ( '' !== $image_url ) {
 			printf(
-				'<img class="pks-oi-product-envelope-preview__card-image" src="%s" alt="%s" loading="lazy" width="240" height="160" />',
-				esc_url( $image_url ),
-				esc_attr( __( 'Envelope artwork', 'prikogstreg-online-invitations' ) )
+				' style="background-image: url(%s);"',
+				esc_url( $image_url )
 			);
 		} else {
-			echo '<div class="pks-oi-product-envelope-preview__card-fallback" aria-hidden="true"></div>';
+			echo ' data-pks-oi-envelope-artwork="fallback"';
 		}
 
-		echo '</div>';
+		echo '>';
 
-		echo '<div class="pks-oi-product-envelope-preview__inner" aria-hidden="true">';
-		printf(
-			'<span class="pks-oi-product-envelope-preview__inner-label">%s</span>',
-			esc_html__( 'Your designed invitation goes inside', 'prikogstreg-online-invitations' )
-		);
+		echo '<div class="pks-oi-product-envelope-preview__inner" data-pks-oi-envelope-thumbnail-host data-pks-oi-active-page="' . esc_attr( (string) $active_page ) . '"';
+
+		if ( [] !== $page_thumbnails ) {
+			printf(
+				' data-pks-oi-page-thumbnails="%s"',
+				esc_attr( (string) wp_json_encode( $page_thumbnails ) )
+			);
+		}
+
+		echo '>';
+
+		if ( '' !== $active_thumbnail ) {
+			printf(
+				'<img class="pks-oi-product-envelope-preview__invitation-image" src="%s" alt="%s" loading="lazy" decoding="async" />',
+				esc_attr( $this->escape_thumbnail_src( $active_thumbnail ) ),
+				esc_attr__( 'Invitation preview', 'prikogstreg-online-invitations' )
+			);
+		} else {
+			printf(
+				'<span class="pks-oi-product-envelope-preview__inner-label">%s</span>',
+				esc_html__( 'Your designed invitation goes inside', 'prikogstreg-online-invitations' )
+			);
+		}
+
 		echo '</div>';
 		echo '</div>';
 
@@ -113,8 +135,30 @@ final class EnvelopeFrontend {
 			echo '</p>';
 		}
 
+		if ( ProductMeta::read_dummy_preview_enabled( $product ) ) {
+			$sample_url = ProductDummyPreviewController::preview_url( $product_id );
+			if ( '' !== $sample_url ) {
+				printf(
+					'<p class="pks-oi-product-envelope-preview__sample-link"><a class="button button-secondary" href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
+					esc_url( $sample_url ),
+					esc_html__( 'See sample invitation', 'prikogstreg-online-invitations' )
+				);
+			}
+		}
+
 		echo '</div>';
 		echo '</div>';
 		echo '</section>';
+	}
+
+	/**
+	 * BPP thumbnails may be https URLs or admin-generated base64 data URLs.
+	 */
+	private function escape_thumbnail_src( string $url ): string {
+		if ( str_starts_with( $url, 'data:image/' ) ) {
+			return $url;
+		}
+
+		return (string) esc_url( $url );
 	}
 }

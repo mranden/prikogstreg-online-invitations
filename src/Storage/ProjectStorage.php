@@ -9,6 +9,7 @@ use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageChecksumException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageConflictException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageValidationException;
+use PrikOgStreg\OnlineInvitations\Support\BuilderPageHtmlNormalizer;
 use PrikOgStreg\OnlineInvitations\Support\UtcDateTime;
 
 /**
@@ -323,7 +324,7 @@ final class ProjectStorage {
 		foreach ( array_values( $raw_pages ) as $index => $html ) {
 			$pages[] = [
 				'index' => $index + 1,
-				'html'  => (string) $html,
+				'html'  => BuilderPageHtmlNormalizer::normalize( (string) $html ),
 			];
 		}
 

@@ -241,7 +241,7 @@ final class ProjectImportSnapshotTest extends TestCase {
 		$this->assertStringContainsString( 'Preview page', $preview['html'] );
 	}
 
-	public function test_checksum_mismatch_records_retryable_failure(): void {
+	public function test_checksum_mismatch_allows_import_when_persisted_payload_is_valid(): void {
 		$payload = $this->load_fixture( 'builder-order-payload.json' );
 		$this->adapter->with_load_state( $payload );
 
@@ -253,7 +253,8 @@ final class ProjectImportSnapshotTest extends TestCase {
 		$project    = $this->repositories->projects()->find_by_id( $project_id );
 
 		$this->assertIsArray( $project );
-		$this->assertSame( 'checksum_mismatch', $project['last_error_code'] ?? '' );
+		$this->assertTrue( ProjectEntitlement::is_project_usable( $project ) );
+		$this->assertSame( '', (string) ( $project['last_error_code'] ?? '' ) );
 	}
 
 	public function test_repeated_import_is_idempotent(): void {

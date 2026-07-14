@@ -52,10 +52,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
 	<?php do_action( 'woocommerce_before_add_to_cart_quantity' ); ?>
 
-	<div class="quantity pks-oi-quantity-fixed" hidden>
-		<label class="pks-oi-sr-only" for="pks-oi-fixed-quantity"><?php echo esc_html__( 'Quantity', 'prikogstreg-online-invitations' ); ?></label>
-		<input type="hidden" id="pks-oi-fixed-quantity" name="quantity" value="1" />
-	</div>
+	<input type="hidden" name="quantity" value="1" />
 
 	<section
 		class="pks-oi-product-configurator__section pks-oi-product-configurator__preview"

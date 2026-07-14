@@ -117,10 +117,7 @@ final class OnlineInvitationProductFrontend {
 	}
 
 	public function render_native_purchase_button( object $product ): void {
-		if ( $this->uses_bpp_purchase_button( $product ) ) {
-			return;
-		}
-
+		$uses_bpp     = $this->uses_bpp_purchase_button( $product );
 		$button_class = 'single_add_to_cart_button button alt';
 		$theme_class  = function_exists( 'wc_wp_theme_get_element_class_name' )
 			? wc_wp_theme_get_element_class_name( 'button' )
@@ -129,10 +126,33 @@ final class OnlineInvitationProductFrontend {
 			$button_class .= ' ' . $theme_class;
 		}
 
+		$product_id = (int) $product->get_id();
+		$sku        = method_exists( $product, 'get_sku' ) ? (string) $product->get_sku() : '';
+
+		if ( $uses_bpp ) {
+			// BPP acceptOrder() reads product metadata from .single_add_to_cart_button.
+			printf(
+				'<input type="hidden" name="add-to-cart" value="%1$d" />',
+				$product_id
+			);
+			echo '<button type="submit" class="' . esc_attr( $button_class ) . '"';
+			printf( ' data-product-id="%d"', $product_id );
+			printf( ' data-product_sku="%s"', esc_attr( $sku ) );
+			echo ' data-pks-oi-section="purchase" tabindex="-1" aria-hidden="true" ';
+			do_action( 'wc_bpp_cart_style' );
+			printf(
+				'>%s</button>',
+				esc_html( $product->single_add_to_cart_text() )
+			);
+
+			return;
+		}
+
 		printf(
-			'<button type="submit" name="add-to-cart" value="%1$d" class="%2$s" data-pks-oi-section="purchase">%3$s</button>',
-			(int) $product->get_id(),
+			'<button type="submit" name="add-to-cart" value="%1$d" class="%2$s" data-product-id="%1$d" data-product_sku="%3$s" data-pks-oi-section="purchase">%4$s</button>',
+			$product_id,
 			esc_attr( $button_class ),
+			esc_attr( $sku ),
 			esc_html( $product->single_add_to_cart_text() )
 		);
 	}

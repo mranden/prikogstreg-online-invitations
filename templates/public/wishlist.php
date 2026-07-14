@@ -18,14 +18,21 @@ $external_url = (string) ( $wishlist['external_url'] ?? '' );
 $rest_base = (string) ( $wishlist['rest_base'] ?? '' );
 $rest_nonce = (string) ( $wishlist['rest_nonce'] ?? '' );
 $requires_name = ! empty( $wishlist['requires_name'] );
+$is_sample = ! empty( $wishlist['is_sample'] );
 ?>
 <div
-	class="pks-oi-wishlist"
+	class="pks-oi-wishlist<?php echo $is_sample ? ' pks-oi-wishlist--sample' : ''; ?>"
 	data-pks-oi-wishlist
 	data-rest-base="<?php echo esc_attr( $rest_base ); ?>"
 	data-rest-nonce="<?php echo esc_attr( $rest_nonce ); ?>"
 	data-requires-name="<?php echo $requires_name ? '1' : '0'; ?>"
 >
+	<?php if ( $is_sample ) : ?>
+		<p class="pks-oi-wishlist__sample-note" role="note">
+			<?php esc_html_e( 'Example wishlist with sample gifts and reservations. Guests can reserve items on real invitations.', 'prikogstreg-online-invitations' ); ?>
+		</p>
+	<?php endif; ?>
+
 	<?php if ( '' !== $external_url ) : ?>
 		<p class="pks-oi-wishlist__external">
 			<a href="<?php echo esc_url( $external_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View external wishlist', 'prikogstreg-online-invitations' ); ?></a>
@@ -41,7 +48,23 @@ $requires_name = ! empty( $wishlist['requires_name'] );
 
 	<ul class="pks-oi-wishlist__items">
 		<?php foreach ( $items as $item ) : ?>
-			<li class="pks-oi-wishlist__item" data-item-id="<?php echo esc_attr( (string) ( $item['wishlist_item_id'] ?? '' ) ); ?>">
+			<?php
+			$available = (int) ( $item['quantity_available'] ?? 0 );
+			$item_class = 'pks-oi-wishlist__item';
+			if ( $available <= 0 ) {
+				$item_class .= ' is-unavailable';
+			}
+			?>
+			<li class="<?php echo esc_attr( $item_class ); ?>" data-item-id="<?php echo esc_attr( (string) ( $item['wishlist_item_id'] ?? '' ) ); ?>">
+				<?php if ( '' !== (string) ( $item['image_url'] ?? '' ) ) : ?>
+					<img
+						class="pks-oi-wishlist__item-image"
+						src="<?php echo esc_url( (string) $item['image_url'] ); ?>"
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				<?php endif; ?>
 				<strong><?php echo esc_html( (string) ( $item['title'] ?? '' ) ); ?></strong>
 				<?php if ( '' !== (string) ( $item['description'] ?? '' ) ) : ?>
 					<p><?php echo esc_html( (string) $item['description'] ); ?></p>
@@ -50,11 +73,11 @@ $requires_name = ! empty( $wishlist['requires_name'] );
 					<p><a href="<?php echo esc_url( (string) $item['external_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View product', 'prikogstreg-online-invitations' ); ?></a></p>
 				<?php endif; ?>
 				<p><?php printf( esc_html__( '%1$d of %2$d reserved', 'prikogstreg-online-invitations' ), (int) ( $item['quantity_reserved'] ?? 0 ), (int) ( $item['quantity_requested'] ?? 0 ) ); ?></p>
-				<?php if ( (int) ( $item['quantity_available'] ?? 0 ) > 0 ) : ?>
-					<button type="button" class="button" data-pks-oi-wishlist-reserve data-quantity="1"><?php esc_html_e( 'Reserve', 'prikogstreg-online-invitations' ); ?></button>
+				<?php if ( $available > 0 ) : ?>
+					<button type="button" class="button" data-pks-oi-wishlist-reserve data-quantity="1"<?php echo $is_sample ? ' disabled' : ''; ?>><?php esc_html_e( 'Reserve', 'prikogstreg-online-invitations' ); ?></button>
 				<?php endif; ?>
 				<?php if ( (int) ( $item['my_reserved_quantity'] ?? 0 ) > 0 ) : ?>
-					<button type="button" class="button" data-pks-oi-wishlist-release"><?php esc_html_e( 'Release my reservation', 'prikogstreg-online-invitations' ); ?></button>
+					<button type="button" class="button" data-pks-oi-wishlist-release"<?php echo $is_sample ? ' disabled' : ''; ?>><?php esc_html_e( 'Release my reservation', 'prikogstreg-online-invitations' ); ?></button>
 				<?php endif; ?>
 			</li>
 		<?php endforeach; ?>

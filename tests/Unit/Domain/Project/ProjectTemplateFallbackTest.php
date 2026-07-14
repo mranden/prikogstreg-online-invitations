@@ -32,7 +32,7 @@ final class ProjectTemplateFallbackTest extends TestCase {
 
 	public function test_recoverable_import_errors_include_missing_page_payload(): void {
 		$this->assertTrue( ProjectTemplateFallback::is_recoverable_import_error( 'missing_page_payload' ) );
-		$this->assertFalse( ProjectTemplateFallback::is_recoverable_import_error( 'checksum_mismatch' ) );
+		$this->assertTrue( ProjectTemplateFallback::is_recoverable_import_error( 'checksum_mismatch' ) );
 	}
 
 	public function test_resolve_for_product_marks_template_fallback_with_placeholder_pages(): void {
@@ -45,5 +45,40 @@ final class ProjectTemplateFallbackTest extends TestCase {
 		$this->assertSame( ProjectDesignSource::TEMPLATE_FALLBACK, $state['design_source'] ?? '' );
 		$this->assertNotEmpty( $state['page'] ?? [] );
 		$this->assertStringContainsString( 'pks-oi-template-fallback', (string) ( $state['page'][0] ?? '' ) );
+	}
+
+	public function test_design_placeholder_page_html_uses_bpp_page_zero_thumbnail(): void {
+		require_once dirname( __DIR__, 3 ) . '/stubs/bpp/BPP_Product.php';
+
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active' => true,
+				'pages'  => [
+					(object) [
+						'thumbnail' => 'https://example.test/page-thumbnail-0.jpg',
+					],
+				],
+			]
+		);
+
+		$fallback = new ProjectTemplateFallback( new BuilderService() );
+		$html     = $fallback->design_placeholder_page_html( 10 );
+
+		$this->assertStringContainsString( 'pks-oi-design-placeholder__image', $html );
+		$this->assertStringContainsString( 'https://example.test/page-thumbnail-0.jpg', $html );
+		$this->assertStringNotContainsString( '<p>Your invitation design will appear here.</p>', $html );
+	}
+
+	public function test_design_placeholder_page_html_falls_back_to_text_without_thumbnail(): void {
+		require_once dirname( __DIR__, 3 ) . '/stubs/bpp/BPP_Product.php';
+		\BPP_Product::reset_test_models();
+
+		$fallback = new ProjectTemplateFallback( new BuilderService() );
+		$html     = $fallback->design_placeholder_page_html( 10 );
+
+		$this->assertStringContainsString( 'pks-oi-design-placeholder', $html );
+		$this->assertStringContainsString( '<p>', $html );
+		$this->assertStringNotContainsString( 'pks-oi-design-placeholder__image', $html );
 	}
 }

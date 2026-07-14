@@ -15,4 +15,12 @@ final class PublicationStatus {
 	public static function all(): array {
 		return [ self::UNPUBLISHED, self::PUBLISHED ];
 	}
+
+	public static function label( string $status ): string {
+		return match ( $status ) {
+			self::PUBLISHED   => __( 'Published', 'prikogstreg-online-invitations' ),
+			self::UNPUBLISHED => __( 'Unpublished', 'prikogstreg-online-invitations' ),
+			default           => $status,
+		};
+	}
 }

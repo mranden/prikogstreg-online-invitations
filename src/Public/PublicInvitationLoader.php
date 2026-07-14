@@ -9,6 +9,7 @@ use PrikOgStreg\OnlineInvitations\Security\PublishedHtmlSanitizer;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageChecksumException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
+use PrikOgStreg\OnlineInvitations\Support\BuilderPageHtmlNormalizer;
 use PrikOgStreg\OnlineInvitations\Support\PublishedHtmlValidator;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
@@ -53,6 +54,7 @@ final class PublicInvitationLoader {
 					(string) $page['published_path'],
 					isset( $page['published_sha256'] ) ? (string) $page['published_sha256'] : null
 				);
+				$html = BuilderPageHtmlNormalizer::normalize( $html );
 				$html = PublishedHtmlSanitizer::sanitize( $html );
 			} catch ( StorageChecksumException $exception ) {
 				return [ 'success' => false, 'error' => 'checksum_failure' ];

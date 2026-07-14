@@ -18,6 +18,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectHardDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectLifecycleAudit;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEventService;
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPreviewService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublicUrlService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectPublishService;
@@ -31,6 +32,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareSettingsService;
 use PrikOgStreg\OnlineInvitations\Domain\Photo\PhotoShareTokenService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStateService;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistItemService;
+use PrikOgStreg\OnlineInvitations\Public\PosterDisplayAssets;
 use PrikOgStreg\OnlineInvitations\Scheduling\WelcomeScheduler;
 use PrikOgStreg\OnlineInvitations\Security\Authorization;
 use PrikOgStreg\OnlineInvitations\Storage\StorageRegistry;
@@ -54,6 +56,10 @@ final class MyAccountRegistrar {
 	private ProjectService $project_service;
 
 	private ProjectStateService $state_service;
+
+	private PosterDisplayAssets $poster_assets;
+
+	private Router $router;
 
 	private Sidebar $sidebar;
 
@@ -161,6 +167,8 @@ final class MyAccountRegistrar {
 		);
 		$this->project_service = $project_service;
 		$this->state_service   = $state_service;
+		$this->poster_assets   = new PosterDisplayAssets( $storage->project_storage() );
+		$this->router          = new Router();
 
 		$this->controller = new ProjectController(
 			$repositories->projects(),
@@ -172,6 +180,7 @@ final class MyAccountRegistrar {
 			$state_service,
 			new ProjectEventService( $repositories->projects(), $repositories->events() ),
 			new ProjectPreviewService( $builder, $state_service ),
+			$this->poster_assets,
 			new ProjectPublishService(
 				$builder,
 				$storage->project_storage(),
@@ -255,5 +264,25 @@ final class MyAccountRegistrar {
 				],
 			]
 		);
+
+		$this->maybe_enqueue_poster_preview_assets();
+	}
+
+	private function maybe_enqueue_poster_preview_assets(): void {
+		$route = $this->router->parse_request();
+		if ( 'project' !== $route['mode'] ) {
+			return;
+		}
+
+		if ( ProjectSections::DESIGN !== $route['section'] ) {
+			return;
+		}
+
+		$project = $this->authorization->resolve_viewable_project( $route['project_id'] );
+		if ( ! is_array( $project ) || ! ProjectEntitlement::is_project_usable( $project ) ) {
+			return;
+		}
+
+		$this->poster_assets->enqueue_account_preview( $project );
 	}
 }

@@ -6,6 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\Domain\Project;
 
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
+use PrikOgStreg\OnlineInvitations\Support\PosterPreviewHtml;
 
 /**
  * Authenticated draft preview without open tracking.
@@ -58,6 +59,8 @@ final class ProjectPreviewService {
 			$pages = is_array( $state['page'] ?? null ) ? $state['page'] : [];
 			$html  = implode( "\n", array_map( 'strval', $pages ) );
 		}
+
+		$html = PosterPreviewHtml::prepare_for_viewport( $html );
 
 		do_action( 'pks_oi_project_preview_rendered', (int) $project['project_id'], false );
 

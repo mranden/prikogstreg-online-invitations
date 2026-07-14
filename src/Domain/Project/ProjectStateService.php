@@ -7,18 +7,14 @@ namespace PrikOgStreg\OnlineInvitations\Domain\Project;
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\EventRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
-use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageConflictException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
-use PrikOgStreg\OnlineInvitations\Storage\ProjectManifest;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
-use PrikOgStreg\OnlineInvitations\Storage\StorageLimits;
+use PrikOgStreg\OnlineInvitations\Support\BuilderPageHtmlNormalizer;
 
 /**
- * Loads and saves project-owned builder state via adapter + atomic storage.
+ * Loads project-owned builder state via adapter + atomic storage.
  */
 final class ProjectStateService {
-
-	public const MAX_REQUEST_BYTES = StorageLimits::MAX_STATE_BYTES;
 
 	public function __construct(
 		private BuilderService $builder,
@@ -142,101 +138,7 @@ final class ProjectStateService {
 			return [ 'error' => 'entitlement_denied', 'code' => 403 ];
 		}
 
-		$encoded = json_encode( $incoming_state, JSON_UNESCAPED_SLASHES );
-		if ( is_string( $encoded ) && strlen( $encoded ) > self::MAX_REQUEST_BYTES ) {
-			return [ 'error' => 'payload_too_large', 'code' => 413 ];
-		}
-
-		$adapter = $this->builder->get_adapter();
-		if ( null === $adapter ) {
-			return [ 'error' => 'adapter_unavailable', 'code' => 503 ];
-		}
-
-		$context = $this->adapter_context( $project, 'edit' );
-		$state   = $incoming_state;
-
-		if ( method_exists( $adapter, 'save_state' ) ) {
-			$saved = $adapter->save_state( $state, $context );
-			if ( is_wp_error( $saved ) ) {
-				return [ 'error' => (string) ( $saved->get_error_code() ?: 'invalid_state' ), 'code' => 422 ];
-			}
-			if ( is_array( $saved ) ) {
-				$state = $saved;
-			}
-		} elseif ( method_exists( $adapter, 'validate_state' ) ) {
-			$validated = $adapter->validate_state( $state, $context );
-			if ( is_wp_error( $validated ) ) {
-				return [ 'error' => (string) ( $validated->get_error_code() ?: 'invalid_state' ), 'code' => 422 ];
-			}
-			if ( is_array( $validated ) ) {
-				$state = $validated;
-			}
-		}
-
-		try {
-			$result = $this->persist_canonical_state( $project, $state, $expected_version );
-		} catch ( StorageConflictException $exception ) {
-			return [ 'error' => 'stale_state_version', 'code' => 409 ];
-		}
-
-		$this->record_event( (int) $project['project_id'], 'project_state_saved', [ 'state_version' => $result['state_version'] ] );
-		do_action( 'pks_oi_project_state_saved', (int) $project['project_id'], $result['state_version'] );
-
-		return [ 'state_version' => (int) $result['state_version'] ];
-	}
-
-	/**
-	 * @param array<string, mixed> $project
-	 * @param array<string, mixed> $state
-	 * @return array{state_version:int}
-	 */
-	private function persist_canonical_state( array $project, array $state, int $expected_version ): array {
-		$pages = [];
-		$raw   = is_array( $state['page'] ?? null ) ? $state['page'] : [];
-
-		foreach ( array_values( $raw ) as $index => $html ) {
-			$pages[] = [
-				'index' => $index + 1,
-				'html'  => (string) $html,
-			];
-		}
-
-		$state_payload = [
-			'schema_version' => (string) ( $state['schema_version'] ?? $project['builder_schema_version'] ?? '1' ),
-			'design_source'  => (string) ( $state['design_source'] ?? ProjectDesignSource::CUSTOMER ),
-			'field'          => is_array( $state['field'] ?? null ) ? $state['field'] : [],
-			'size'           => (string) ( $state['size'] ?? '' ),
-			'format'         => (string) ( $state['format'] ?? '' ),
-			'pages'          => array_map( static fn( array $page ): array => [ 'index' => (int) $page['index'] ], $pages ),
-		];
-
-		$state_json = json_encode( $state_payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-		if ( ! is_string( $state_json ) ) {
-			throw new \InvalidArgumentException( 'invalid_state_json' );
-		}
-
-		$result = $this->storage->save_state(
-			[
-				'project_id'             => (int) $project['project_id'],
-				'storage_uuid'           => (string) $project['storage_uuid'],
-				'builder_schema_version' => (string) ( $project['builder_schema_version'] ?? '1' ),
-				'product_id'             => (int) $project['product_id'],
-				'template_id'            => (string) ( $project['template_id'] ?? (string) $project['product_id'] ),
-				'expected_state_version' => $expected_version,
-				'state_json'             => $state_json,
-				'pages'                  => $pages,
-			]
-		);
-
-		$this->projects->update(
-			(int) $project['project_id'],
-			[
-				'state_version'       => (int) $result['state_version'],
-				'state_manifest_path' => (string) $result['state_manifest_path'],
-			]
-		);
-
-		return $result;
+		return [ 'error' => 'design_read_only', 'code' => 403 ];
 	}
 
 	/**
@@ -262,10 +164,12 @@ final class ProjectStateService {
 			if ( ! isset( $page['editable_path'] ) ) {
 				continue;
 			}
-			$pages[] = $this->storage->read_editable_page(
-				$storage_uuid,
-				(string) $page['editable_path'],
-				isset( $page['editable_sha256'] ) ? (string) $page['editable_sha256'] : null
+			$pages[] = BuilderPageHtmlNormalizer::normalize(
+				$this->storage->read_editable_page(
+					$storage_uuid,
+					(string) $page['editable_path'],
+					isset( $page['editable_sha256'] ) ? (string) $page['editable_sha256'] : null
+				)
 			);
 		}
 
@@ -298,20 +202,5 @@ final class ProjectStateService {
 			'is_preview'    => 'preview' === $mode,
 			'is_public'     => 'public' === $mode,
 		];
-	}
-
-	/**
-	 * @param array<string, mixed> $metadata
-	 */
-	private function record_event( int $project_id, string $event_type, array $metadata = [] ): void {
-		$encoded = json_encode( $metadata, JSON_UNESCAPED_SLASHES );
-		$this->events->insert(
-			[
-				'project_id'    => $project_id,
-				'actor_type'    => 'customer',
-				'event_type'    => $event_type,
-				'metadata_json' => is_string( $encoded ) ? $encoded : '{}',
-			]
-		);
 	}
 }

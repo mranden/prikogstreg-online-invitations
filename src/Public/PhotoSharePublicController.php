@@ -271,10 +271,12 @@ final class PhotoSharePublicController {
 	}
 
 	private function enqueue_public_style(): void {
+		PublicThemeFonts::enqueue();
+
 		wp_enqueue_style(
 			'pks-oi-public',
 			PKS_OI_PLUGIN_URL . 'assets/build/css/public.css',
-			[],
+			[ 'pks-oi-theme-fonts' ],
 			PKS_OI_VERSION
 		);
 	}

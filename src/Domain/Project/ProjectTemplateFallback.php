@@ -24,6 +24,7 @@ final class ProjectTemplateFallback {
 				'bpp_invalid_state',
 				'invalid_builder_state',
 				'malformed_payload',
+				'checksum_mismatch',
 			],
 			true
 		);
@@ -141,21 +142,61 @@ final class ProjectTemplateFallback {
 	 * @return array<string, mixed>
 	 */
 	private function minimal_placeholder_state( int $product_id ): array {
-		$label = __( 'Your invitation design will appear here.', 'prikogstreg-online-invitations' );
-
 		return [
 			'schema_version' => '1',
 			'field'          => [],
 			'page'           => [
-				sprintf(
-					'<section class="pks-oi-design-placeholder"><p>%s</p></section>',
-					esc_html( $label )
-				),
+				$this->design_placeholder_page_html( $product_id ),
 			],
 			'size'           => 'a5',
 			'format'         => 'flat',
 			'product_id'     => $product_id,
 			'template_id'    => $product_id,
 		];
+	}
+
+	public function design_placeholder_page_html( int $product_id ): string {
+		$label     = __( 'Your invitation design will appear here.', 'prikogstreg-online-invitations' );
+		$thumbnail = $this->bpp_page_thumbnail( $product_id, 0 );
+
+		if ( '' !== $thumbnail ) {
+			return sprintf(
+				'<section class="pks-oi-design-placeholder"><img class="pks-oi-design-placeholder__image" src="%s" alt="%s" loading="lazy" decoding="async" /></section>',
+				esc_attr( $this->escape_thumbnail_src( $thumbnail ) ),
+				esc_attr( $label )
+			);
+		}
+
+		return sprintf(
+			'<section class="pks-oi-design-placeholder"><p>%s</p></section>',
+			esc_html( $label )
+		);
+	}
+
+	private function bpp_page_thumbnail( int $product_id, int $page_index = 0 ): string {
+		if ( ! class_exists( 'BPP_Product', false ) ) {
+			return '';
+		}
+
+		$product = new \BPP_Product( $product_id );
+		if ( ! (bool) $product->active ) {
+			return '';
+		}
+
+		$pages = array_values( (array) ( $product->pages ?? [] ) );
+		$page  = $pages[ $page_index ] ?? null;
+		if ( ! is_object( $page ) ) {
+			return '';
+		}
+
+		return trim( (string) ( $page->thumbnail ?? '' ) );
+	}
+
+	private function escape_thumbnail_src( string $url ): string {
+		if ( str_starts_with( $url, 'data:image/' ) ) {
+			return $url;
+		}
+
+		return (string) esc_url( $url );
 	}
 }

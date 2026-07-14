@@ -49,7 +49,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
 		<select name="publication_status" id="filter-publication">
 			<option value=""><?php esc_html_e( 'All publication states', 'prikogstreg-online-invitations' ); ?></option>
 			<?php foreach ( PublicationStatus::all() as $status ) : ?>
-				<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $query->publication_status, $status ); ?>><?php echo esc_html( $status ); ?></option>
+				<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $query->publication_status, $status ); ?>><?php echo esc_html( PublicationStatus::label( $status ) ); ?></option>
 			<?php endforeach; ?>
 		</select>
 

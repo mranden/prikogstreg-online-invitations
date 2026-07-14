@@ -87,21 +87,57 @@ final class ProjectImportGuard {
 			return null;
 		}
 
-		$validator = new CartPayloadValidator( new BuilderService() );
-		$computed  = $validator->compute_checksum(
-			[
-				'field'      => is_array( $state['field'] ?? null ) ? $state['field'] : [],
-				'page'       => is_array( $state['page'] ?? null ) ? $state['page'] : [],
-				'size'       => (string) ( $state['size'] ?? $state['pa_bpp_size'] ?? '' ),
-				'format'     => (string) ( $state['format'] ?? $state['pa_bpp_format'] ?? '' ),
-				'product_id' => (int) ( $state['product_id'] ?? 0 ),
-			]
-		);
+		$checksum_state = self::build_checksum_state( $state, $item );
+		$validator      = new CartPayloadValidator( new BuilderService() );
+		$computed       = $validator->compute_checksum( $checksum_state );
 
-		if ( ! hash_equals( $expected, $computed ) ) {
-			return 'checksum_mismatch';
+		if ( hash_equals( $expected, $computed ) ) {
+			return null;
 		}
 
-		return null;
+		// BPP persists the authoritative payload after cart capture (filesystem file, admin edits).
+		if ( null === self::validate_builder_pages( $checksum_state ) ) {
+			return null;
+		}
+
+		return 'checksum_mismatch';
+	}
+
+	/**
+	 * @param array<string, mixed> $state
+	 * @param object               $item WooCommerce order item.
+	 * @return array<string, mixed>
+	 */
+	public static function build_checksum_state( array $state, object $item ): array {
+		$field = is_array( $state['field'] ?? null ) ? $state['field'] : [];
+		$page  = is_array( $state['page'] ?? null ) ? $state['page'] : [];
+
+		$size = (string) ( $state['size'] ?? $state['pa_bpp_size'] ?? '' );
+		$format = (string) ( $state['format'] ?? $state['pa_bpp_format'] ?? '' );
+		$product_id = (int) ( $state['product_id'] ?? 0 );
+
+		if ( method_exists( $item, 'get_meta' ) ) {
+			$item_size = (string) $item->get_meta( 'pa_bpp_size', true );
+			if ( '' !== $item_size ) {
+				$size = $item_size;
+			}
+
+			$item_format = (string) $item->get_meta( 'pa_bpp_format', true );
+			if ( '' !== $item_format ) {
+				$format = $item_format;
+			}
+		}
+
+		if ( $product_id <= 0 && method_exists( $item, 'get_product_id' ) ) {
+			$product_id = (int) $item->get_product_id();
+		}
+
+		return [
+			'field'      => $field,
+			'page'       => $page,
+			'size'       => $size,
+			'format'     => $format,
+			'product_id' => $product_id,
+		];
 	}
 }

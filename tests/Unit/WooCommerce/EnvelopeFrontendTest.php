@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\Tests\Unit\WooCommerce;
 
 use Brain\Monkey\Functions;
+use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\BuilderFrontendBridge;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\EnvelopeFrontend;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 use PrikOgStreg\OnlineInvitations\Tests\TestCase;
@@ -38,7 +40,8 @@ final class EnvelopeFrontendTest extends TestCase {
 		$this->assertStringContainsString( 'data-pks-oi-section="envelope"', $output );
 		$this->assertStringContainsString( 'pks-oi-envelope--classic', $output );
 		$this->assertStringContainsString( 'pks-oi-envelope--bg-floral', $output );
-		$this->assertStringContainsString( 'https://example.test/envelope.jpg', $output );
+		$this->assertStringContainsString( 'background-image: url(https://example.test/envelope.jpg)', $output );
+		$this->assertStringContainsString( 'data-pks-oi-envelope-thumbnail-host', $output );
 		$this->assertStringContainsString( 'pks-oi-product-envelope-preview__inner', $output );
 		$this->assertStringNotContainsString( '<script', $output );
 	}
@@ -66,8 +69,62 @@ final class EnvelopeFrontendTest extends TestCase {
 		$frontend->render( $product );
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'pks-oi-product-envelope-preview__card-fallback', $output );
-		$this->assertStringNotContainsString( '<img', $output );
+		$this->assertStringContainsString( 'data-pks-oi-envelope-artwork="fallback"', $output );
+		$this->assertStringNotContainsString( 'pks-oi-product-envelope-preview__invitation-image', $output );
+	}
+
+	public function test_renders_page_zero_thumbnail_from_bpp_product_template(): void {
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+				'pages'           => [
+					(object) [
+						'low_res_html' => '<div>page</div>',
+						'thumbnail'    => 'https://example.test/page-thumbnail-0.jpg',
+					],
+				],
+			]
+		);
+
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, $value ) {
+				if ( 'bpp/is_product_customizable' === $hook ) {
+					return true;
+				}
+
+				return $value;
+			}
+		);
+
+		$product = $this->make_product(
+			[
+				ProductMeta::ENVELOPE_PRESET   => 'classic',
+				ProductMeta::BACKGROUND_PRESET => 'neutral',
+			]
+		);
+
+		$frontend = new EnvelopeFrontend( new BuilderFrontendBridge( new BuilderService() ) );
+
+		ob_start();
+		$frontend->render( $product );
+		$output = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'pks-oi-product-envelope-preview__invitation-image', $output );
+		$this->assertStringContainsString( 'https://example.test/page-thumbnail-0.jpg', $output );
+		$this->assertStringContainsString( 'data-pks-oi-page-thumbnails', $output );
+		$this->assertStringContainsString( 'data-pks-oi-active-page="0"', $output );
 	}
 
 	public function test_output_is_escaped(): void {
@@ -94,6 +151,35 @@ final class EnvelopeFrontendTest extends TestCase {
 		$this->assertStringNotContainsString( 'classic"><script', $output );
 	}
 
+	public function test_renders_sample_preview_link_when_enabled(): void {
+		$product = $this->make_product(
+			[
+				ProductMeta::ENVELOPE_PRESET       => 'classic',
+				ProductMeta::BACKGROUND_PRESET     => 'neutral',
+				ProductMeta::DUMMY_PREVIEW_ENABLED => 'yes',
+			]
+		);
+
+		Functions\when( 'home_url' )->alias(
+			static fn( string $path ): string => 'https://example.test' . $path
+		);
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, $value ) {
+				return $value;
+			}
+		);
+
+		$frontend = new EnvelopeFrontend();
+
+		ob_start();
+		$frontend->render( $product );
+		$output = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'pks-oi-product-envelope-preview__sample-link', $output );
+		$this->assertStringContainsString( 'https://example.test/invitation-sample/10/', $output );
+		$this->assertStringContainsString( 'target="_blank"', $output );
+	}
+
 	/**
 	 * @param array<string, mixed> $meta
 	 * @return object
@@ -111,6 +197,10 @@ final class EnvelopeFrontendTest extends TestCase {
 
 			public function is_type( string $type ): bool {
 				return ProductMeta::TYPE === $type;
+			}
+
+			public function is_visible(): bool {
+				return true;
 			}
 
 			public function get_meta( string $key, bool $single = true ): mixed {

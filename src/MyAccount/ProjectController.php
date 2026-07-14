@@ -21,8 +21,9 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectArchiveService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectCustomerDeleteService;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
+use PrikOgStreg\OnlineInvitations\Public\PosterDimensions;
+use PrikOgStreg\OnlineInvitations\Public\PosterDisplayAssets;
 use PrikOgStreg\OnlineInvitations\Security\Authorization;
-use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Support\TemplateLoader;
 
 /**
@@ -44,6 +45,7 @@ final class ProjectController {
 		private ProjectStateService $state_service,
 		private ProjectEventService $event_service,
 		private ProjectPreviewService $preview_service,
+		private PosterDisplayAssets $poster_assets,
 		private ProjectPublishService $publish_service,
 		private ProjectPublicUrlService $public_url_service,
 		private ProjectService $project_service,
@@ -230,42 +232,33 @@ final class ProjectController {
 	 */
 	private function render_design( array $context, array $project ): void {
 		if ( ! $this->authorization->can_edit_project( $project ) ) {
-			$context['editor_html'] = '';
-			$context['editor_error'] = $this->design_unavailable_message( $project );
+			$context['design_html']  = '';
+			$context['design_error'] = $this->design_unavailable_message( $project );
+			$context['design_uses_template_fallback'] = false;
 			$this->templates->render( 'myaccount/project-design', $context );
 
 			return;
 		}
 
-		try {
-			$state = $this->state_service->load_canonical_state( $project );
-		} catch ( StorageException $exception ) {
-			$context['editor_html']  = '';
-			$context['editor_error'] = $this->design_unavailable_message( $project );
+		if ( '' !== (string) ( $project['last_error_code'] ?? '' ) ) {
+			$context['design_html']  = '';
+			$context['design_error'] = $this->design_unavailable_message( $project );
+			$context['design_uses_template_fallback'] = false;
 			$this->templates->render( 'myaccount/project-design', $context );
 
 			return;
 		}
 
-		$adapter = $this->builder->get_adapter();
-		$adapter_context = $this->state_service->adapter_context( $project, 'project_edit' );
-
-		if ( null !== $adapter && method_exists( $adapter, 'enqueue_editor_assets' ) ) {
-			$adapter->enqueue_editor_assets( $adapter_context );
-		}
-
-		$editor_html = '';
-		if ( null !== $adapter && method_exists( $adapter, 'render_editor' ) ) {
-			$rendered = $adapter->render_editor( $state, $adapter_context );
-			if ( ! is_wp_error( $rendered ) ) {
-				$editor_html = (string) $rendered;
-			}
-		}
-
-		$context['editor_html']        = $editor_html;
-		$context['state_version']    = (int) ( $project['state_version'] ?? 0 );
-		$context['rest_save_url']      = rest_url( 'prikogstreg-online-invitations/v1/projects/' . (int) $project['project_id'] . '/state' );
-		$context['rest_nonce']         = wp_create_nonce( 'wp_rest' );
+		$preview = $this->preview_service->render_preview( $project );
+		$poster  = $this->poster_preview_context( $project, $preview['html'] );
+		$context['design_html']                   = $preview['html'];
+		$context['design_uses_template_fallback'] = ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' );
+		$context['design_error']                  = '' === $preview['html']
+			? __( 'Your design preview is not available yet. Contact support if this persists.', 'prikogstreg-online-invitations' )
+			: '';
+		$context['poster_width']                  = $poster['width'];
+		$context['poster_height']                 = $poster['height'];
+		$context['preview_html']                  = $preview['html'];
 
 		$this->templates->render( 'myaccount/project-design', $context );
 	}
@@ -294,15 +287,11 @@ final class ProjectController {
 			$public_url = $this->public_url_service->resolve_url( $project ) ?? '';
 		}
 
-		$preview = $this->preview_service->render_preview( $project );
 		$project = $context['project'] ?? $project;
-		$context['project']                 = $project;
-		$context['preview_html']            = $preview['html'];
-		$context['preview_uses_template_fallback'] = ProjectDesignSource::TEMPLATE_FALLBACK === (string) ( $project['design_source'] ?? '' );
-		$context['envelope_preset']         = $preview['envelope_preset'];
-		$context['track_opens']      = false;
-		$context['public_url']       = $public_url;
-		$context['is_public_live']   = PublicEntitlement::is_publicly_available( $project );
+		$context['project']           = $project;
+		$context['envelope_preset']   = (string) ( $project['envelope_preset'] ?? '' );
+		$context['public_url']        = $public_url;
+		$context['is_public_live']    = PublicEntitlement::is_publicly_available( $project );
 		$this->templates->render( 'myaccount/project-preview', $context );
 	}
 
@@ -412,8 +401,8 @@ final class ProjectController {
 				'done'   => $has_design,
 				'detail' => $has_design
 					? ( $uses_fallback
-						? __( 'No custom design was saved with your order. Customise the default template to get started.', 'prikogstreg-online-invitations' )
-						: __( 'Your customised design is ready to edit.', 'prikogstreg-online-invitations' ) )
+						? __( 'No custom design was saved with your order. The default template is shown in preview.', 'prikogstreg-online-invitations' )
+						: __( 'Your customised design was imported from your order.', 'prikogstreg-online-invitations' ) )
 					: __( 'Import is pending or failed — contact support if this persists.', 'prikogstreg-online-invitations' ),
 				'url'    => Endpoints::project_url( $project_id, ProjectSections::DESIGN ),
 			],
@@ -503,7 +492,7 @@ final class ProjectController {
 		) {
 			$notices[] = [
 				'type'    => 'info',
-				'message' => __( 'No custom design was saved with your order. We loaded the default template so you can customise it now.', 'prikogstreg-online-invitations' ),
+				'message' => __( 'No custom design was saved with your order. We loaded the default template for preview.', 'prikogstreg-online-invitations' ),
 			];
 		}
 
@@ -518,7 +507,20 @@ final class ProjectController {
 			return __( 'Your order design could not be imported. Please contact support so we can restore your invitation.', 'prikogstreg-online-invitations' );
 		}
 
-		return __( 'Design editing is not available for this project.', 'prikogstreg-online-invitations' );
+		return __( 'Design preview is not available for this project.', 'prikogstreg-online-invitations' );
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 * @return array{width:int,height:int}
+	 */
+	private function poster_preview_context( array $project, string $preview_html ): array {
+		$meta = $this->poster_assets->resolve_poster_meta( $project, $preview_html );
+
+		return [
+			'width'  => max( 1, (int) ( $meta['width'] ?? PosterDimensions::DEFAULT_WIDTH ) ),
+			'height' => max( 1, (int) ( $meta['height'] ?? PosterDimensions::DEFAULT_HEIGHT ) ),
+		];
 	}
 
 	/**

@@ -15,9 +15,11 @@ final class Endpoints {
 
 	public const POSTER_ASSET_QUERY_VAR = 'pks_oi_poster_asset';
 
+	public const PRODUCT_SAMPLE_QUERY_VAR = 'pks_oi_product_sample_id';
+
 	public const REWRITE_VERSION_OPTION = 'pks_oi_public_rewrite_version';
 
-	public const REWRITE_VERSION = '3';
+	public const REWRITE_VERSION = '4';
 
 	public function register(): void {
 		add_action( 'init', [ $this, 'register_rewrite_rules' ], 0 );
@@ -43,6 +45,11 @@ final class Endpoints {
 			'index.php?' . self::QUERY_VAR . '=$matches[1]',
 			'top'
 		);
+		add_rewrite_rule(
+			'^invitation-sample/([0-9]+)/?$',
+			'index.php?' . self::PRODUCT_SAMPLE_QUERY_VAR . '=$matches[1]',
+			'top'
+		);
 	}
 
 	/**
@@ -53,8 +60,17 @@ final class Endpoints {
 		$vars[] = self::QUERY_VAR;
 		$vars[] = self::ENVELOPE_ASSET_QUERY_VAR;
 		$vars[] = self::POSTER_ASSET_QUERY_VAR;
+		$vars[] = self::PRODUCT_SAMPLE_QUERY_VAR;
 
 		return $vars;
+	}
+
+	public static function product_sample_url( int $product_id ): string {
+		if ( $product_id <= 0 || ! function_exists( 'home_url' ) ) {
+			return '';
+		}
+
+		return home_url( '/invitation-sample/' . $product_id . '/' );
 	}
 
 	public static function envelope_image_url( string $raw_token ): string {
@@ -81,6 +97,18 @@ final class Endpoints {
 	public static function maybe_flush_rewrites(): void {
 		$stored = (string) get_option( self::REWRITE_VERSION_OPTION, '' );
 		if ( self::REWRITE_VERSION === $stored ) {
+			return;
+		}
+
+		if ( ! did_action( 'init' ) ) {
+			add_action(
+				'init',
+				static function (): void {
+					self::maybe_flush_rewrites();
+				},
+				99
+			);
+
 			return;
 		}
 

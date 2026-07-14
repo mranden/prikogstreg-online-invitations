@@ -29,6 +29,7 @@ final class PublicRegistrar {
 
 	public function register(): void {
 		( new Endpoints() )->register();
+		Endpoints::maybe_flush_rewrites();
 
 		$project_storage = $this->storage->project_storage();
 		$poster_assets   = new PosterDisplayAssets( $project_storage );

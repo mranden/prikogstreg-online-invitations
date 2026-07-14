@@ -1,6 +1,6 @@
 <?php
 /**
- * Invitation preview, public link, and design access.
+ * Public invitation link and design access.
  *
  * @package PrikOgStreg\OnlineInvitations
  */
@@ -18,7 +18,6 @@ use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
 
 $public_url     = (string) ( $public_url ?? '' );
 $is_public_live = ! empty( $is_public_live );
-$preview_uses_template_fallback = ! empty( $preview_uses_template_fallback );
 $design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN );
 ?>
 <?php pks_oi_project_open(); ?>
@@ -29,7 +28,7 @@ $design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN )
 	pks_oi_section_open(
 		'pks-oi-preview-title',
 		__( 'Preview', 'prikogstreg-online-invitations' ),
-		__( 'Preview your invitation, open the public link, or edit the design.', 'prikogstreg-online-invitations' )
+		__( 'Open your public invitation link or view your imported design.', 'prikogstreg-online-invitations' )
 	);
 	?>
 
@@ -55,34 +54,12 @@ $design_url     = Endpoints::project_url( $project_id, ProjectSections::DESIGN )
 			<p class="pks-oi-field__hint"><?php esc_html_e( 'Complete your design and event details to activate your public invitation link.', 'prikogstreg-online-invitations' ); ?></p>
 		<?php endif; ?>
 
-		<a class="button" href="<?php echo esc_url( $design_url ); ?>"><?php esc_html_e( 'Edit design', 'prikogstreg-online-invitations' ); ?></a>
-		<button type="button" class="button" data-pks-oi-preview-toggle><?php esc_html_e( 'Toggle full width', 'prikogstreg-online-invitations' ); ?></button>
+		<a class="button" href="<?php echo esc_url( $design_url ); ?>"><?php esc_html_e( 'View design', 'prikogstreg-online-invitations' ); ?></a>
 	</div>
 
 	<?php if ( '' !== $envelope_preset ) : ?>
 		<p class="pks-oi-preview__meta"><?php printf( esc_html__( 'Envelope: %s', 'prikogstreg-online-invitations' ), esc_html( (string) $envelope_preset ) ); ?></p>
 	<?php endif; ?>
-
-	<div class="pks-oi-preview__device" data-pks-oi-preview-device>
-		<?php if ( '' === $preview_html ) : ?>
-			<?php
-			pks_oi_render_empty_state(
-				__( 'Preview not ready', 'prikogstreg-online-invitations' ),
-				__( 'Complete your design and event details to generate a preview.', 'prikogstreg-online-invitations' ),
-				[ 'label' => __( 'Edit design', 'prikogstreg-online-invitations' ), 'url' => $design_url ]
-			);
-			?>
-		<?php else : ?>
-			<?php if ( $preview_uses_template_fallback ) : ?>
-				<p class="pks-oi-field__hint" role="status">
-					<?php esc_html_e( 'No custom design was saved with your order. This preview uses the default template.', 'prikogstreg-online-invitations' ); ?>
-				</p>
-			<?php endif; ?>
-			<div class="pks-oi-preview__html" data-track-opens="<?php echo $track_opens ? '1' : '0'; ?>">
-				<?php echo $preview_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</div>
-		<?php endif; ?>
-	</div>
 
 	<?php pks_oi_section_close(); ?>
 <?php pks_oi_project_close(); ?>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\WooCommerce\Checkout;
 
+use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectImportGuard;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Cart\CartPayload;
 use PrikOgStreg\OnlineInvitations\WooCommerce\Cart\CartPayloadValidator;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
@@ -20,6 +21,7 @@ final class OrderItemPayload {
 	public function register(): void {
 		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'persist_invitation_references' ], 20, 4 );
 		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'validate_line_before_persist' ], 5, 4 );
+		add_action( 'woocommerce_new_order_item', [ $this, 'refresh_checksum_after_bpp_persist' ], 25, 3 );
 	}
 
 	/**
@@ -56,5 +58,49 @@ final class OrderItemPayload {
 		if ( ! empty( $values[ CartPayload::CHECKSUM_KEY ] ) ) {
 			$item->update_meta_data( CartPayload::ORDER_META_CHECKSUM, (string) $values[ CartPayload::CHECKSUM_KEY ] );
 		}
+	}
+
+	/**
+	 * Recompute checksum from the persisted BPP payload so import matches order storage.
+	 *
+	 * @param int                    $item_id
+	 * @param \WC_Order_Item_Product $item
+	 * @param int                    $order_id
+	 */
+	public function refresh_checksum_after_bpp_persist( $item_id, $item, $order_id ): void {
+		unset( $order_id );
+
+		if ( ! is_object( $item ) || ! method_exists( $item, 'get_meta' ) ) {
+			return;
+		}
+
+		if ( ProductMeta::TYPE !== (string) $item->get_meta( CartPayload::ORDER_META_TYPE, true ) ) {
+			return;
+		}
+
+		if ( ! class_exists( 'BPP_Order_Item_Storage', false ) ) {
+			return;
+		}
+
+		$payload = \BPP_Order_Item_Storage::get_payload( (int) $item_id );
+		if ( ! is_array( $payload ) ) {
+			return;
+		}
+
+		$state = ProjectImportGuard::build_checksum_state(
+			[
+				'field' => is_array( $payload['field'] ?? null ) ? $payload['field'] : [],
+				'page'  => is_array( $payload['page'] ?? null ) ? $payload['page'] : [],
+			],
+			$item
+		);
+
+		if ( null !== ProjectImportGuard::validate_builder_pages( $state ) ) {
+			return;
+		}
+
+		$checksum = $this->validator->compute_checksum( $state );
+		$item->update_meta_data( CartPayload::ORDER_META_CHECKSUM, $checksum );
+		$item->save();
 	}
 }

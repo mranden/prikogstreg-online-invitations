@@ -197,6 +197,92 @@ final class ProductDataPanel {
 					]
 				);
 				?>
+
+				<hr />
+				<p class="form-field">
+					<strong><?php esc_html_e( 'Sample invitation preview', 'prikogstreg-online-invitations' ); ?></strong><br />
+					<span class="description">
+						<?php esc_html_e( 'Configure dummy data for the storefront sample link. Opens the full guest invitation experience in a new tab.', 'prikogstreg-online-invitations' ); ?>
+					</span>
+				</p>
+
+				<?php
+				woocommerce_wp_checkbox(
+					[
+						'id'          => ProductMeta::DUMMY_PREVIEW_ENABLED,
+						'label'       => __( 'Enable sample preview link', 'prikogstreg-online-invitations' ),
+						'value'       => wc_bool_to_string( '' === get_post_meta( $product_id, ProductMeta::DUMMY_PREVIEW_ENABLED, true ) || 'yes' === get_post_meta( $product_id, ProductMeta::DUMMY_PREVIEW_ENABLED, true ) ),
+					]
+				);
+
+				woocommerce_wp_text_input(
+					[
+						'id'                => ProductMeta::DUMMY_EVENT_TITLE,
+						'label'             => __( 'Sample event title', 'prikogstreg-online-invitations' ),
+						'placeholder'       => $product ? $product->get_name() : '',
+						'value'             => (string) get_post_meta( $product_id, ProductMeta::DUMMY_EVENT_TITLE, true ),
+						'desc_tip'          => true,
+						'description'       => __( 'Leave empty to use the product name.', 'prikogstreg-online-invitations' ),
+					]
+				);
+
+				woocommerce_wp_text_input(
+					[
+						'id'                => ProductMeta::DUMMY_EVENT_DAYS_AHEAD,
+						'label'             => __( 'Sample event date (days ahead)', 'prikogstreg-online-invitations' ),
+						'type'              => 'number',
+						'custom_attributes' => [
+							'min'  => '1',
+							'max'  => '365',
+							'step' => '1',
+						],
+						'value'             => (string) ( get_post_meta( $product_id, ProductMeta::DUMMY_EVENT_DAYS_AHEAD, true ) ?: ProductMeta::DEFAULT_DUMMY_EVENT_DAYS ),
+					]
+				);
+
+				woocommerce_wp_text_input(
+					[
+						'id'                => ProductMeta::DUMMY_GUEST_COUNT,
+						'label'             => __( 'Sample guest party size', 'prikogstreg-online-invitations' ),
+						'type'              => 'number',
+						'custom_attributes' => [
+							'min'  => '1',
+							'max'  => '20',
+							'step' => '1',
+						],
+						'value'             => (string) ( get_post_meta( $product_id, ProductMeta::DUMMY_GUEST_COUNT, true ) ?: ProductMeta::DEFAULT_DUMMY_GUEST_COUNT ),
+						'desc_tip'          => true,
+						'description'       => __( 'Used for the addressee RSVP party size hint.', 'prikogstreg-online-invitations' ),
+					]
+				);
+
+				woocommerce_wp_text_input(
+					[
+						'id'                => ProductMeta::DUMMY_GIFT_COUNT,
+						'label'             => __( 'Sample wishlist gifts', 'prikogstreg-online-invitations' ),
+						'type'              => 'number',
+						'custom_attributes' => [
+							'min'  => '1',
+							'max'  => '20',
+							'step' => '1',
+						],
+						'value'             => (string) ( get_post_meta( $product_id, ProductMeta::DUMMY_GIFT_COUNT, true ) ?: ProductMeta::DEFAULT_DUMMY_GIFT_COUNT ),
+					]
+				);
+				?>
+
+				<?php if ( $product && ProductMeta::read_dummy_preview_enabled( $product ) ) : ?>
+					<p class="form-field">
+						<a
+							class="button button-secondary"
+							href="<?php echo esc_url( ProductDummyPreviewController::preview_url( $product_id ) ); ?>"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<?php esc_html_e( 'Open sample preview', 'prikogstreg-online-invitations' ); ?>
+						</a>
+					</p>
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php
@@ -324,6 +410,10 @@ final class ProductDataPanel {
 			'pksOiAdmin',
 			[
 				'productType' => ProductMeta::TYPE,
+				'i18n'        => [
+					'selectEnvelopeImage' => __( 'Select envelope image', 'prikogstreg-online-invitations' ),
+					'useImage'            => __( 'Use image', 'prikogstreg-online-invitations' ),
+				],
 			]
 		);
 	}

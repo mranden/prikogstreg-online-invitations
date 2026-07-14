@@ -146,8 +146,10 @@ final class BuilderFrontendBridgeTest extends TestCase {
 		$second_output = (string) ob_get_clean();
 
 		$this->assertStringContainsString( 'name="attribute_pa_bpp_size"', $first_output );
+		$this->assertStringContainsString( 'id="pa_bpp_size"', $first_output );
 		$this->assertStringContainsString( 'value="a5"', $first_output );
 		$this->assertStringContainsString( 'name="attribute_pa_bpp_format"', $first_output );
+		$this->assertStringContainsString( 'id="pa_bpp_format"', $first_output );
 		$this->assertStringContainsString( 'value="flat"', $first_output );
 		$this->assertStringContainsString( 'product-addons-for-customizer', $first_output );
 		$this->assertSame( 1, $field_form_calls );
@@ -223,6 +225,123 @@ final class BuilderFrontendBridgeTest extends TestCase {
 
 		$this->assertTrue( is_wp_error( $result ) );
 		$this->assertSame( 'bpp_size_not_permitted', $result->get_error_code() );
+	}
+
+	public function test_get_page_thumbnail_map_returns_indexed_urls(): void {
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+				'pages'           => [
+					(object) [
+						'low_res_html' => '<div>page</div>',
+						'thumbnail'    => 'https://example.test/page-0.jpg',
+					],
+					(object) [
+						'low_res_html' => '<div>page</div>',
+						'thumbnail'    => 'https://example.test/page-1.jpg',
+					],
+				],
+			]
+		);
+
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, $value ) {
+				return $value;
+			}
+		);
+
+		$map = $this->make_bridge()->get_page_thumbnail_map( 10 );
+
+		$this->assertSame(
+			[
+				0 => 'https://example.test/page-0.jpg',
+				1 => 'https://example.test/page-1.jpg',
+			],
+			$map
+		);
+	}
+
+	public function test_get_page_thumbnail_returns_page_zero_url(): void {
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+				'pages'           => [
+					(object) [
+						'low_res_html' => '<div>page</div>',
+						'thumbnail'    => 'https://example.test/page-thumbnail-0.jpg',
+					],
+				],
+			]
+		);
+
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, $value ) {
+				return $value;
+			}
+		);
+
+		$bridge = $this->make_bridge();
+
+		$this->assertSame( 'https://example.test/page-thumbnail-0.jpg', $bridge->get_page_thumbnail( 10, 0 ) );
+		$this->assertSame( 0, $bridge->get_storefront_active_page_index( 10 ) );
+	}
+
+	public function test_get_storefront_active_page_index_matches_four_page_products(): void {
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => true,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+				'pages'           => [
+					(object) [ 'thumbnail' => 'https://example.test/0.jpg' ],
+					(object) [ 'thumbnail' => 'https://example.test/1.jpg' ],
+					(object) [ 'thumbnail' => 'https://example.test/2.jpg' ],
+					(object) [ 'thumbnail' => 'https://example.test/3.jpg' ],
+				],
+			]
+		);
+
+		Functions\when( 'apply_filters' )->alias(
+			static function ( string $hook, $value ) {
+				return $value;
+			}
+		);
+
+		$this->assertSame( 1, $this->make_bridge()->get_storefront_active_page_index( 10 ) );
 	}
 
 	public function test_add_to_cart_template_does_not_duplicate_canvas_markup(): void {

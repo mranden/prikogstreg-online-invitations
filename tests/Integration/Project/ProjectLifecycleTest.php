@@ -90,7 +90,7 @@ final class ProjectLifecycleTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function test_owner_save_increments_state_version(): void {
+	public function test_owner_save_rejected_as_read_only(): void {
 		$project = $this->seed_imported_project();
 
 		$result = $this->state_service->save_design_state(
@@ -105,9 +105,11 @@ final class ProjectLifecycleTest extends TestCase {
 			1
 		);
 
-		$this->assertSame( 2, $result['state_version'] ?? null );
+		$this->assertSame( 'design_read_only', $result['error'] ?? null );
+		$this->assertSame( 403, $result['code'] ?? null );
+
 		$updated = $this->repositories->projects()->find_by_id( (int) $project['project_id'] );
-		$this->assertSame( 2, (int) ( $updated['state_version'] ?? 0 ) );
+		$this->assertSame( 1, (int) ( $updated['state_version'] ?? 0 ) );
 	}
 
 	public function test_other_user_cannot_resolve_project_for_save(): void {
@@ -118,7 +120,7 @@ final class ProjectLifecycleTest extends TestCase {
 		$this->assertNull( $this->authorization->resolve_viewable_project( 3001 ) );
 	}
 
-	public function test_stale_version_returns_conflict(): void {
+	public function test_stale_version_still_rejected_as_read_only(): void {
 		$project = $this->seed_imported_project();
 
 		$result = $this->state_service->save_design_state(
@@ -133,11 +135,11 @@ final class ProjectLifecycleTest extends TestCase {
 			0
 		);
 
-		$this->assertSame( 'stale_state_version', $result['error'] ?? null );
-		$this->assertSame( 409, $result['code'] ?? null );
+		$this->assertSame( 'design_read_only', $result['error'] ?? null );
+		$this->assertSame( 403, $result['code'] ?? null );
 	}
 
-	public function test_invalid_state_is_rejected_by_adapter(): void {
+	public function test_invalid_state_still_rejected_as_read_only(): void {
 		$project = $this->seed_imported_project();
 		$this->adapter->with_save_state(
 			new class() {
@@ -153,8 +155,8 @@ final class ProjectLifecycleTest extends TestCase {
 			1
 		);
 
-		$this->assertSame( 'invalid_state', $result['error'] ?? null );
-		$this->assertSame( 422, $result['code'] ?? null );
+		$this->assertSame( 'design_read_only', $result['error'] ?? null );
+		$this->assertSame( 403, $result['code'] ?? null );
 	}
 
 	public function test_publish_fails_when_public_html_is_unsafe(): void {

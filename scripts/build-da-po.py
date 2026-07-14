@@ -13,6 +13,8 @@ except ImportError:
     print("Install polib: pip3 install polib", file=sys.stderr)
     sys.exit(1)
 
+from da_translations_supplement import SUPPLEMENT
+
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 POT_FILE = PLUGIN_ROOT / "languages" / "prikogstreg-online-invitations.pot"
 PO_FILE = PLUGIN_ROOT / "languages" / "prikogstreg-online-invitations-da_DK.po"
@@ -490,6 +492,8 @@ TRANSLATIONS: dict[str, str] = {
     'Your wishlist reservations': 'Dine ønskelistereservationer',
     '“Sent” means accepted by wp_mail/mailer, not inbox delivery.': '«Sendt» betyder accepteret af wp_mail/mailer, ikke levering til indbakken.',
 }
+
+TRANSLATIONS.update(SUPPLEMENT)
 
 # Plural forms: (singular, plural) for Danish n != 1 rule.
 PLURAL_TRANSLATIONS: dict[str, tuple[str, str]] = {

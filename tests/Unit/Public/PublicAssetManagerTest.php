@@ -101,4 +101,36 @@ final class PublicAssetManagerTest extends TestCase {
 		$this->assertContains( 'style:admin-bar', $dequeued );
 		$this->assertContains( 'style:prikogstreg-fonts', $dequeued );
 	}
+
+	public function test_dequeues_handles_on_product_sample_page(): void {
+		$dequeued = [];
+
+		Functions\when( 'get_query_var' )->alias(
+			function ( string $key ) {
+				if ( Endpoints::PRODUCT_SAMPLE_QUERY_VAR === $key ) {
+					return '284185';
+				}
+
+				return '';
+			}
+		);
+
+		Functions\when( 'wp_dequeue_style' )->alias(
+			function ( string $handle ) use ( &$dequeued ): bool {
+				$dequeued[] = 'style:' . $handle;
+				return true;
+			}
+		);
+		Functions\when( 'wp_dequeue_script' )->alias(
+			function ( string $handle ) use ( &$dequeued ): bool {
+				$dequeued[] = 'script:' . $handle;
+				return true;
+			}
+		);
+
+		( new PublicAssetManager() )->dequeue_unrelated_assets();
+
+		$this->assertContains( 'style:theme-style', $dequeued );
+		$this->assertContains( 'script:minicart-js', $dequeued );
+	}
 }

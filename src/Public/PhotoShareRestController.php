@@ -73,6 +73,8 @@ final class PhotoShareRestController {
 		);
 
 		register_rest_route(
+			self::REST_NAMESPACE,
+			'/photo-share/(?P<token>[A-Za-z0-9_-]+)/gallery',
 			[
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'handle_gallery' ],

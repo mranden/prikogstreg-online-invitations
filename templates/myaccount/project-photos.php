@@ -103,7 +103,7 @@ $wall_url       = (string) ( $summary['wall_url'] ?? '' );
 					]
 				);
 				?>
-				<p><strong><?php esc_html_e( 'Photo code (fotokode)', 'prikogstreg-online-invitations' ); ?></strong></p>
+				<p><strong><?php esc_html_e( 'Photo code', 'prikogstreg-online-invitations' ); ?></strong></p>
 				<?php if ( '' !== $display_code ) : ?>
 					<p class="pks-oi-photo-code-display">
 						<strong><?php esc_html_e( 'Your photo code', 'prikogstreg-online-invitations' ); ?>:</strong>

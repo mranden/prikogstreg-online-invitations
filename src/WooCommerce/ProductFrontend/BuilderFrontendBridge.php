@@ -231,12 +231,13 @@ final class BuilderFrontendBridge {
 	 * @param array{size:string,format:string} $defaults
 	 */
 	private function render_hidden_attribute_inputs( array $defaults ): void {
+		// BPP public.js reads #pa_bpp_size during cart preview capture (not attribute_pa_bpp_size).
 		printf(
-			'<input type="hidden" name="attribute_pa_bpp_size" value="%s" />',
+			'<input type="hidden" id="pa_bpp_size" name="attribute_pa_bpp_size" value="%s" />',
 			esc_attr( $defaults['size'] )
 		);
 		printf(
-			'<input type="hidden" name="attribute_pa_bpp_format" value="%s" />',
+			'<input type="hidden" id="pa_bpp_format" name="attribute_pa_bpp_format" value="%s" />',
 			esc_attr( $defaults['format'] )
 		);
 	}
@@ -246,6 +247,63 @@ final class BuilderFrontendBridge {
 		 * Compatibility path: BPP_Hooks::customizer_view_right() → BPP_Product::render_product_customizer_form().
 		 */
 		do_action( self::FIELD_FORM_ACTION );
+	}
+
+	/**
+	 * Read a page thumbnail URL from the BPP product template (_bpp_product meta).
+	 *
+	 * This is the storefront-safe equivalent of admin #page-thumbnail-{n} values.
+	 *
+	 * @return string Image URL or base64 data URL; empty when unavailable.
+	 */
+	public function get_page_thumbnail( int $product_id, int $page_index = 0 ): string {
+		$map = $this->get_page_thumbnail_map( $product_id );
+
+		return (string) ( $map[ $page_index ] ?? '' );
+	}
+
+	/**
+	 * Mirrors BPP_PDF_Plugin::content_single_product() active page selection.
+	 */
+	public function get_storefront_active_page_index( int $product_id ): int {
+		if ( ! $this->is_builder_plugin_available() || ! $this->has_active_template( $product_id ) ) {
+			return 0;
+		}
+
+		$builder = new \BPP_Product( $product_id );
+		if ( ! $builder->active ) {
+			return 0;
+		}
+
+		$pages = array_values( (array) ( $builder->pages ?? [] ) );
+
+		return 4 === count( $pages ) ? 1 : 0;
+	}
+
+	/**
+	 * @return array<int, string> Page index => thumbnail URL.
+	 */
+	public function get_page_thumbnail_map( int $product_id ): array {
+		if ( ! $this->is_builder_plugin_available() || ! $this->has_active_template( $product_id ) ) {
+			return [];
+		}
+
+		$builder = new \BPP_Product( $product_id );
+		if ( ! $builder->active ) {
+			return [];
+		}
+
+		$pages = array_values( (array) ( $builder->pages ?? [] ) );
+		$map   = [];
+
+		foreach ( $pages as $index => $page ) {
+			$thumbnail = is_object( $page ) ? (string) ( $page->thumbnail ?? '' ) : '';
+			if ( '' !== $thumbnail ) {
+				$map[ (int) $index ] = $thumbnail;
+			}
+		}
+
+		return $map;
 	}
 
 	/**

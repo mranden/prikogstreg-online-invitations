@@ -54,9 +54,10 @@
       event.preventDefault();
 
       if (!frame) {
+        var i18n = window.pksOiAdmin && window.pksOiAdmin.i18n ? window.pksOiAdmin.i18n : {};
         frame = wp.media({
-          title: "Select envelope image",
-          button: { text: "Use image" },
+          title: i18n.selectEnvelopeImage || "Select envelope image",
+          button: { text: i18n.useImage || "Use image" },
           library: { type: "image" },
           multiple: false,
         });

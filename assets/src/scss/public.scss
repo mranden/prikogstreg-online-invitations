@@ -11,3 +11,15 @@
     scroll-behavior: auto !important;
   }
 }
+
+.pks-oi-sample-preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  background: #1d2327;
+  color: #fff;
+  font-family: 'Open sans', sans-serif;
+  font-size: 0.875rem;
+  text-align: center;
+}

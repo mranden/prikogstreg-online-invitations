@@ -99,11 +99,13 @@ final class OnlineInvitationProductFrontendTest extends TestCase {
 		);
 
 		$this->assertStringContainsString( 'render_native_purchase_button', $template );
-		$this->assertStringNotContainsString( 'wc_bpp_cart_style', $template );
+		$this->assertStringContainsString( 'wc_bpp_cart_style', (string) file_get_contents(
+			$this->plugin_root . '/src/WooCommerce/ProductFrontend/OnlineInvitationProductFrontend.php'
+		) );
 		$this->assertSame( 1, substr_count( $template, '<form' ) );
 	}
 
-	public function test_render_native_purchase_button_skipped_for_customizable_products(): void {
+	public function test_render_native_purchase_button_renders_hidden_anchor_for_customizable_products(): void {
 		$frontend = $this->make_frontend();
 		$product  = $this->make_product( 10, true, true, true );
 
@@ -122,12 +124,24 @@ final class OnlineInvitationProductFrontendTest extends TestCase {
 				return $value;
 			}
 		);
+		Functions\when( 'do_action' )->alias(
+			static function ( string $hook ): void {
+				if ( 'wc_bpp_cart_style' === $hook ) {
+					echo 'style="display:none"';
+				}
+			}
+		);
 
 		ob_start();
 		$frontend->render_native_purchase_button( $product );
 		$output = (string) ob_get_clean();
 
-		$this->assertSame( '', $output );
+		$this->assertStringContainsString( 'single_add_to_cart_button', $output );
+		$this->assertStringContainsString( 'data-product-id="10"', $output );
+		$this->assertStringContainsString( 'data-product_sku=', $output );
+		$this->assertStringContainsString( 'name="add-to-cart"', $output );
+		$this->assertStringContainsString( 'style="display:none"', $output );
+		$this->assertStringNotContainsString( '<button type="submit" name="add-to-cart"', $output );
 	}
 
 	public function test_render_native_purchase_button_outputs_submit_for_non_customizable_products(): void {
@@ -269,8 +283,11 @@ final class OnlineInvitationProductFrontendTest extends TestCase {
 		$this->assertStringContainsString( 'data-pks-oi-section="envelope"', $output );
 		$this->assertStringContainsString( 'data-pks-oi-section="builder-fields"', $output );
 		$this->assertStringContainsString( 'name="attribute_pa_bpp_size"', $output );
+		$this->assertStringContainsString( 'id="pa_bpp_size"', $output );
 		$this->assertStringContainsString( 'product-addons-for-customizer', $output );
-		$this->assertStringNotContainsString( 'name="add-to-cart"', $output );
+		$this->assertStringContainsString( 'name="add-to-cart"', $output );
+		$this->assertStringContainsString( 'data-product-id="10"', $output );
+		$this->assertStringContainsString( 'single_add_to_cart_button', $output );
 	}
 
 	public function test_render_add_to_cart_is_not_duplicated(): void {
@@ -328,7 +345,7 @@ final class OnlineInvitationProductFrontendTest extends TestCase {
 
 		return new OnlineInvitationProductFrontend(
 			new \PrikOgStreg\OnlineInvitations\WooCommerce\ProductFrontend\ProductReadiness( $bridge ),
-			new EnvelopeFrontend(),
+			new EnvelopeFrontend( $bridge ),
 			$bridge,
 			new ProductFrontendAssets()
 		);

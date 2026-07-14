@@ -73,7 +73,7 @@ $code_hint  = ! empty( $auto_approve )
 	<?php if ( ! $authorized ) : ?>
 		<section class="pks-oi-photo-share__card" aria-labelledby="pks-oi-photo-code-title">
 			<h2 id="pks-oi-photo-code-title"><?php esc_html_e( 'Enter photo code', 'prikogstreg-online-invitations' ); ?></h2>
-			<p class="pks-oi-photo-share__card-lead"><?php esc_html_e( 'Use the fotokode shared by the organiser to unlock uploads.', 'prikogstreg-online-invitations' ); ?></p>
+			<p class="pks-oi-photo-share__card-lead"><?php esc_html_e( 'Use the photo code shared by the organiser to unlock uploads.', 'prikogstreg-online-invitations' ); ?></p>
 			<form class="pks-oi-photo-share__code-form" data-pks-oi-photo-code-form novalidate>
 				<p>
 					<label for="pks-oi-photo-code"><?php esc_html_e( 'Photo code', 'prikogstreg-online-invitations' ); ?></label>

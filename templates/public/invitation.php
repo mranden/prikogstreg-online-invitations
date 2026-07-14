@@ -22,7 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<title><?php echo esc_html( '' !== $view->event_title ? $view->event_title : __( 'Invitation', 'prikogstreg-online-invitations' ) ); ?></title>
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class( 'pks-oi-public pks-oi-public-invitation' ); ?>>
+<body <?php body_class( 'pks-oi-public pks-oi-public-invitation' . ( ! empty( $is_sample_preview ) ? ' pks-oi-public-invitation--sample' : '' ) ); ?>>
+	<?php if ( ! empty( $is_sample_preview ) ) : ?>
+		<div class="pks-oi-sample-preview-banner" role="status">
+			<?php esc_html_e( 'Sample preview with dummy data — responses are not saved.', 'prikogstreg-online-invitations' ); ?>
+		</div>
+	<?php endif; ?>
 	<main id="pks-oi-public-main" class="pks-oi-public__main">
 		<?php
 		$envelope_view = $view;
