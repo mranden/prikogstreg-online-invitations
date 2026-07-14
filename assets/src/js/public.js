@@ -6,6 +6,137 @@
 
   document.documentElement.classList.add("pks-oi-public-js");
 
+  var i18n = (window.pksOiPublic && window.pksOiPublic.i18n) || {};
+
+  function initPosterViewport() {
+    var viewport = document.querySelector(".pks-oi-poster-viewport");
+    var canvas = viewport && viewport.querySelector("[data-pks-oi-poster-canvas]");
+    if (!viewport || !canvas) {
+      return;
+    }
+
+    var designWidth = parseInt(viewport.getAttribute("data-poster-width") || "510", 10);
+    var designHeight = parseInt(viewport.getAttribute("data-poster-height") || "680", 10);
+    if (!designWidth || !designHeight) {
+      return;
+    }
+
+    function applyScale() {
+      var frame = viewport.querySelector(".pks-oi-poster-viewport__frame");
+      if (!frame) {
+        return;
+      }
+
+      var available = frame.clientWidth;
+      if (!available) {
+        return;
+      }
+
+      var scale = Math.min(1, available / designWidth);
+      canvas.style.transform = "scale(" + scale + ")";
+      canvas.style.width = designWidth + "px";
+      canvas.style.height = designHeight + "px";
+      frame.style.height = Math.ceil(designHeight * scale) + "px";
+    }
+
+    applyScale();
+
+    if (window.ResizeObserver && viewport.querySelector(".pks-oi-poster-viewport__frame")) {
+      var observer = new ResizeObserver(applyScale);
+      observer.observe(viewport.querySelector(".pks-oi-poster-viewport__frame"));
+    } else {
+      window.addEventListener("resize", applyScale);
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(applyScale).catch(function () {});
+    }
+
+    window.addEventListener("load", applyScale);
+  }
+
+  function initPosterPages() {
+    var viewport = document.querySelector(".pks-oi-poster-viewport");
+    if (!viewport) {
+      return;
+    }
+
+    var pages = Array.prototype.slice.call(
+      viewport.querySelectorAll("[data-pks-oi-poster-page]")
+    );
+    if (pages.length < 2) {
+      return;
+    }
+
+    var current = 0;
+    var prevButton = viewport.querySelector("[data-pks-oi-poster-prev]");
+    var nextButton = viewport.querySelector("[data-pks-oi-poster-next]");
+    var status = viewport.querySelector("[data-pks-oi-poster-status]");
+
+    function pageLabel(index) {
+      var template = i18n.poster_page || "Page %1$d of %2$d";
+      return template
+        .replace("%1$d", String(index + 1))
+        .replace("%2$d", String(pages.length))
+        .replace("%s", String(index + 1));
+    }
+
+    function showPage(index) {
+      if (index < 0 || index >= pages.length) {
+        return;
+      }
+
+      current = index;
+      pages.forEach(function (page, pageIndex) {
+        var active = pageIndex === current;
+        page.hidden = !active;
+        page.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+
+      if (status) {
+        status.textContent = pageLabel(current);
+      }
+
+      if (prevButton) {
+        prevButton.disabled = current === 0;
+      }
+      if (nextButton) {
+        nextButton.disabled = current >= pages.length - 1;
+      }
+    }
+
+    function goPrev() {
+      showPage(current - 1);
+    }
+
+    function goNext() {
+      showPage(current + 1);
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener("click", goPrev);
+    }
+    if (nextButton) {
+      nextButton.addEventListener("click", goNext);
+    }
+
+    viewport.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goPrev();
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goNext();
+      }
+    });
+
+    showPage(0);
+  }
+
+  initPosterViewport();
+  initPosterPages();
+
   var root = document.querySelector(".pks-oi-envelope");
   var openButton = document.getElementById("pks-oi-open-invitation");
   var content = document.getElementById("pks-oi-invitation-content");
@@ -51,7 +182,6 @@
   var statusEl = rsvpForm.querySelector("[data-pks-oi-rsvp-status]");
   var personalLinkEl = rsvpForm.querySelector("[data-pks-oi-personal-link]");
   var attendeeWrap = rsvpForm.querySelector("[data-pks-oi-attendee-wrap]");
-  var i18n = (window.pksOiPublic && window.pksOiPublic.i18n) || {};
 
   function setStatus(message, isError) {
     if (!statusEl) {

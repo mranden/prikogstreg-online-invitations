@@ -34,6 +34,9 @@ Implementation: `StoragePath::root()`.
 │   ├── editable/page-001.html
 │   └── published/page-001.html
 ├── published/manifest.json
+├── envelope/
+│   ├── manifest.json
+│   └── envelope-image.*
 ├── previews/
 ├── wishlist/images/
 ├── photos/{pending,approved,thumbnails}/
@@ -51,6 +54,7 @@ Paths are resolved only from `storage_uuid` and allowlisted relative paths (`Sto
 | `StoragePath` | Root resolution, UUID validation, traversal-safe path building |
 | `AtomicFileWriter` | Temp write, `flock`, `fflush`, SHA-256, atomic `rename()` |
 | `ProjectManifest` | `manifest.json` / `published/manifest.json` serialization |
+| `EnvelopeManifest` | `envelope/manifest.json` immutable envelope configuration snapshot |
 | `ProjectStorage` | Create dirs, save state, publish snapshot, read/verify, delete tree |
 | `SafeFileReader` | Read files with optional checksum verification |
 | `FileStreamResponse` | Authorized streaming helper (no public URLs) |
@@ -104,4 +108,11 @@ No raw HTML or large JSON blobs are stored in custom tables.
 composer test
 ```
 
-Coverage includes: directory creation, atomic save, simulated partial failure, stale version conflict, checksum mismatch, traversal rejection, invalid UTF-8, oversized state, previous-state recovery, publish separation, stream helper, deletion idempotency, diagnostic health.
+Coverage includes: directory creation, atomic save, simulated partial failure, stale version conflict, checksum mismatch, traversal rejection, invalid UTF-8, oversized state, previous-state recovery, publish separation, stream helper, deletion idempotency, diagnostic health, purchase import snapshot (builder + envelope).
+
+### Envelope media independence
+
+- Purchase import writes `envelope/manifest.json` from the project row snapshotted at creation (preset, background, attachment ID).
+- When the source attachment file is readable, a project-owned copy is stored at `envelope/envelope-image.*` with checksum verification.
+- When copy fails, `media_storage` is `attachment_reference` and the manifest retains the purchase-time attachment ID. Public rendering uses the WordPress attachment URL while the attachment exists; after deletion, token-scoped `/invitation/{token}/envelope-image/` serves the project copy when available.
+- Product envelope changes after purchase do not alter imported `envelope/manifest.json`.

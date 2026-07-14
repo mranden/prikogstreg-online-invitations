@@ -1,0 +1,30 @@
+/**
+ * Minimal BPP poster display rules snapshotted when pdf-plugin CSS is unavailable.
+ * Loaded only inside .pks-oi-poster-viewport on public invitation routes.
+ */
+.pks-oi-poster-viewport .customizer-page-content,
+.pks-oi-poster-viewport .customizer-content,
+.pks-oi-poster-viewport .bpp-public-page {
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.pks-oi-poster-viewport .bpp-drag-element,
+.pks-oi-poster-viewport [class*='bpp-drag-element-'] {
+	position: absolute;
+	box-sizing: border-box;
+}
+
+.pks-oi-poster-viewport .bpp-image-field,
+.pks-oi-poster-viewport .bpp-text-field,
+.pks-oi-poster-viewport img {
+	max-width: 100%;
+	height: auto;
+}
+
+.pks-oi-poster-viewport .bpp-text-field {
+	white-space: pre-wrap;
+	word-break: break-word;
+}

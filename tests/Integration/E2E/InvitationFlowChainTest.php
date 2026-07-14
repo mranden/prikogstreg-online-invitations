@@ -23,6 +23,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
 use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpService;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistItemService;
 use PrikOgStreg\OnlineInvitations\Domain\Wishlist\WishlistReservationService;
+use PrikOgStreg\OnlineInvitations\Public\PosterDisplayAssets;
 use PrikOgStreg\OnlineInvitations\Public\PublicInvitationLoader;
 use PrikOgStreg\OnlineInvitations\Public\TokenResolver;
 use PrikOgStreg\OnlineInvitations\Scheduling\WelcomeScheduler;
@@ -171,7 +172,7 @@ final class InvitationFlowChainTest extends TestCase {
 		$resolution = $resolver->resolve( $guest_token['raw'] );
 		$this->assertNotNull( $resolution );
 
-		$loader = new PublicInvitationLoader( $storage, $builder );
+		$loader = new PublicInvitationLoader( $storage, $builder, new PosterDisplayAssets( $storage ) );
 		$loaded = $loader->load_published_content( $resolution->project() );
 		$this->assertTrue( $loaded['success'] ?? false );
 

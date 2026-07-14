@@ -25,9 +25,12 @@ final class PublicRegistrar {
 	public function register(): void {
 		( new Endpoints() )->register();
 
+		$project_storage = $this->storage->project_storage();
+		$poster_assets   = new PosterDisplayAssets( $project_storage );
+
 		$controller = new PublicController(
 			new TokenResolver( $this->repositories->guests(), $this->repositories->projects() ),
-			new PublicInvitationLoader( $this->storage->project_storage(), $this->builder ),
+			new PublicInvitationLoader( $project_storage, $this->builder, $poster_assets ),
 			new OpenTracker( $this->repositories->guests() ),
 			new InvalidTokenRateLimiter(),
 			$this->templates,
@@ -37,7 +40,11 @@ final class PublicRegistrar {
 				$this->repositories->wishlist_reservations(),
 				$this->repositories->guests(),
 				$this->repositories->events()
-			)
+			),
+			$project_storage,
+			$this->storage->file_streams(),
+			new EnvelopeImageResolver( $project_storage ),
+			$poster_assets
 		);
 
 		$controller->register();

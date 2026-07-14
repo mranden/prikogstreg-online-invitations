@@ -24,6 +24,12 @@ final class SchemaTest extends TestCase {
 	}
 
 	public function test_current_version_matches_constant(): void {
-		$this->assertSame( 1, Schema::CURRENT_VERSION );
+		$this->assertSame( 2, Schema::CURRENT_VERSION );
+	}
+
+	public function test_projects_table_includes_envelope_image_id_column(): void {
+		$definitions = Schema::get_definitions( 'wp_', 'DEFAULT CHARSET=utf8mb4' );
+
+		$this->assertStringContainsString( 'envelope_image_id bigint(20) unsigned NOT NULL DEFAULT 0', $definitions[0] );
 	}
 }

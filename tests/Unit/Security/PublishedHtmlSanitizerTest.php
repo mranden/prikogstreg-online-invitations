@@ -34,6 +34,10 @@ final class PublishedHtmlSanitizerTest extends TestCase {
 			[ '<section><script>alert(1)</script></section>' ],
 			[ '<a href="javascript:alert(1)">x</a>' ],
 			[ '<img src="x" onerror="alert(1)">' ],
+			[ '<div class="customizer-page-content"><iframe src="https://evil.test"></iframe></div>' ],
+			[ '<div style="width:expression(alert(1))">x</div>' ],
+			[ '<style>@import url("https://evil.test/x.css");</style><div>x</div>' ],
+			[ '<form action="/evil"><input type="text"></form>' ],
 		];
 	}
 
@@ -71,7 +75,14 @@ final class PublishedHtmlSanitizerTest extends TestCase {
 			return [];
 		}
 
-		$blocked_by_oi = [ 'script-tag', 'onerror-attribute', 'javascript-url' ];
+		$blocked_by_oi = [
+			'script-tag',
+			'onerror-attribute',
+			'javascript-url',
+			'malicious-style-expression',
+			'malicious-style-import',
+			'external-iframe',
+		];
 		$cases         = [];
 
 		foreach ( $data['fixtures'] as $fixture ) {

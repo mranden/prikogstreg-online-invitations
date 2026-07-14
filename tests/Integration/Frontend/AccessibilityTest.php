@@ -29,6 +29,16 @@ final class AccessibilityTest extends TestCase {
 		$this->assertStringContainsString( '@version ' . TemplateVersions::VERSION, $contents );
 	}
 
+	public function test_poster_template_includes_viewport_and_page_navigation(): void {
+		$loader = new TemplateLoader();
+		$this->assertStringContainsString( 'templates/public/poster.php', $loader->locate( 'public/poster' ) );
+
+		$contents = (string) file_get_contents( PKS_OI_PLUGIN_PATH . 'templates/public/poster.php' );
+		$this->assertStringContainsString( 'pks-oi-poster-viewport', $contents );
+		$this->assertStringContainsString( 'data-pks-oi-poster-prev', $contents );
+		$this->assertStringContainsString( 'aria-live="polite"', $contents );
+	}
+
 	public function test_rsvp_form_has_labels_and_live_region(): void {
 		$path = PKS_OI_PLUGIN_PATH . 'templates/public/rsvp-form.php';
 		$contents = (string) file_get_contents( $path );

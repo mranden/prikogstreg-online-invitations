@@ -12,7 +12,9 @@ final class ProductMeta {
 	public const TYPE = 'online_invitation';
 
 	public const ENVELOPE_PRESET       = '_pks_oi_envelope_preset';
+	/** @deprecated V1 admin note field; superseded by ENVELOPE_IMAGE_ID. */
 	public const ENVELOPE_PREVIEW_REF  = '_pks_oi_envelope_preview_ref';
+	public const ENVELOPE_IMAGE_ID     = '_pks_oi_envelope_image_id';
 	public const BACKGROUND_PRESET     = '_pks_oi_background_preset';
 	public const DEFAULT_LOCALE        = '_pks_oi_default_locale';
 	public const REMINDER_OFFSET_DAYS  = '_pks_oi_reminder_offset_days';
@@ -130,6 +132,10 @@ final class ProductMeta {
 		return (string) $product->get_meta( self::BACKGROUND_PRESET, true );
 	}
 
+	public static function read_envelope_image_id( object $product ): int {
+		return max( 0, (int) $product->get_meta( self::ENVELOPE_IMAGE_ID, true ) );
+	}
+
 	/**
 	 * @param object $product WooCommerce product object.
 	 */
@@ -191,7 +197,15 @@ final class ProductMeta {
 		}
 
 		$preview_ref = sanitize_text_field( (string) ( $data[ self::ENVELOPE_PREVIEW_REF ] ?? '' ) );
-		$product->update_meta_data( self::ENVELOPE_PREVIEW_REF, $preview_ref );
+		if ( '' !== $preview_ref ) {
+			$product->update_meta_data( self::ENVELOPE_PREVIEW_REF, $preview_ref );
+		}
+
+		$envelope_image = max( 0, (int) ( $data[ self::ENVELOPE_IMAGE_ID ] ?? 0 ) );
+		if ( $envelope_image > 0 && ! AttachmentValidator::is_valid_image_attachment( $envelope_image ) ) {
+			$envelope_image = 0;
+		}
+		$product->update_meta_data( self::ENVELOPE_IMAGE_ID, $envelope_image );
 
 		$background = sanitize_key( (string) ( $data[ self::BACKGROUND_PRESET ] ?? '' ) );
 		if ( self::is_background_preset_valid( $background ) ) {

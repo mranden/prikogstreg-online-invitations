@@ -35,6 +35,7 @@ final class TemplateLoader {
 		'myaccount/project-edit',
 		'public/invitation',
 		'public/envelope',
+		'public/poster',
 		'public/rsvp-form',
 		'public/wishlist',
 		'public/photos',

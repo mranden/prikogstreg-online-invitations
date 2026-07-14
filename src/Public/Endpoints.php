@@ -11,9 +11,13 @@ final class Endpoints {
 
 	public const QUERY_VAR = 'pks_oi_invitation_token';
 
+	public const ENVELOPE_ASSET_QUERY_VAR = 'pks_oi_envelope_asset';
+
+	public const POSTER_ASSET_QUERY_VAR = 'pks_oi_poster_asset';
+
 	public const REWRITE_VERSION_OPTION = 'pks_oi_public_rewrite_version';
 
-	public const REWRITE_VERSION = '1';
+	public const REWRITE_VERSION = '3';
 
 	public function register(): void {
 		add_action( 'init', [ $this, 'register_rewrite_rules' ], 0 );
@@ -22,6 +26,18 @@ final class Endpoints {
 
 	public function register_rewrite_rules(): void {
 		add_rewrite_tag( '%' . self::QUERY_VAR . '%', '([^&]+)' );
+		add_rewrite_tag( '%' . self::ENVELOPE_ASSET_QUERY_VAR . '%', '([01])' );
+		add_rewrite_tag( '%' . self::POSTER_ASSET_QUERY_VAR . '%', '(display|fonts)' );
+		add_rewrite_rule(
+			'^invitation/([^/]+)/envelope-image/?$',
+			'index.php?' . self::QUERY_VAR . '=$matches[1]&' . self::ENVELOPE_ASSET_QUERY_VAR . '=1',
+			'top'
+		);
+		add_rewrite_rule(
+			'^invitation/([^/]+)/poster-asset/(display|fonts)/?$',
+			'index.php?' . self::QUERY_VAR . '=$matches[1]&' . self::POSTER_ASSET_QUERY_VAR . '=$matches[2]',
+			'top'
+		);
 		add_rewrite_rule(
 			'^invitation/([^/]+)/?$',
 			'index.php?' . self::QUERY_VAR . '=$matches[1]',
@@ -35,8 +51,31 @@ final class Endpoints {
 	 */
 	public function register_query_var( array $vars ): array {
 		$vars[] = self::QUERY_VAR;
+		$vars[] = self::ENVELOPE_ASSET_QUERY_VAR;
+		$vars[] = self::POSTER_ASSET_QUERY_VAR;
 
 		return $vars;
+	}
+
+	public static function envelope_image_url( string $raw_token ): string {
+		if ( '' === $raw_token || ! function_exists( 'home_url' ) ) {
+			return '';
+		}
+
+		return home_url( '/invitation/' . rawurlencode( $raw_token ) . '/envelope-image/' );
+	}
+
+	public static function poster_asset_url( string $raw_token, string $asset ): string {
+		if ( '' === $raw_token || ! function_exists( 'home_url' ) ) {
+			return '';
+		}
+
+		$asset = sanitize_key( $asset );
+		if ( ! in_array( $asset, [ 'display', 'fonts' ], true ) ) {
+			return '';
+		}
+
+		return home_url( '/invitation/' . rawurlencode( $raw_token ) . '/poster-asset/' . $asset . '/' );
 	}
 
 	public static function maybe_flush_rewrites(): void {

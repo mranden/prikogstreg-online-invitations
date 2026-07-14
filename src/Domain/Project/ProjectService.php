@@ -66,6 +66,11 @@ final class ProjectService {
 
 		$existing = $this->resolve_existing_project_id( $item, $order_item_id );
 		if ( $existing > 0 ) {
+			$project = $this->projects->find_by_id( $existing );
+			if ( is_array( $project ) && ! ProjectEntitlement::is_project_usable( $project ) ) {
+				$this->import_for_project( $project, $order, $item );
+			}
+
 			return $existing;
 		}
 
@@ -270,11 +275,22 @@ final class ProjectService {
 	 * @param object               $item  WooCommerce order item product.
 	 */
 	private function import_for_project( array $project, object $order, object $item ): bool {
+		if ( ProjectImportGuard::is_already_imported( $project ) ) {
+			return true;
+		}
+
 		$project_id    = (int) ( $project['project_id'] ?? 0 );
 		$order_id      = (int) ( $project['order_id'] ?? 0 );
 		$order_item_id = (int) ( $project['order_item_id'] ?? 0 );
 		$product_id    = (int) ( $project['product_id'] ?? 0 );
 		$storage_uuid  = (string) ( $project['storage_uuid'] ?? '' );
+
+		$context_error = ProjectImportGuard::validate_import_context( $project, $order, $item );
+		if ( null !== $context_error ) {
+			$this->mark_import_failed( $project_id, $storage_uuid, $context_error, $order_id, $order_item_id );
+
+			return false;
+		}
 
 		$adapter = $this->builder->get_adapter();
 		if ( null === $adapter || ! method_exists( $adapter, 'load_state' ) ) {
@@ -335,6 +351,20 @@ final class ProjectService {
 			}
 		}
 
+		$page_error = ProjectImportGuard::validate_builder_pages( $state );
+		if ( null !== $page_error ) {
+			$this->mark_import_failed( $project_id, $storage_uuid, $page_error, $order_id, $order_item_id );
+
+			return false;
+		}
+
+		$checksum_error = ProjectImportGuard::validate_payload_checksum( $state, $item );
+		if ( null !== $checksum_error ) {
+			$this->mark_import_failed( $project_id, $storage_uuid, $checksum_error, $order_id, $order_item_id );
+
+			return false;
+		}
+
 		$schema_version = '1';
 		if ( method_exists( $adapter, 'get_schema_version' ) ) {
 			$schema_version = (string) $adapter->get_schema_version( $state );
@@ -360,7 +390,9 @@ final class ProjectService {
 		}
 
 		try {
-			$import = $this->storage->import_from_builder_state(
+			$envelope_snapshot = EnvelopeSnapshot::from_project_row( $project );
+
+			$import = $this->storage->import_complete_snapshot(
 				[
 					'project_id'             => $project_id,
 					'storage_uuid'           => $storage_uuid,
@@ -368,7 +400,8 @@ final class ProjectService {
 					'product_id'             => $product_id,
 					'template_id'            => (string) ( $project['template_id'] ?? $product_id ),
 				],
-				$state
+				$state,
+				$envelope_snapshot
 			);
 
 			$expires_at = ProjectExpiration::calculate_initial_expiry(

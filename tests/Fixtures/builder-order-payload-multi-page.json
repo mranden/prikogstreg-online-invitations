@@ -1,0 +1,31 @@
+{
+  "schema_version": "1",
+  "field": {
+    "550e8400-e29b-41d4-a716-446655440000": {
+      "text": "Page one",
+      "type": "text"
+    },
+    "660e8400-e29b-41d4-a716-446655440001": {
+      "text": "Page two",
+      "type": "text"
+    }
+  },
+  "page": [
+    "<div class=\"customizer-page-content page-0 front\"><span>Page 1</span></div>",
+    "<div class=\"customizer-page-content page-1\"><span>Page 2</span></div>"
+  ],
+  "_pages_thumbnails": [
+    {
+      "thumbnail": "https://example.test/uploads/thumb-page-0.jpg",
+      "page_name": "Forside"
+    },
+    {
+      "thumbnail": "https://example.test/uploads/thumb-page-1.jpg",
+      "page_name": "Bagside"
+    }
+  ],
+  "size": "a5",
+  "format": "flat",
+  "product_id": 10,
+  "template_id": "10"
+}

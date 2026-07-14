@@ -18,6 +18,7 @@ final class StoragePath {
 	public const STATE_PREVIOUS         = 'state/previous.json';
 	public const STATE_MANIFEST         = 'manifest.json';
 	public const PUBLISHED_MANIFEST     = 'published/manifest.json';
+	public const ENVELOPE_MANIFEST      = 'envelope/manifest.json';
 	public const EDITABLE_PAGE_PATTERN  = 'pages/editable/page-%03d.html';
 	public const PUBLISHED_PAGE_PATTERN = 'pages/published/page-%03d.html';
 
@@ -32,6 +33,7 @@ final class StoragePath {
 		'photos/pending/',
 		'photos/approved/',
 		'photos/thumbnails/',
+		'envelope/',
 		'tmp/',
 	];
 
@@ -124,7 +126,11 @@ final class StoragePath {
 			throw new StoragePathException( 'Relative path contains invalid characters.' );
 		}
 
-		if ( self::STATE_MANIFEST === $relative_path || self::PUBLISHED_MANIFEST === $relative_path ) {
+		if (
+			self::STATE_MANIFEST === $relative_path
+			|| self::PUBLISHED_MANIFEST === $relative_path
+			|| self::ENVELOPE_MANIFEST === $relative_path
+		) {
 			return;
 		}
 

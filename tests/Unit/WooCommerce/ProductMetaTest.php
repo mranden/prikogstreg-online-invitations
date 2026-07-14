@@ -9,6 +9,13 @@ use PrikOgStreg\OnlineInvitations\Tests\TestCase;
 
 final class ProductMetaTest extends TestCase {
 
+	protected function setUp(): void {
+		parent::setUp();
+
+		\Brain\Monkey\Functions\when( 'get_post_type' )->justReturn( 'attachment' );
+		\Brain\Monkey\Functions\when( 'wp_attachment_is_image' )->justReturn( true );
+	}
+
 	public function test_product_type_slug_is_online_invitation(): void {
 		$this->assertSame( 'online_invitation', ProductMeta::TYPE );
 	}
@@ -42,7 +49,7 @@ final class ProductMetaTest extends TestCase {
 			$product,
 			[
 				ProductMeta::ENVELOPE_PRESET      => 'modern',
-				ProductMeta::ENVELOPE_PREVIEW_REF => 'preview-ref-1',
+				ProductMeta::ENVELOPE_IMAGE_ID  => '55',
 				ProductMeta::BACKGROUND_PRESET    => 'floral',
 				ProductMeta::DEFAULT_LOCALE       => 'da_DK',
 				ProductMeta::REMINDER_OFFSET_DAYS => '7',
@@ -52,7 +59,7 @@ final class ProductMetaTest extends TestCase {
 		);
 
 		$this->assertSame( 'modern', $product->get_meta( ProductMeta::ENVELOPE_PRESET ) );
-		$this->assertSame( 'preview-ref-1', $product->get_meta( ProductMeta::ENVELOPE_PREVIEW_REF ) );
+		$this->assertSame( 55, $product->get_meta( ProductMeta::ENVELOPE_IMAGE_ID ) );
 		$this->assertSame( 'floral', $product->get_meta( ProductMeta::BACKGROUND_PRESET ) );
 		$this->assertSame( 7, $product->get_meta( ProductMeta::REMINDER_OFFSET_DAYS ) );
 	}

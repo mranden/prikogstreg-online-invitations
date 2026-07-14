@@ -6,6 +6,7 @@ namespace PrikOgStreg\OnlineInvitations\Domain\Project;
 
 use PrikOgStreg\OnlineInvitations\Admin\ProjectPostType;
 use PrikOgStreg\OnlineInvitations\Security\InvitationToken;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\EnvelopeDesign;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 /**
@@ -101,6 +102,7 @@ final class ProjectFactory {
 			'internal_wishlist_enabled' => is_object( $product ) && ProductMeta::read_wishlist_default( $product ) ? 1 : 0,
 			'envelope_preset'          => is_object( $product ) ? ProductMeta::read_envelope_preset( $product ) : '',
 			'background_preset'        => is_object( $product ) ? ProductMeta::read_background_preset( $product ) : '',
+			'envelope_image_id'        => is_object( $product ) ? EnvelopeDesign::resolve_for_product( $product )['image_id'] : 0,
 			'generic_token_hash'       => (string) $context['generic_token_hash'],
 			'generic_token_version'    => 1,
 			'builder_schema_version'   => (string) ( $context['builder_schema_version'] ?? '1' ),

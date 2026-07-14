@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\WooCommerce\Cart;
 
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\BppAttributeDefaults;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 /**
@@ -24,7 +25,13 @@ final class CartPayloadValidator {
 			return [];
 		}
 
-		$state = $this->build_state_from_request( $product_id );
+		$state  = $this->build_state_from_request( $product_id );
+		$errors = $this->attribute_errors( $product_id, (string) ( $state['size'] ?? '' ), (string) ( $state['format'] ?? '' ) );
+
+		if ( [] !== $errors ) {
+			return $errors;
+		}
+
 		$errors = $this->structural_errors( $state );
 
 		if ( [] !== $errors ) {
@@ -84,14 +91,40 @@ final class CartPayloadValidator {
 			$page = array_map( 'strval', wp_unslash( $_POST['page'] ) );
 		}
 
+		$posted_size   = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_size'] ?? '' ) ) );
+		$posted_format = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_format'] ?? '' ) ) );
+		$attributes    = BppAttributeDefaults::normalize_posted_attributes( $product_id, $posted_size, $posted_format );
+
+		$size   = is_wp_error( $attributes ) ? $posted_size : $attributes['size'];
+		$format = is_wp_error( $attributes ) ? $posted_format : $attributes['format'];
+
 		return [
 			'field'       => $field,
 			'page'        => $page,
-			'size'        => sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_size'] ?? '' ) ) ),
-			'format'      => sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_format'] ?? '' ) ) ),
+			'size'        => $size,
+			'format'      => $format,
 			'product_id'  => $product_id,
 			'template_id' => $product_id,
 		];
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	public function attribute_errors( int $product_id, string $size, string $format ): array {
+		if ( ProductMeta::is_builder_optional_id( $product_id ) ) {
+			return [];
+		}
+
+		$posted_size   = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_size'] ?? '' ) ) );
+		$posted_format = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_format'] ?? '' ) ) );
+		$attributes    = BppAttributeDefaults::normalize_posted_attributes( $product_id, $posted_size, $posted_format );
+
+		if ( is_wp_error( $attributes ) ) {
+			return [ $attributes->get_error_code() ?: 'invalid_bpp_attributes' ];
+		}
+
+		return [];
 	}
 
 	/**

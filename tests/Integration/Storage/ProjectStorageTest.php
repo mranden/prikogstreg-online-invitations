@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\Tests\Integration\Storage;
 
+use PrikOgStreg\OnlineInvitations\Domain\Project\EnvelopeSnapshot;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageChecksumException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageConflictException;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StoragePathException;
@@ -169,6 +170,22 @@ final class ProjectStorageTest extends TestCase {
 
 	public function test_storage_diagnostic_reports_health(): void {
 		$this->storage->project_storage()->save_state( $this->base_context( 0 ) );
+		$this->storage->project_storage()->import_envelope_snapshot(
+			[
+				'project_id'   => 101,
+				'storage_uuid' => $this->uuid,
+			],
+			EnvelopeSnapshot::from_project_row(
+				[
+					'project_id'         => 101,
+					'storage_uuid'       => $this->uuid,
+					'product_id'         => 12,
+					'envelope_preset'    => 'classic',
+					'background_preset'  => 'neutral',
+					'envelope_image_id'  => 0,
+				]
+			)
+		);
 
 		$report = $this->storage->diagnostic()->diagnose_project(
 			[

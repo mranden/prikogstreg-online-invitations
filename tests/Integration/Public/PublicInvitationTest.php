@@ -14,6 +14,8 @@ use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicEntitlement;
 use PrikOgStreg\OnlineInvitations\Public\EnvelopeViewModel;
 use PrikOgStreg\OnlineInvitations\Public\OpenTracker;
+use PrikOgStreg\OnlineInvitations\Public\PosterDisplayAssets;
+use PrikOgStreg\OnlineInvitations\Public\PublicInvitationContent;
 use PrikOgStreg\OnlineInvitations\Public\PublicInvitationLoader;
 use PrikOgStreg\OnlineInvitations\Public\TokenResolution;
 use PrikOgStreg\OnlineInvitations\Public\TokenResolver;
@@ -58,7 +60,11 @@ final class PublicInvitationTest extends TestCase {
 		$builder->resolve();
 
 		$this->resolver     = new TokenResolver( $this->repositories->guests(), $this->repositories->projects() );
-		$this->loader       = new PublicInvitationLoader( ( new StorageRegistry( $this->storage_root ) )->project_storage(), $builder );
+		$this->loader       = new PublicInvitationLoader(
+			( new StorageRegistry( $this->storage_root ) )->project_storage(),
+			$builder,
+			new PosterDisplayAssets( ( new StorageRegistry( $this->storage_root ) )->project_storage() )
+		);
 		$this->open_tracker = new OpenTracker( $this->repositories->guests() );
 	}
 
@@ -190,7 +196,21 @@ final class PublicInvitationTest extends TestCase {
 		$resolution = $this->resolver->resolve( $guest_token['raw'] );
 		$this->assertInstanceOf( TokenResolution::class, $resolution );
 
-		$view = EnvelopeViewModel::from_resolution( $resolution, '<section>Published</section>' );
+		$content = new PublicInvitationContent(
+			[
+				[ 'index' => 1, 'html' => '<section>Published</section>' ],
+			],
+			[
+				'width'       => 510,
+				'height'      => 680,
+				'orientation' => 'portrait',
+				'size'        => 'a5',
+				'format'      => 'flat',
+			],
+			1
+		);
+
+		$view = EnvelopeViewModel::from_resolution( $resolution, $content );
 		$export = json_encode(
 			[
 				'addressee_label' => $view->addressee_label,

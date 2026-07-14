@@ -7,6 +7,7 @@ $plugin_root = dirname( __DIR__ );
 require_once $plugin_root . '/vendor/autoload.php';
 require_once $plugin_root . '/tests/Support/OptionsStore.php';
 require_once $plugin_root . '/tests/stubs/woocommerce/WC_Email.php';
+require_once $plugin_root . '/tests/stubs/bpp/BPP_Product.php';
 
 /** @var list<array{to:string,subject:string,message:string}> */
 $GLOBALS['pks_oi_test_mail_log'] = [];
@@ -236,6 +237,33 @@ if ( ! defined( 'DAY_IN_SECONDS' ) ) {
 if ( ! function_exists( 'sanitize_key' ) ) {
 	function sanitize_key( $key ) {
 		return strtolower( preg_replace( '/[^a-z0-9_\\-]/', '', (string) $key ) );
+	}
+}
+
+if ( ! function_exists( 'sanitize_title' ) ) {
+	function sanitize_title( $title ) {
+		$title = strtolower( (string) $title );
+		$title = preg_replace( '/[^a-z0-9_\\-]/', '-', $title ) ?? $title;
+
+		return trim( $title, '-' );
+	}
+}
+
+if ( ! class_exists( 'WP_Error', false ) ) {
+	class WP_Error {
+		public function __construct(
+			private string $code = '',
+			private string $message = '',
+			private mixed $data = null
+		) {}
+
+		public function get_error_code(): string {
+			return $this->code;
+		}
+
+		public function get_error_message(): string {
+			return $this->message;
+		}
 	}
 }
 

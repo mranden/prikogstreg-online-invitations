@@ -9,7 +9,7 @@ namespace PrikOgStreg\OnlineInvitations\Database;
  */
 final class Schema {
 
-	public const CURRENT_VERSION = 1;
+	public const CURRENT_VERSION = 2;
 
 	/**
 	 * @return list<string> Ordered CREATE TABLE statements.
@@ -68,6 +68,7 @@ final class Schema {
 			external_wishlist_url text NULL,
 			envelope_preset varchar(64) NOT NULL DEFAULT '',
 			background_preset varchar(64) NOT NULL DEFAULT '',
+			envelope_image_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			generic_token_hash char(64) NULL,
 			generic_token_version int(10) unsigned NOT NULL DEFAULT 1,
 			builder_schema_version varchar(32) NOT NULL DEFAULT '1',

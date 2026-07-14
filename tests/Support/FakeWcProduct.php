@@ -8,11 +8,17 @@ use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 final class FakeWcProduct {
 
+	/** @var array<string, mixed> */
+	private array $meta = [];
+
 	public function __construct(
 		private int $id,
 		private string $type = ProductMeta::TYPE,
-		private string $name = 'Invitation Product'
-	) {}
+		private string $name = 'Invitation Product',
+		array $meta = []
+	) {
+		$this->meta = $meta;
+	}
 
 	public function get_id(): int {
 		return $this->id;
@@ -27,6 +33,6 @@ final class FakeWcProduct {
 	}
 
 	public function get_meta( string $key, bool $single = true ) {
-		return '';
+		return $this->meta[ $key ] ?? '';
 	}
 }

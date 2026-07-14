@@ -42,7 +42,22 @@ final class ProductDataPanel {
 
 		$product_id = (int) $post->ID;
 		$status     = BuilderValidity::integration_status( $product_id );
-		$customize  = admin_url( 'admin.php?page=bpp-customize&product_id=' . $product_id );
+		$customize  = admin_url( 'admin.php?page=bpp-customize&prdid=' . $product_id );
+		$product    = wc_get_product( $product_id );
+		$design     = $product ? EnvelopeDesign::resolve_for_product( $product ) : [
+			'preset'            => '',
+			'background_preset' => '',
+			'image_id'          => 0,
+			'image_url'         => '',
+			'image_source'      => EnvelopeDesign::SOURCE_PRESET,
+			'explicit_image_id' => 0,
+		];
+		$envelope_image_id = $product
+			? ProductMeta::read_envelope_image_id( $product )
+			: max( 0, (int) get_post_meta( $product_id, ProductMeta::ENVELOPE_IMAGE_ID, true ) );
+		$preview_url       = $envelope_image_id > 0
+			? AttachmentValidator::image_url( $envelope_image_id, 'medium' )
+			: (string) ( $design['image_url'] ?? '' );
 		?>
 		<div id="pks_oi_online_invitation_product_data" class="panel woocommerce_options_panel hidden">
 			<div class="options_group pks-oi-admin">
@@ -80,15 +95,60 @@ final class ProductDataPanel {
 					]
 				);
 
-				woocommerce_wp_text_input(
-					[
-						'id'          => ProductMeta::ENVELOPE_PREVIEW_REF,
-						'label'       => __( 'Envelope preview reference', 'prikogstreg-online-invitations' ),
-						'value'       => (string) get_post_meta( $product_id, ProductMeta::ENVELOPE_PREVIEW_REF, true ),
-						'desc_tip'    => true,
-						'description' => __( 'Optional admin reference for preview assets (slug, note, or internal asset key).', 'prikogstreg-online-invitations' ),
-					]
-				);
+				?>
+				<p class="form-field pks-oi-envelope-image-field">
+					<label for="<?php echo esc_attr( ProductMeta::ENVELOPE_IMAGE_ID ); ?>">
+						<?php esc_html_e( 'Envelope image', 'prikogstreg-online-invitations' ); ?>
+					</label>
+					<input
+						type="hidden"
+						name="<?php echo esc_attr( ProductMeta::ENVELOPE_IMAGE_ID ); ?>"
+						id="<?php echo esc_attr( ProductMeta::ENVELOPE_IMAGE_ID ); ?>"
+						value="<?php echo esc_attr( (string) $envelope_image_id ); ?>"
+					/>
+					<span class="description">
+						<?php esc_html_e( 'Optional custom image for the closed envelope card. When empty, the first product gallery image may be used as a fallback. The featured image remains the shop thumbnail.', 'prikogstreg-online-invitations' ); ?>
+					</span>
+					<span class="pks-oi-envelope-image-actions">
+						<button type="button" class="button pks-oi-envelope-image-upload">
+							<?php esc_html_e( 'Select image', 'prikogstreg-online-invitations' ); ?>
+						</button>
+						<button type="button" class="button pks-oi-envelope-image-remove" <?php echo $envelope_image_id > 0 ? '' : 'style="display:none"'; ?>>
+							<?php esc_html_e( 'Remove image', 'prikogstreg-online-invitations' ); ?>
+						</button>
+					</span>
+					<span
+						class="pks-oi-envelope-image-preview"
+						<?php echo '' !== $preview_url ? '' : 'style="display:none"'; ?>
+					>
+						<img src="<?php echo esc_url( $preview_url ); ?>" alt="" />
+					</span>
+				</p>
+				<div class="pks-oi-envelope-admin-preview">
+					<strong><?php esc_html_e( 'Envelope preview', 'prikogstreg-online-invitations' ); ?></strong>
+					<div
+						class="pks-oi-envelope-admin-preview__frame pks-oi-envelope--<?php echo esc_attr( (string) ( $design['preset'] ?: 'classic' ) ); ?> pks-oi-envelope--bg-<?php echo esc_attr( (string) ( $design['background_preset'] ?: 'neutral' ) ); ?>"
+					>
+						<div class="pks-oi-envelope-admin-preview__card">
+							<?php if ( '' !== (string) ( $design['image_url'] ?? '' ) ) : ?>
+								<img src="<?php echo esc_url( (string) $design['image_url'] ); ?>" alt="" />
+							<?php endif; ?>
+							<p><?php esc_html_e( 'You are invited', 'prikogstreg-online-invitations' ); ?></p>
+						</div>
+					</div>
+					<p class="description">
+						<?php
+						echo esc_html(
+							sprintf(
+								/* translators: %s: image source label */
+								__( 'Resolved image source: %s', 'prikogstreg-online-invitations' ),
+								EnvelopeDesign::image_source_label( (string) ( $design['image_source'] ?? EnvelopeDesign::SOURCE_PRESET ) )
+							)
+						);
+						?>
+					</p>
+				</div>
+				<?php
 
 				woocommerce_wp_select(
 					[
@@ -241,6 +301,8 @@ final class ProductDataPanel {
 		if ( ! $screen || 'product' !== $screen->id ) {
 			return;
 		}
+
+		wp_enqueue_media();
 
 		wp_enqueue_style(
 			'pks-oi-admin',

@@ -21,6 +21,7 @@ final class ProductTypeRegistrar {
 		( new ProductDataPanel() )->register();
 		( new QuantityGuard() )->register();
 		( new BuilderIntegration() )->register();
+		( new StorefrontBuilderBridge() )->register();
 		( new ProductPagePlaceholder() )->register();
 	}
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrikOgStreg\OnlineInvitations\WooCommerce\Cart;
 
+use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\BppAttributeDefaults;
 use PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\ProductMeta;
 
 /**
@@ -29,6 +30,20 @@ final class InvitationCart {
 		$product = wc_get_product( $product_id );
 		if ( ! $product || ! ProductMeta::is_online_invitation( $product ) ) {
 			return $passed;
+		}
+
+		if ( ProductMeta::is_builder_optional( $product ) ) {
+			return $passed;
+		}
+
+		$posted_size   = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_size'] ?? '' ) ) );
+		$posted_format = sanitize_text_field( wp_unslash( (string) ( $_POST['attribute_pa_bpp_format'] ?? '' ) ) );
+		$attributes    = BppAttributeDefaults::normalize_posted_attributes( (int) $product_id, $posted_size, $posted_format );
+
+		if ( is_wp_error( $attributes ) ) {
+			wc_add_notice( BppAttributeDefaults::customer_error_message( $attributes ), 'error' );
+
+			return false;
 		}
 
 		$errors = $this->validator->validate_posted_payload( (int) $product_id );

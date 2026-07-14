@@ -52,6 +52,52 @@ final class CartCheckoutTest extends TestCase {
 		$this->assertSame( 'abc123', $item[ CartPayload::CHECKSUM_KEY ] );
 	}
 
+	public function test_invalid_bpp_attributes_reject_add_to_cart(): void {
+		$_POST = [
+			'field'                   => [ 'uuid-1' => [ 'text' => 'Hello' ] ],
+			'page'                    => [ '<div>Page</div>' ],
+			'attribute_pa_bpp_size'   => 'invalid-size',
+			'attribute_pa_bpp_format' => 'flat',
+		];
+
+		$product = $this->make_product( 10, ProductMeta::TYPE );
+		Functions\when( 'wc_get_product' )->justReturn( $product );
+		Functions\expect( 'wc_add_notice' )->once();
+
+		$cart = new InvitationCart( new CartPayloadValidator( new BuilderService() ) );
+		$this->assertFalse( $cart->validate_builder_payload( true, 10, 1 ) );
+
+		unset( $_POST );
+	}
+
+	public function test_unresolved_bpp_defaults_reject_add_to_cart(): void {
+		$_POST = [
+			'field' => [ 'uuid-1' => [ 'text' => 'Hello' ] ],
+			'page'  => [ '<div>Page</div>' ],
+		];
+
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [ 'invitation' => [] ],
+			]
+		);
+
+		$product = $this->make_product( 10, ProductMeta::TYPE );
+		Functions\when( 'wc_get_product' )->justReturn( $product );
+		Functions\expect( 'wc_add_notice' )->once();
+
+		$cart = new InvitationCart( new CartPayloadValidator( new BuilderService() ) );
+		$this->assertFalse( $cart->validate_builder_payload( true, 10, 1 ) );
+
+		\BPP_Product::reset_test_models();
+		unset( $_POST );
+	}
+
 	public function test_invalid_builder_payload_rejects_add_to_cart(): void {
 		$_POST = [];
 

@@ -36,6 +36,7 @@ final class ProjectStorage {
 			$this->paths->project_root( $storage_uuid ) . '/photos/pending',
 			$this->paths->project_root( $storage_uuid ) . '/photos/approved',
 			$this->paths->project_root( $storage_uuid ) . '/photos/thumbnails',
+			$this->paths->project_root( $storage_uuid ) . '/envelope',
 			$this->paths->project_tmp_dir( $storage_uuid ),
 		];
 
@@ -239,6 +240,49 @@ final class ProjectStorage {
 		return $manifest;
 	}
 
+	public function try_read_poster_manifest( string $storage_uuid ): ?PublishedPosterManifest {
+		try {
+			$absolute = $this->paths->absolute_from_relative( $storage_uuid, PublishedPosterManifest::RELATIVE_PATH );
+		} catch ( \Throwable ) {
+			return null;
+		}
+
+		if ( ! is_readable( $absolute ) ) {
+			return null;
+		}
+
+		try {
+			return PublishedPosterManifest::read_file( $absolute );
+		} catch ( \Throwable ) {
+			return null;
+		}
+	}
+
+	public function write_published_asset( string $storage_uuid, string $relative_path, string $content ): string {
+		$this->paths->assert_relative_path( $relative_path );
+		if ( ! str_starts_with( $relative_path, 'published/' ) ) {
+			throw new StorageException( 'Published asset path must live under published/.' );
+		}
+
+		$this->assert_utf8( $content, 'published_asset' );
+		$this->assert_max_bytes( $content, StorageLimits::MAX_PAGE_BYTES, 'published_asset' );
+
+		$absolute = $this->paths->absolute_from_relative( $storage_uuid, $relative_path );
+
+		return $this->writer->write( $absolute, $content );
+	}
+
+	public function read_published_asset( string $storage_uuid, string $relative_path ): string {
+		$this->paths->assert_relative_path( $relative_path );
+		if ( ! str_starts_with( $relative_path, 'published/' ) ) {
+			throw new StorageException( 'Published asset path must live under published/.' );
+		}
+
+		$absolute = $this->paths->absolute_from_relative( $storage_uuid, $relative_path );
+
+		return $this->reader->read( $absolute );
+	}
+
 	public function verify_manifest_integrity( string $storage_uuid ): void {
 		$manifest = $this->read_state_manifest( $storage_uuid );
 		$this->verify_manifest_page_checksums( $storage_uuid, $manifest, 'editable_path', 'editable_sha256' );
@@ -282,15 +326,27 @@ final class ProjectStorage {
 			];
 		}
 
+		if ( [] === $pages ) {
+			throw new StorageValidationException( 'Builder import requires at least one page.', 'missing_page_payload' );
+		}
+
+		$thumbnails = is_array( $canonical_state['_pages_thumbnails'] ?? null )
+			? $canonical_state['_pages_thumbnails']
+			: [];
+
 		$state_payload = [
-			'schema_version' => (string) ( $canonical_state['schema_version'] ?? $project_context['builder_schema_version'] ),
-			'field'          => is_array( $canonical_state['field'] ?? null ) ? $canonical_state['field'] : [],
-			'size'           => (string) ( $canonical_state['size'] ?? '' ),
-			'format'         => (string) ( $canonical_state['format'] ?? '' ),
-			'pages'          => array_map(
+			'schema_version'     => (string) ( $canonical_state['schema_version'] ?? $project_context['builder_schema_version'] ),
+			'field'              => is_array( $canonical_state['field'] ?? null ) ? $canonical_state['field'] : [],
+			'size'               => (string) ( $canonical_state['size'] ?? $canonical_state['pa_bpp_size'] ?? '' ),
+			'format'             => (string) ( $canonical_state['format'] ?? $canonical_state['pa_bpp_format'] ?? '' ),
+			'product_id'         => (int) ( $canonical_state['product_id'] ?? $project_context['product_id'] ),
+			'template_id'        => (string) ( $canonical_state['template_id'] ?? $project_context['template_id'] ),
+			'page_count'         => count( $pages ),
+			'pages'              => array_map(
 				static fn( array $page ): array => [ 'index' => (int) $page['index'] ],
 				$pages
 			),
+			'thumbnails'         => $thumbnails,
 		];
 
 		$state_json = json_encode( $state_payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
@@ -310,6 +366,170 @@ final class ProjectStorage {
 				'pages'                  => $pages,
 			]
 		);
+	}
+
+	/**
+	 * Atomic initial import: builder state plus envelope snapshot.
+	 *
+	 * @param array{
+	 *     project_id:int,
+	 *     storage_uuid:string,
+	 *     builder_schema_version:string,
+	 *     product_id:int,
+	 *     template_id:string
+	 * } $project_context
+	 * @param array<string, mixed> $canonical_state
+	 * @param array<string, mixed> $envelope_snapshot
+	 * @return array{
+	 *     state_version:int,
+	 *     state_manifest_path:string,
+	 *     state_sha256:string,
+	 *     envelope_manifest_path:string,
+	 *     pages:list<array<string,mixed>>
+	 * }
+	 */
+	public function import_complete_snapshot( array $project_context, array $canonical_state, array $envelope_snapshot ): array {
+		$builder = $this->import_from_builder_state( $project_context, $canonical_state );
+		$envelope = $this->import_envelope_snapshot( $project_context, $envelope_snapshot );
+
+		return array_merge( $builder, $envelope );
+	}
+
+	/**
+	 * @param array{
+	 *     project_id:int,
+	 *     storage_uuid:string
+	 * } $project_context
+	 * @param array<string, mixed> $envelope_snapshot
+	 * @return array{envelope_manifest_path:string}
+	 */
+	public function import_envelope_snapshot( array $project_context, array $envelope_snapshot ): array {
+		$storage_uuid = (string) $project_context['storage_uuid'];
+		$this->paths->assert_storage_uuid( $storage_uuid );
+		$this->create_project_directories( $storage_uuid );
+
+		$snapshot = array_merge(
+			$envelope_snapshot,
+			[
+				'project_id'   => (int) $project_context['project_id'],
+				'storage_uuid' => $storage_uuid,
+			]
+		);
+
+		$attachment_id = max( 0, (int) ( $snapshot['attachment_id'] ?? 0 ) );
+		if ( $attachment_id > 0 ) {
+			$copied = $this->copy_attachment_to_envelope( $storage_uuid, $attachment_id );
+			if ( $copied['success'] ) {
+				$snapshot['media_storage']  = EnvelopeManifest::MEDIA_PROJECT_COPY;
+				$snapshot['image_path']     = (string) $copied['relative_path'];
+				$snapshot['image_sha256']   = (string) $copied['sha256'];
+			} else {
+				$snapshot['media_storage'] = EnvelopeManifest::MEDIA_ATTACHMENT;
+			}
+		}
+
+		$manifest = EnvelopeManifest::from_snapshot( $snapshot );
+		$absolute = $this->paths->absolute_from_relative( $storage_uuid, EnvelopeManifest::RELATIVE_PATH );
+		$this->writer->write( $absolute, $manifest->to_json() );
+
+		if ( null !== $manifest->image_path && null !== $manifest->image_sha256 && '' !== $manifest->image_sha256 ) {
+			$image_absolute = $this->paths->absolute_from_relative( $storage_uuid, $manifest->image_path );
+			$this->reader->read_verified( $image_absolute, $manifest->image_sha256 );
+		}
+
+		return [
+			'envelope_manifest_path' => EnvelopeManifest::RELATIVE_PATH,
+		];
+	}
+
+	public function read_envelope_manifest( string $storage_uuid, bool $verify_checksum = true ): EnvelopeManifest {
+		$absolute = $this->paths->absolute_from_relative( $storage_uuid, EnvelopeManifest::RELATIVE_PATH );
+		$manifest = EnvelopeManifest::read_file( $absolute );
+
+		if ( $verify_checksum && null !== $manifest->image_path && null !== $manifest->image_sha256 && '' !== $manifest->image_sha256 ) {
+			$image_absolute = $this->paths->absolute_from_relative( $storage_uuid, $manifest->image_path );
+			$this->reader->read_verified( $image_absolute, $manifest->image_sha256 );
+		}
+
+		return $manifest;
+	}
+
+	public function try_read_envelope_manifest( string $storage_uuid ): ?EnvelopeManifest {
+		$absolute = $this->paths->absolute_from_relative( $storage_uuid, EnvelopeManifest::RELATIVE_PATH );
+		if ( ! is_readable( $absolute ) ) {
+			return null;
+		}
+
+		return EnvelopeManifest::read_file( $absolute );
+	}
+
+	public function envelope_image_absolute_path( string $storage_uuid ): ?string {
+		$manifest = $this->try_read_envelope_manifest( $storage_uuid );
+		if ( null === $manifest || EnvelopeManifest::MEDIA_PROJECT_COPY !== $manifest->media_storage ) {
+			return null;
+		}
+
+		if ( null === $manifest->image_path || '' === $manifest->image_path ) {
+			return null;
+		}
+
+		try {
+			return $this->paths->absolute_from_relative( $storage_uuid, $manifest->image_path );
+		} catch ( \Throwable ) {
+			return null;
+		}
+	}
+
+	private function resolve_attachment_source_path( int $attachment_id ): string {
+		$path = '';
+		if ( function_exists( 'get_attached_file' ) ) {
+			$attached = get_attached_file( $attachment_id );
+			if ( is_string( $attached ) ) {
+				$path = $attached;
+			}
+		}
+
+		/**
+		 * @var string $path
+		 */
+		return (string) \apply_filters( 'pks_oi/envelope_attachment_source_path', $path, $attachment_id );
+	}
+
+	/**
+	 * @return array{success:bool,relative_path?:string,sha256?:string}
+	 */
+	private function copy_attachment_to_envelope( string $storage_uuid, int $attachment_id ): array {
+		$source = $this->resolve_attachment_source_path( $attachment_id );
+		if ( '' === $source ) {
+			return [ 'success' => false ];
+		}
+
+		$extension = strtolower( pathinfo( $source, PATHINFO_EXTENSION ) );
+		if ( '' === $extension || ! preg_match( '/^[a-z0-9]{1,8}$/', $extension ) ) {
+			$extension = 'jpg';
+		}
+
+		$relative = 'envelope/envelope-image.' . $extension;
+
+		try {
+			$this->paths->assert_relative_path( $relative );
+			$bytes = file_get_contents( $source );
+			if ( false === $bytes || '' === $bytes ) {
+				return [ 'success' => false ];
+			}
+
+			$this->assert_max_bytes( $bytes, StorageLimits::MAX_PAGE_BYTES, 'envelope_image' );
+			$absolute = $this->paths->absolute_from_relative( $storage_uuid, $relative );
+			$checksum = $this->writer->write( $absolute, $bytes );
+
+			return [
+				'success'       => true,
+				'relative_path' => $relative,
+				'sha256'        => $checksum,
+			];
+		} catch ( \Throwable ) {
+			return [ 'success' => false ];
+		}
 	}
 
 	public function read_editable_page( string $storage_uuid, string $relative_path, ?string $checksum = null ): string {

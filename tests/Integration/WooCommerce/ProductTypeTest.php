@@ -61,6 +61,16 @@ final class ProductTypeTest extends TestCase {
 
 		Functions\when( 'wc_get_product' )->justReturn( $invitation );
 		Functions\when( 'get_post_meta' )->justReturn( '' );
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => false,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [ 'invitation' => [] ],
+			]
+		);
 		Functions\expect( 'wc_add_notice' )->once();
 
 		$guard = new QuantityGuard();
@@ -100,12 +110,48 @@ final class ProductTypeTest extends TestCase {
 		);
 	}
 
+	public function test_registers_storefront_builder_bridge(): void {
+		$source = (string) file_get_contents(
+			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductTypeRegistrar.php'
+		);
+
+		$this->assertStringContainsString(
+			'( new StorefrontBuilderBridge() )->register()',
+			$source
+		);
+	}
+
+	public function test_admin_customize_link_uses_prdid_query_param(): void {
+		$source = (string) file_get_contents(
+			dirname( __DIR__, 3 ) . '/src/WooCommerce/ProductType/ProductDataPanel.php'
+		);
+
+		$this->assertStringContainsString( 'page=bpp-customize&prdid=', $source );
+		$this->assertStringNotContainsString( 'page=bpp-customize&product_id=', $source );
+	}
+
 	public function test_bpp_customizable_filter_for_online_invitation_with_active_builder(): void {
 		$integration = new \PrikOgStreg\OnlineInvitations\WooCommerce\ProductType\BuilderIntegration();
 		$product     = $this->make_product( 10, ProductMeta::TYPE, true );
 
+		\BPP_Product::set_test_model(
+			10,
+			(object) [
+				'active'          => true,
+				'type'            => 'invitation',
+				'foldable'        => false,
+				'default_size'    => 'a5',
+				'available_sizes' => [
+					'invitation' => [
+						[
+							'attribute_slug' => 'a5',
+							'available'      => true,
+						],
+					],
+				],
+			]
+		);
 		Functions\when( 'wc_get_product' )->justReturn( $product );
-		Functions\when( 'get_post_meta' )->justReturn( (object) [ 'active' => true ] );
 
 		$this->assertTrue( $integration->filter_product_customizable( false, 10 ) );
 	}
@@ -169,6 +215,10 @@ final class ProductTypeTest extends TestCase {
 					ProductMeta::BACKGROUND_PRESET => 'neutral',
 					default => '',
 				};
+			}
+
+			public function get_price(): string {
+				return $this->valid_config ? '199' : '';
 			}
 		};
 	}

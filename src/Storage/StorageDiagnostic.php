@@ -40,6 +40,7 @@ final class StorageDiagnostic {
 		$root_writable   = is_writable( $root );
 		$project_exists  = is_dir( $project_root );
 		$manifest_exists = is_readable( $project_root . '/manifest.json' );
+		$envelope_exists = is_readable( $project_root . '/envelope/manifest.json' );
 		$checksums_valid = false;
 		$published_exists = is_readable( $project_root . '/published/manifest.json' );
 		$temp_pending    = 0;
@@ -65,6 +66,20 @@ final class StorageDiagnostic {
 			$issues[] = 'state_manifest_missing';
 		}
 
+		if ( (int) ( $project['state_version'] ?? 0 ) >= 1 && ! $envelope_exists ) {
+			$issues[] = 'envelope_manifest_missing';
+		}
+
+		if ( $envelope_exists ) {
+			try {
+				$this->storage->read_envelope_manifest( $storage_uuid, true );
+			} catch ( StorageChecksumException ) {
+				$issues[] = 'envelope_checksum_mismatch';
+			} catch ( StorageException $e ) {
+				$issues[] = $e->code_key;
+			}
+		}
+
 		if ( $published_exists ) {
 			try {
 				$this->storage->read_published_manifest( $storage_uuid, true );
@@ -84,6 +99,7 @@ final class StorageDiagnostic {
 			'root_writable'              => $root_writable,
 			'project_directory_exists'   => $project_exists,
 			'state_manifest_exists'      => $manifest_exists,
+			'envelope_manifest_exists'   => $envelope_exists,
 			'checksums_valid'            => $checksums_valid,
 			'published_manifest_exists'  => $published_exists,
 			'state_manifest_path'        => (string) ( $project['state_manifest_path'] ?? '' ),

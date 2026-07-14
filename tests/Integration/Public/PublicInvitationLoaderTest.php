@@ -8,6 +8,7 @@ use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\RepositoryRegistry;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
+use PrikOgStreg\OnlineInvitations\Public\PosterDisplayAssets;
 use PrikOgStreg\OnlineInvitations\Public\PublicInvitationLoader;
 use PrikOgStreg\OnlineInvitations\Storage\StorageRegistry;
 use PrikOgStreg\OnlineInvitations\Tests\Support\FakeBuilderAdapter;
@@ -37,7 +38,8 @@ final class PublicInvitationLoaderTest extends TestCase {
 
 		$this->loader = new PublicInvitationLoader(
 			( new StorageRegistry( $this->storage_root ) )->project_storage(),
-			$builder
+			$builder,
+			new PosterDisplayAssets( ( new StorageRegistry( $this->storage_root ) )->project_storage() )
 		);
 	}
 

@@ -7,6 +7,7 @@ namespace PrikOgStreg\OnlineInvitations\Domain\Project;
 use PrikOgStreg\OnlineInvitations\Builder\BuilderService;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\EventRepository;
 use PrikOgStreg\OnlineInvitations\Database\Repositories\ProjectRepository;
+use PrikOgStreg\OnlineInvitations\Public\PublishedPosterAssetSnapshotter;
 use PrikOgStreg\OnlineInvitations\Security\PublishedHtmlSanitizer;
 use PrikOgStreg\OnlineInvitations\Storage\Exception\StorageException;
 use PrikOgStreg\OnlineInvitations\Storage\ProjectStorage;
@@ -71,6 +72,8 @@ final class ProjectPublishService {
 
 		$this->record_event( (int) $project['project_id'], 'project_published', [ 'published_version' => $published_version ] );
 		do_action( 'pks_oi_project_published', (int) $project['project_id'], $published_version );
+
+		( new PublishedPosterAssetSnapshotter( $this->storage ) )->snapshot( $project, $state, $pages_html['pages'] );
 
 		return [ 'success' => true, 'published_version' => $published_version ];
 	}

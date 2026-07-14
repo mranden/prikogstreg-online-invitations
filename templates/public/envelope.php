@@ -22,7 +22,26 @@ $view = $envelope_view;
 	data-pks-oi-track-opens="<?php echo $view->track_opens ? '1' : '0'; ?>"
 >
 	<div class="pks-oi-envelope__stage">
-		<div class="pks-oi-envelope__card" aria-hidden="true">
+		<div
+			class="pks-oi-envelope__card"
+			role="img"
+			aria-label="<?php esc_attr_e( 'Invitation envelope', 'prikogstreg-online-invitations' ); ?>"
+		>
+			<?php if ( '' !== $view->envelope_image_url ) : ?>
+				<img
+					class="pks-oi-envelope__card-image"
+					src="<?php echo esc_url( $view->envelope_image_url ); ?>"
+					alt=""
+					loading="lazy"
+					decoding="async"
+					<?php if ( $view->envelope_image_width > 0 && $view->envelope_image_height > 0 ) : ?>
+						width="<?php echo esc_attr( (string) $view->envelope_image_width ); ?>"
+						height="<?php echo esc_attr( (string) $view->envelope_image_height ); ?>"
+					<?php endif; ?>
+				/>
+			<?php else : ?>
+				<div class="pks-oi-envelope__card-fallback" aria-hidden="true"></div>
+			<?php endif; ?>
 			<p class="pks-oi-envelope__addressee"><?php echo esc_html( $view->addressee_label ); ?></p>
 			<?php if ( '' !== $view->event_title ) : ?>
 				<p class="pks-oi-envelope__event"><?php echo esc_html( $view->event_title ); ?></p>
@@ -45,8 +64,8 @@ $view = $envelope_view;
 		tabindex="-1"
 		hidden
 	>
-		<div class="pks-oi-envelope__invitation bpp-public-invitation">
-			<?php echo $view->invitation_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized published snapshot ?>
+		<div class="pks-oi-envelope__invitation">
+			<?php require __DIR__ . '/poster.php'; ?>
 		</div>
 
 		<?php foreach ( $view->sections as $section ) : ?>
