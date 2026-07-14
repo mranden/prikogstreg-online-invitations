@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrikOgStreg\OnlineInvitations\Domain\Guest;
 
 use PrikOgStreg\OnlineInvitations\Database\Repositories\GuestRepository;
+use PrikOgStreg\OnlineInvitations\Domain\AddressBook\AddressBookService;
 
 /**
  * Validates and imports guest CSV rows in bounded batches.
@@ -19,7 +20,8 @@ final class GuestImportService {
 
 	public function __construct(
 		private GuestRepository $guests,
-		private GuestService $guests_service
+		private GuestService $guests_service,
+		private AddressBookService $address_book
 	) {}
 
 	/**
@@ -83,6 +85,8 @@ final class GuestImportService {
 				$errors[] = sprintf( 'Row %d: %s', $index + 1, (string) ( $result['error'] ?? 'failed' ) );
 				continue;
 			}
+
+			$this->sync_guest_to_address_book( $project, (int) ( $result['guest_id'] ?? 0 ) );
 			++$imported;
 		}
 
@@ -91,5 +95,21 @@ final class GuestImportService {
 			'failed'   => $failed,
 			'errors'   => $errors,
 		];
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 */
+	private function sync_guest_to_address_book( array $project, int $guest_id ): void {
+		if ( $guest_id <= 0 ) {
+			return;
+		}
+
+		$guest = $this->guests->find_by_id_for_project( $guest_id, (int) ( $project['project_id'] ?? 0 ) );
+		if ( ! is_array( $guest ) ) {
+			return;
+		}
+
+		$this->address_book->save_guest_snapshot( (int) ( $project['user_id'] ?? 0 ), $guest );
 	}
 }

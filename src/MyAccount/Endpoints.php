@@ -79,7 +79,7 @@ final class Endpoints {
 	 */
 	public static function section_urls( int $project_id ): array {
 		$urls = [];
-		foreach ( array_keys( ProjectSections::labels() ) as $section ) {
+		foreach ( array_keys( ProjectSections::visible_labels() ) as $section ) {
 			$urls[ $section ] = self::project_url( $project_id, $section );
 		}
 

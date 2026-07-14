@@ -87,6 +87,9 @@ final class GuestController {
 					: [ 'success' => false ];
 			} else {
 				$result = $this->guests->create( $project, wp_unslash( $_POST ) );
+				if ( ! empty( $result['success'] ) && ! empty( $result['guest_id'] ) ) {
+					$this->sync_guest_to_address_book( $project, (int) $result['guest_id'] );
+				}
 				if ( ! empty( $result['success'] ) && ! empty( $result['invitation_url'] ) && ! empty( $result['guest_id'] ) ) {
 					GuestLinkFlash::store(
 						(int) $result['guest_id'],
@@ -147,15 +150,6 @@ final class GuestController {
 				}
 			}
 			wp_safe_redirect( add_query_arg( 'pks_oi_link', '1', $redirect_url ) );
-			exit;
-		}
-
-		if ( 'save_guest_to_address_book' === $action ) {
-			$guest = $this->guest_repository->find_by_id_for_project( (int) ( $_POST['guest_id'] ?? 0 ), (int) $project['project_id'] );
-			if ( is_array( $guest ) ) {
-				$this->address_book->save_guest_snapshot( (int) ( $project['user_id'] ?? 0 ), $guest );
-			}
-			wp_safe_redirect( add_query_arg( 'pks_oi_saved_ab', '1', $redirect_url ) );
 			exit;
 		}
 
@@ -237,5 +231,21 @@ final class GuestController {
 
 	private function import_report_key( int $project_id ): string {
 		return 'pks_oi_import_report_' . $project_id . '_' . $this->authorization->current_user_id();
+	}
+
+	/**
+	 * @param array<string, mixed> $project
+	 */
+	private function sync_guest_to_address_book( array $project, int $guest_id ): void {
+		if ( $guest_id <= 0 ) {
+			return;
+		}
+
+		$guest = $this->guest_repository->find_by_id_for_project( $guest_id, (int) ( $project['project_id'] ?? 0 ) );
+		if ( ! is_array( $guest ) ) {
+			return;
+		}
+
+		$this->address_book->save_guest_snapshot( (int) ( $project['user_id'] ?? 0 ), $guest );
 	}
 }

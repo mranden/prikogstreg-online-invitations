@@ -1,4 +1,5 @@
 @use 'shared';
+@use 'section-ui';
 
 .pks-oi {
   box-sizing: border-box;
@@ -116,7 +117,7 @@
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  @include shared.pks-oi-touch-target;
+  padding: 0.65rem 1.1rem;
 }
 
 .pks-oi .button:hover,
@@ -453,11 +454,12 @@
   width: 100%;
   max-width: 28rem;
   margin-bottom: 0.75rem;
+  box-sizing: border-box;
 }
 
 .pks-oi-form button,
 .pks-oi-form .button {
-  @include shared.pks-oi-touch-target;
+  padding: 0.65rem 1.1rem;
 }
 
 .pks-oi-form button:focus-visible,
@@ -569,6 +571,27 @@
     margin-bottom: 1rem;
     border: 1px solid #eee;
     padding: 0.5rem;
+  }
+}
+
+// Theme account shell sets min-height on form buttons — keep plugin sizing natural.
+.prikogstreg-account__content,
+.prikogstreg-account__content--auth {
+  .pks-oi .button,
+  .pks-oi a.button,
+  .pks-oi-event-form .button,
+  .pks-oi-event-form button[type='submit'],
+  .pks-oi-form .button,
+  .pks-oi-form button[type='submit'],
+  .pks-oi-form button,
+  .pks-oi-import-form .button,
+  .pks-oi-import-form button[type='submit'],
+  .pks-oi-publish-form .button,
+  .pks-oi-publish-form button[type='submit'],
+  .pks-oi-search-form .button,
+  .pks-oi-search-form button[type='submit'] {
+    min-height: unset;
+    min-width: unset;
   }
 }
 

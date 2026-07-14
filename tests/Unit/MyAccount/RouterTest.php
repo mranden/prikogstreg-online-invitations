@@ -41,6 +41,11 @@ final class RouterTest extends TestCase {
 		$this->assertSame( ProjectSections::OVERVIEW, $route['section'] );
 	}
 
+	public function test_hidden_address_book_section_redirects_to_guests(): void {
+		$route = $this->router->parse_request( '42/address-book' );
+		$this->assertSame( ProjectSections::GUESTS, $route['section'] );
+	}
+
 	public function test_endpoints_build_project_urls(): void {
 		$this->assertStringContainsString( 'online-invitations', Endpoints::base_url() );
 		$this->assertStringContainsString( '42', Endpoints::project_url( 42 ) );

@@ -42,7 +42,7 @@ final class GuestManagementTest extends TestCase {
 			$this->guests,
 			$this->repositories->events()
 		);
-		$this->import = new GuestImportService( $this->repositories->guests(), $this->guests );
+		$this->import = new GuestImportService( $this->repositories->guests(), $this->guests, $this->address_book );
 
 		Functions\when( 'do_action' )->justReturn( null );
 	}
@@ -56,6 +56,24 @@ final class GuestManagementTest extends TestCase {
 		}
 
 		$this->assertSame( 25, $this->repositories->guests()->count_for_project( (int) $project['project_id'] ) );
+	}
+
+	public function test_guest_can_be_created_with_invited_attendee_count(): void {
+		$project = $this->seed_project( 7 );
+		$created = $this->guests->create(
+			$project,
+			[
+				'display_name'   => 'Family Hansen',
+				'email'          => 'family@example.com',
+				'attendee_count' => 3,
+			]
+		);
+
+		$this->assertTrue( $created['success'] ?? false );
+
+		$guest = $this->repositories->guests()->find_by_id_for_project( (int) $created['guest_id'], (int) $project['project_id'] );
+		$this->assertIsArray( $guest );
+		$this->assertSame( 3, (int) ( $guest['attendee_count'] ?? 0 ) );
 	}
 
 	public function test_duplicate_email_is_allowed_with_warning(): void {

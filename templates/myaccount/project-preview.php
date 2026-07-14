@@ -3,10 +3,6 @@
  * Authenticated draft preview (no open tracking).
  *
  * @package PrikOgStreg\OnlineInvitations
- *
- * @var string $preview_html
- * @var string $envelope_preset
- * @var bool   $track_opens
  */
 
 declare(strict_types=1);
@@ -16,27 +12,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require __DIR__ . '/_helpers.php';
+
+use PrikOgStreg\OnlineInvitations\MyAccount\Endpoints;
+use PrikOgStreg\OnlineInvitations\MyAccount\ProjectSections;
 ?>
-<div class="pks-oi pks-oi-myaccount pks-oi-project">
+<?php pks_oi_project_open(); ?>
 	<?php pks_oi_render_notices( $notices ); ?>
 	<?php pks_oi_render_section_nav( $section, $sections, $section_urls ); ?>
 
-	<section class="pks-oi-preview" aria-labelledby="pks-oi-preview-title">
-		<h3 id="pks-oi-preview-title"><?php esc_html_e( 'Preview', 'prikogstreg-online-invitations' ); ?></h3>
-		<p class="pks-oi-preview__note"><?php esc_html_e( 'This is a private draft preview. Opens are not tracked.', 'prikogstreg-online-invitations' ); ?></p>
+	<?php
+	pks_oi_section_open(
+		'pks-oi-preview-title',
+		__( 'Preview', 'prikogstreg-online-invitations' ),
+		__( 'Private draft preview — opens are not tracked.', 'prikogstreg-online-invitations' )
+	);
+	?>
 
+	<div class="pks-oi-preview__toolbar">
+		<?php pks_oi_render_badge( __( 'Draft preview', 'prikogstreg-online-invitations' ), 'neutral' ); ?>
 		<?php if ( '' !== $envelope_preset ) : ?>
-			<p><?php printf( esc_html__( 'Envelope: %s', 'prikogstreg-online-invitations' ), esc_html( $envelope_preset ) ); ?></p>
+			<?php pks_oi_render_badge( sprintf( __( 'Envelope: %s', 'prikogstreg-online-invitations' ), $envelope_preset ), 'neutral' ); ?>
 		<?php endif; ?>
+		<a class="button" href="<?php echo esc_url( Endpoints::project_url( $project_id, ProjectSections::DESIGN ) ); ?>"><?php esc_html_e( 'Edit design', 'prikogstreg-online-invitations' ); ?></a>
+		<a class="button" href="<?php echo esc_url( Endpoints::project_url( $project_id, ProjectSections::PUBLISH ) ); ?>"><?php esc_html_e( 'Go to publish', 'prikogstreg-online-invitations' ); ?></a>
+		<button type="button" class="button" data-pks-oi-preview-toggle><?php esc_html_e( 'Toggle full width', 'prikogstreg-online-invitations' ); ?></button>
+	</div>
 
-		<div class="pks-oi-preview__frame" data-track-opens="<?php echo $track_opens ? '1' : '0'; ?>">
-			<?php if ( '' === $preview_html ) : ?>
-				<p><?php esc_html_e( 'Preview content is not available yet.', 'prikogstreg-online-invitations' ); ?></p>
-			<?php else : ?>
-				<div class="pks-oi-preview__html">
-					<?php echo $preview_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- draft builder HTML ?>
-				</div>
-			<?php endif; ?>
-		</div>
-	</section>
-</div>
+	<div class="pks-oi-preview__device" data-pks-oi-preview-device>
+		<?php if ( '' === $preview_html ) : ?>
+			<?php
+			pks_oi_render_empty_state(
+				__( 'Preview not ready', 'prikogstreg-online-invitations' ),
+				__( 'Complete your design and event details to generate a preview.', 'prikogstreg-online-invitations' ),
+				[ 'label' => __( 'Go to design', 'prikogstreg-online-invitations' ), 'url' => Endpoints::project_url( $project_id, ProjectSections::DESIGN ) ]
+			);
+			?>
+		<?php else : ?>
+			<div class="pks-oi-preview__html" data-track-opens="<?php echo $track_opens ? '1' : '0'; ?>">
+				<?php echo $preview_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		<?php endif; ?>
+	</div>
+
+	<?php pks_oi_section_close(); ?>
+<?php pks_oi_project_close(); ?>

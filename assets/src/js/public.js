@@ -153,7 +153,9 @@
         if (result.body && result.body.invitation_url && personalLinkEl) {
           personalLinkEl.hidden = false;
           personalLinkEl.textContent =
-            "Personal link (save for later): " + result.body.invitation_url;
+            (i18n.personal_link || "Personal link (save for later):") +
+            " " +
+            result.body.invitation_url;
         }
       })
       .catch(function () {

@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require __DIR__ . '/_section-ui.php';
+
 if ( ! function_exists( 'pks_oi_render_notices' ) ) {
 	/**
 	 * @param list<array{type:string,message:string}> $notices

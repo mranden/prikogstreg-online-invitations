@@ -12,15 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require __DIR__ . '/_helpers.php';
+require __DIR__ . '/_section-ui.php';
 
 $section_label = $sections[ $section ] ?? $section;
-?>
-<div class="pks-oi pks-oi-myaccount pks-oi-project">
-	<?php pks_oi_render_notices( $notices ); ?>
-	<?php pks_oi_render_section_nav( $section, $sections, $section_urls ); ?>
 
-	<section aria-labelledby="pks-oi-section-title">
-		<h3 id="pks-oi-section-title"><?php echo esc_html( (string) $section_label ); ?></h3>
-		<p><?php esc_html_e( 'This section is not available yet. It will be added in an upcoming release.', 'prikogstreg-online-invitations' ); ?></p>
-	</section>
-</div>
+pks_oi_project_open( $notices, $section, $sections, $section_urls );
+pks_oi_section_open( (string) $section_label );
+pks_oi_render_empty_state(
+	esc_html__( 'Coming soon', 'prikogstreg-online-invitations' ),
+	esc_html__( 'This section is not available yet. It will be added in an upcoming release.', 'prikogstreg-online-invitations' )
+);
+pks_oi_section_close();
+pks_oi_project_close();

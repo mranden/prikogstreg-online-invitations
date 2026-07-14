@@ -33,6 +33,7 @@ final class RsvpFormViewModel {
 			'dietary_notes_enabled'   => ! empty( $project['dietary_notes_enabled'] ),
 			'attending'               => null,
 			'attendee_count'          => null,
+			'invited_attendee_count'  => null,
 			'rsvp_comment'            => '',
 			'dietary_notes'           => '',
 			'display_name'            => '',
@@ -53,6 +54,14 @@ final class RsvpFormViewModel {
 			$config['dietary_notes']      = (string) ( $guest['dietary_notes'] ?? '' );
 			$config['display_name']       = (string) ( $guest['display_name'] ?? '' );
 			$config['email']              = (string) ( $guest['email'] ?? '' );
+
+			if (
+				RsvpStatus::PENDING === $status
+				&& null !== ( $guest['attendee_count'] ?? null )
+				&& (int) $guest['attendee_count'] > 0
+			) {
+				$config['invited_attendee_count'] = (int) $guest['attendee_count'];
+			}
 		}
 
 		return new self( $config );

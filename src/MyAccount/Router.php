@@ -45,6 +45,10 @@ final class Router {
 			$section = ProjectSections::default_section();
 		}
 
+		if ( ! ProjectSections::is_visible( $section ) ) {
+			$section = ProjectSections::GUESTS;
+		}
+
 		return [
 			'mode'       => $project_id > 0 ? 'project' : 'list',
 			'project_id' => $project_id,

@@ -14,6 +14,8 @@ final class GuestService {
 
 	public const PER_PAGE = 20;
 
+	public const MAX_ATTENDEE_COUNT = 50;
+
 	public function __construct(
 		private GuestRepository $guests,
 		private GuestTokenService $tokens
@@ -193,8 +195,13 @@ final class GuestService {
 		];
 
 		if ( array_key_exists( 'attendee_count', $input ) && '' !== (string) $input['attendee_count'] ) {
-			$data['attendee_count'] = max( 1, (int) $input['attendee_count'] );
-		} elseif ( $is_create ) {
+			$count = (int) $input['attendee_count'];
+			if ( $count < 1 || $count > self::MAX_ATTENDEE_COUNT ) {
+				return [ 'error' => 'invalid_attendee_count' ];
+			}
+
+			$data['attendee_count'] = $count;
+		} elseif ( array_key_exists( 'attendee_count', $input ) || $is_create ) {
 			$data['attendee_count'] = null;
 		}
 

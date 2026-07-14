@@ -28,7 +28,6 @@ final class SectionNavBuilder {
 				ProjectSections::DESIGN,
 				ProjectSections::EVENT,
 				ProjectSections::GUESTS,
-				ProjectSections::ADDRESS_BOOK,
 			],
 		],
 		'launch'  => [
@@ -86,7 +85,7 @@ final class SectionNavBuilder {
 	public function build( array $project, string $current_section, int $user_id ): array {
 		$project_id   = (int) ( $project['project_id'] ?? 0 );
 		$section_urls = Endpoints::section_urls( $project_id );
-		$sections     = ProjectSections::labels();
+		$sections     = ProjectSections::visible_labels();
 		$stats        = $this->collect_stats( $project, $project_id, $user_id );
 		$items        = [];
 

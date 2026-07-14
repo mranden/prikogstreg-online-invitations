@@ -12,6 +12,9 @@ final class Capabilities {
 	public const MANAGE_OWN   = 'pks_oi_manage_own_projects';
 	public const SUPPORT      = 'pks_oi_support_projects';
 
+	/** Standard WooCommerce admin cap — used for menu visibility (no custom plugin cap). */
+	public const ADMIN_MENU   = 'manage_woocommerce';
+
 	/**
 	 * @return list<string>
 	 */

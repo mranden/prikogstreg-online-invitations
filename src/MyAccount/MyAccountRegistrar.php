@@ -74,7 +74,7 @@ final class MyAccountRegistrar {
 		$queue = new DeliveryQueueService( $repositories->deliveries() );
 		$guest_controller = new GuestController(
 			$guest_service,
-			new GuestImportService( $repositories->guests(), $guest_service ),
+			new GuestImportService( $repositories->guests(), $guest_service, $address_book_service ),
 			$repositories->guests(),
 			$address_book_service,
 			$authorization,

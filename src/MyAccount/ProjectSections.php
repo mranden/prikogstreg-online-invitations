@@ -44,8 +44,36 @@ final class ProjectSections {
 		return in_array( $section, self::all(), true );
 	}
 
+	/**
+	 * Sections kept in the backend but hidden from customer navigation.
+	 *
+	 * @return list<string>
+	 */
+	public static function hidden(): array {
+		return [
+			self::ADDRESS_BOOK,
+		];
+	}
+
+	public static function is_visible( string $section ): bool {
+		return self::is_valid( $section ) && ! in_array( $section, self::hidden(), true );
+	}
+
 	public static function default_section(): string {
 		return self::OVERVIEW;
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	public static function visible_labels(): array {
+		$labels = self::labels();
+
+		foreach ( self::hidden() as $hidden ) {
+			unset( $labels[ $hidden ] );
+		}
+
+		return $labels;
 	}
 
 	/**
@@ -82,7 +110,6 @@ final class ProjectSections {
 			self::PREVIEW,
 			self::PUBLISH,
 			self::GUESTS,
-			self::ADDRESS_BOOK,
 			self::RESPONSES,
 			self::WISHLIST,
 			self::PHOTOS,

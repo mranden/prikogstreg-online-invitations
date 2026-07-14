@@ -13,6 +13,7 @@ use PrikOgStreg\OnlineInvitations\Domain\Guest\RsvpStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\ProjectStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Project\PublicationStatus;
 use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpDeadlinePolicy;
+use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpFormViewModel;
 use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpSanitizer;
 use PrikOgStreg\OnlineInvitations\Domain\Rsvp\RsvpService;
 use PrikOgStreg\OnlineInvitations\Public\TokenResolver;
@@ -272,6 +273,27 @@ final class RsvpTest extends TestCase {
 		);
 		$this->assertFalse( $invalid['success'] );
 		$this->assertSame( 'invalid_attendee_count', $invalid['error'] ?? '' );
+	}
+
+	public function test_form_exposes_invited_attendee_count_for_pending_guest(): void {
+		$token   = InvitationToken::generate();
+		$project = $this->seed_project( [ 'attendee_count_enabled' => 1 ] );
+		$this->repositories->guests()->insert(
+			[
+				'project_id'     => (int) $project['project_id'],
+				'display_name'   => 'Family Hansen',
+				'token_hash'     => $token['hash'],
+				'attendee_count' => 2,
+				'rsvp_status'    => RsvpStatus::PENDING,
+			]
+		);
+
+		$resolution = $this->resolver->resolve( $token['raw'] );
+		$this->assertNotNull( $resolution );
+
+		$form = RsvpFormViewModel::from_resolution( $resolution );
+		$this->assertSame( 2, $form->config['invited_attendee_count'] );
+		$this->assertSame( 2, $form->config['attendee_count'] );
 	}
 
 	public function test_xss_stripped_from_comments(): void {

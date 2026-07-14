@@ -83,6 +83,23 @@ $is_generic = 'generic' === (string) ( $form['link_type'] ?? '' );
 
 			<?php if ( ! empty( $form['attendee_count_enabled'] ) ) : ?>
 				<p class="pks-oi-rsvp__attendee-count" data-pks-oi-attendee-wrap hidden>
+					<?php if ( ! empty( $form['invited_attendee_count'] ) ) : ?>
+						<span class="pks-oi-rsvp__invited-count">
+							<?php
+							printf(
+								esc_html(
+									_n(
+										'This invitation is for %d guest. Please confirm how many will attend.',
+										'This invitation is for %d guests. Please confirm how many will attend.',
+										(int) $form['invited_attendee_count'],
+										'prikogstreg-online-invitations'
+									)
+								),
+								(int) $form['invited_attendee_count']
+							);
+							?>
+						</span><br />
+					<?php endif; ?>
 					<label for="pks-oi-rsvp-count"><?php esc_html_e( 'Number attending', 'prikogstreg-online-invitations' ); ?></label><br />
 					<input
 						type="number"

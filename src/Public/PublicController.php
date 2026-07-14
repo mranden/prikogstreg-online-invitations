@@ -135,6 +135,7 @@ final class PublicController {
 					'photos_uploaded' => __( 'Photos uploaded. They will appear after organiser approval.', 'prikogstreg-online-invitations' ),
 					'photos_uploading' => __( 'Uploading photos…', 'prikogstreg-online-invitations' ),
 					'photos_error'    => __( 'We could not upload your photos. Please try again.', 'prikogstreg-online-invitations' ),
+					'personal_link'   => __( 'Personal link (save for later):', 'prikogstreg-online-invitations' ),
 				],
 			]
 		);

@@ -26,14 +26,14 @@ final class ProjectsAdminScreen {
 			'woocommerce',
 			__( 'Online Invitations', 'prikogstreg-online-invitations' ),
 			__( 'Online Invitations', 'prikogstreg-online-invitations' ),
-			Capabilities::SUPPORT,
+			Capabilities::ADMIN_MENU,
 			ProjectAdminListViewModel::PAGE_SLUG,
 			[ $this, 'render_page' ]
 		);
 	}
 
 	public function render_page(): void {
-		if ( ! current_user_can( Capabilities::SUPPORT ) ) {
+		if ( ! current_user_can( Capabilities::ADMIN_MENU ) ) {
 			wp_die( esc_html__( 'You do not have permission to view invitation projects.', 'prikogstreg-online-invitations' ) );
 		}
 

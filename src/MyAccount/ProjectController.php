@@ -215,9 +215,6 @@ final class ProjectController {
 			case ProjectSections::GUESTS:
 				$this->guest_controller->render( $project, $context );
 				return;
-			case ProjectSections::ADDRESS_BOOK:
-				$this->address_book_controller->render( $project, $context );
-				return;
 			case ProjectSections::RESPONSES:
 				$this->responses_controller->render( $project, $context );
 				return;
@@ -292,6 +289,9 @@ final class ProjectController {
 	 * @return array<string, mixed>
 	 */
 	private function base_context( array $project, int $project_id, string $section ): array {
+		$guest_summary = $this->guests->status_summary( $project_id );
+		$section_urls  = $this->section_urls( $project_id );
+
 		return [
 			'project'           => $project,
 			'project_id'        => $project_id,
@@ -299,10 +299,27 @@ final class ProjectController {
 			'is_support'        => $this->authorization->is_support_view( $project ),
 			'can_edit'          => $this->authorization->can_edit_project( $project ),
 			'can_publish'       => ProjectEntitlement::can_publish_project( $project ),
-			'sections'          => ProjectSections::labels(),
-			'section_urls'      => $this->section_urls( $project_id ),
+			'sections'          => ProjectSections::visible_labels(),
+			'section_urls'      => $section_urls,
 			'notices'           => $this->dependency_notices( $project ),
-			'checklist'         => $this->build_checklist( $project ),
+			'checklist'         => $this->build_checklist( $project, $project_id ),
+			'overview_stats'    => [
+				[
+					'label' => __( 'Guests', 'prikogstreg-online-invitations' ),
+					'value' => (string) (int) ( $guest_summary['total'] ?? 0 ),
+					'url'   => $section_urls[ ProjectSections::GUESTS ] ?? '',
+				],
+				[
+					'label' => __( 'Attending', 'prikogstreg-online-invitations' ),
+					'value' => (string) (int) ( $guest_summary['attending'] ?? 0 ),
+					'url'   => $section_urls[ ProjectSections::RESPONSES ] ?? '',
+				],
+				[
+					'label' => __( 'Opened', 'prikogstreg-online-invitations' ),
+					'value' => (string) (int) ( $guest_summary['opened'] ?? 0 ),
+					'url'   => $section_urls[ ProjectSections::RESPONSES ] ?? '',
+				],
+			],
 			'next_action'       => $this->primary_next_action( $project ),
 			'order_url'         => $this->order_admin_url( (int) ( $project['order_id'] ?? 0 ) ),
 			'event_fields'      => ProjectEventService::ALLOWED_FIELDS,
@@ -357,8 +374,7 @@ final class ProjectController {
 	 * @param array<string, mixed> $project
 	 * @return array<string, array{label:string,done:bool,detail:string}>
 	 */
-	private function build_checklist( array $project ): array {
-		$project_id  = (int) ( $project['project_id'] ?? 0 );
+	private function build_checklist( array $project, int $project_id ): array {
 		$has_design  = (int) ( $project['state_version'] ?? 0 ) >= 1 && '' === (string) ( $project['last_error_code'] ?? '' );
 		$has_event   = ProjectEntitlement::has_required_event_data( $project );
 		$published   = PublicationStatus::PUBLISHED === (string) ( $project['publication_status'] ?? '' );
@@ -372,6 +388,7 @@ final class ProjectController {
 				'detail' => $has_design
 					? __( 'Your customised design is ready to edit.', 'prikogstreg-online-invitations' )
 					: __( 'Import is pending or failed — contact support if this persists.', 'prikogstreg-online-invitations' ),
+				'url'    => Endpoints::project_url( $project_id, ProjectSections::DESIGN ),
 			],
 			'event'   => [
 				'label'  => __( 'Event details', 'prikogstreg-online-invitations' ),
@@ -379,6 +396,7 @@ final class ProjectController {
 				'detail' => $has_event
 					? __( 'Event title and date are set.', 'prikogstreg-online-invitations' )
 					: __( 'Add your event title and date before publishing.', 'prikogstreg-online-invitations' ),
+				'url'    => Endpoints::project_url( $project_id, ProjectSections::EVENT ),
 			],
 			'guests'  => [
 				'label'  => __( 'Guest list', 'prikogstreg-online-invitations' ),
@@ -390,6 +408,7 @@ final class ProjectController {
 						$guest_count
 					)
 					: __( 'Add guests to send personal invitation links.', 'prikogstreg-online-invitations' ),
+				'url'    => Endpoints::project_url( $project_id, ProjectSections::GUESTS ),
 			],
 			'publish' => [
 				'label'  => __( 'Published', 'prikogstreg-online-invitations' ),
@@ -397,6 +416,7 @@ final class ProjectController {
 				'detail' => $published
 					? __( 'Your invitation is published.', 'prikogstreg-online-invitations' )
 					: __( 'Publish when your project is ready to share.', 'prikogstreg-online-invitations' ),
+				'url'    => Endpoints::project_url( $project_id, ProjectSections::PUBLISH ),
 			],
 		];
 	}

@@ -79,6 +79,7 @@ final class SectionNavBuilderTest extends TestCase {
 		$this->assertNotNull( $guest_item );
 		$this->assertSame( 'complete', $guest_item['status'] );
 		$this->assertStringContainsString( '1 guest', $guest_item['meta'] );
+		$this->assertNull( $this->find_item( $nav['groups'], ProjectSections::ADDRESS_BOOK ) );
 	}
 
 	public function test_build_flags_design_attention_when_import_failed(): void {

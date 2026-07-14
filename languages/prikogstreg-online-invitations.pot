@@ -1,306 +1,275 @@
-#
+# Copyright (C) 2026 Prik & Streg
+# This file is distributed under the same license as the Prikogstreg Online Invitations plugin.
 msgid ""
 msgstr ""
 "Project-Id-Version: Prikogstreg Online Invitations 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/prikogstreg-online-invitations\n"
-"POT-Creation-Date: 2026-07-14T11:18:11+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language: da_DK\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: 2026-07-14T11:18:11+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: prikogstreg-online-invitations\n"
 
 #. Plugin Name of the plugin
-#: prikogstreg-online-invitations.php src/Privacy/Policy.php:31
+#: prikogstreg-online-invitations.php
+#: src/Privacy/Policy.php:31
 msgid "Prikogstreg Online Invitations"
-msgstr "Prikogstreg Online Invitations"
+msgstr ""
 
 #. Plugin URI of the plugin
 #: prikogstreg-online-invitations.php
 msgid "https://prikogstreg.dk/"
-msgstr "https://prikogstreg.dk/"
+msgstr ""
 
 #. Description of the plugin
 #: prikogstreg-online-invitations.php
 msgid "WooCommerce online invitation projects with PDF Builder integration."
-msgstr "WooCommerce online invitationsprojekter med PDF Builder-integration."
+msgstr ""
 
 #. Author of the plugin
 #: prikogstreg-online-invitations.php
 msgid "Prik & Streg"
-msgstr "Prik & Streg"
+msgstr ""
 
 #: prikogstreg-online-invitations.php:41
-msgid ""
-"Prikogstreg Online Invitations is missing Composer dependencies. Run "
-"composer install in the plugin directory."
+msgid "Prikogstreg Online Invitations is missing Composer dependencies. Run composer install in the plugin directory."
 msgstr ""
-"Prikogstreg Online Invitations mangler Composer-afhængigheder. Kør composer "
-"install i plugin-mappen."
 
-#: src/Admin/DeliveryFailures.php:28 templates/admin/project-detail.php:63
+#: src/Admin/DeliveryFailures.php:28
+#: templates/admin/project-detail.php:63
 #: templates/admin/support.php:87
 msgid "Delivery failures"
-msgstr "Leveringsfejl"
+msgstr ""
 
-#: src/Admin/DeliveryFailures.php:46 src/Admin/ProjectSupportScreen.php:44
+#: src/Admin/DeliveryFailures.php:46
+#: src/Admin/ProjectSupportScreen.php:44
 msgid "No linked project row."
-msgstr "Ingen tilknyttet projektrad."
+msgstr ""
 
 #: src/Admin/DeliveryFailures.php:53
 msgid "No failed or skipped deliveries."
-msgstr "Ingen mislykkede eller sprunget over leveringer."
+msgstr ""
 
 #: src/Admin/DeliveryFailures.php:68
 msgid "“Sent” means accepted by wp_mail/mailer, not inbox delivery."
 msgstr ""
-"«Sendt» betyder accepteret af wp_mail/mailer, ikke levering til indbakken."
 
 #: src/Admin/Notices.php:38
-msgid ""
-"Prikogstreg Online Invitations detected an incompatible PDF Builder "
-"integration service. Online invitation features are disabled until the "
-"adapter is updated."
+msgid "Prikogstreg Online Invitations detected an incompatible PDF Builder integration service. Online invitation features are disabled until the adapter is updated."
 msgstr ""
-"Prikogstreg Online Invitations har registreret en inkompatibel PDF Builder-"
-"integrationstjeneste. Online invitationsfunktioner er deaktiveret, indtil "
-"adapteren opdateres."
 
 #: src/Admin/Notices.php:47
-msgid ""
-"Prikogstreg Online Invitations is waiting for the PDF Builder integration "
-"adapter (bpp/integration/service). Online invitation features are not active"
-" yet."
+msgid "Prikogstreg Online Invitations is waiting for the PDF Builder integration adapter (bpp/integration/service). Online invitation features are not active yet."
 msgstr ""
-"Prikogstreg Online Invitations venter på PDF Builder-integrationsadapteren "
-"(bpp/integration/service). Online invitationsfunktioner er endnu ikke "
-"aktive."
 
 #: src/Admin/Notices.php:55
-msgid ""
-"The PDF Builder integration adapter is not available. Online invitation "
-"features are disabled."
+msgid "The PDF Builder integration adapter is not available. Online invitation features are disabled."
 msgstr ""
-"PDF Builder-integrationsadapteren er ikke tilgængelig. Online "
-"invitationsfunktioner er deaktiveret."
 
 #: src/Admin/Notices.php:70
-msgid ""
-"Action Scheduler was not detected. Scheduled invitation tasks will not run "
-"until WooCommerce Action Scheduler is available."
+msgid "Action Scheduler was not detected. Scheduled invitation tasks will not run until WooCommerce Action Scheduler is available."
 msgstr ""
-"Action Scheduler blev ikke fundet. Planlagte invitationsopgaver kører ikke, "
-"før WooCommerce Action Scheduler er tilgængelig."
 
 #: src/Admin/Notices.php:87
-msgid ""
-"Prikogstreg Online Invitations could not complete a database migration. "
-"Online invitation data may be unavailable until the migration succeeds."
+msgid "Prikogstreg Online Invitations could not complete a database migration. Online invitation data may be unavailable until the migration succeeds."
 msgstr ""
-"Prikogstreg Online Invitations kunne ikke fuldføre en databasemigrering. "
-"Online invitationsdata er muligvis utilgængelige, indtil migreringen lykkes."
 
 #: src/Admin/ProjectAdminFilter.php:37
 #: templates/myaccount/project-wishlist.php:88
 #: templates/myaccount/_section-ui.php:66
 msgid "Active"
-msgstr "Aktiv"
+msgstr ""
 
 #: src/Admin/ProjectAdminFilter.php:38
 msgid "Deactivated"
-msgstr "Deaktiveret"
+msgstr ""
 
 #: src/Admin/ProjectAdminFilter.php:39
 #: templates/myaccount/project-photos.php:27
 #: templates/myaccount/project-responses.php:34
 msgid "All"
-msgstr "Alle"
+msgstr ""
 
 #. translators: %d: project ID
 #: src/Admin/ProjectAdminListViewModel.php:82
 #: src/MyAccount/AccountPresentation.php:131
-#: src/MyAccount/ProjectController.php:368 src/MyAccount/Sidebar.php:102
+#: src/MyAccount/ProjectController.php:368
+#: src/MyAccount/Sidebar.php:102
 #: templates/myaccount/project-overview.php:23
 #, php-format
 msgid "Invitation project #%d"
-msgstr "Invitationsprojekt #%d"
+msgstr ""
 
 #: src/Admin/ProjectImportRetry.php:24
 msgid "You do not have permission to retry project imports."
-msgstr "Du har ikke tilladelse til at prøve projektimport igen."
+msgstr ""
 
 #: src/Admin/ProjectImportRetry.php:41
 msgid "Project import retry completed successfully."
-msgstr "Genforsøg på projektimport gennemført."
+msgstr ""
 
 #: src/Admin/ProjectImportRetry.php:48
-msgid ""
-"Project import retry failed. Check the project error code and order payload."
+msgid "Project import retry failed. Check the project error code and order payload."
 msgstr ""
-"Genforsøg på projektimport mislykkedes. Tjek projektets fejlkode og ordrens "
-"data."
 
 #: src/Admin/ProjectPostType.php:24
 msgid "Invitation Projects"
-msgstr "Invitationsprojekter"
+msgstr ""
 
 #: src/Admin/ProjectPostType.php:25
 msgid "Invitation Project"
-msgstr "Invitationsprojekt"
+msgstr ""
 
-#: src/Admin/ProjectsAdminScreen.php:27 src/Admin/ProjectsAdminScreen.php:28
-#: src/Admin/ProjectsAdminScreen.php:60 src/Admin/ProjectsAdminScreen.php:70
-#: src/Privacy/EraserRegistrar.php:26 src/Privacy/ExporterRegistrar.php:26
+#: src/Admin/ProjectsAdminScreen.php:27
+#: src/Admin/ProjectsAdminScreen.php:28
+#: src/Admin/ProjectsAdminScreen.php:60
+#: src/Admin/ProjectsAdminScreen.php:70
+#: src/Privacy/EraserRegistrar.php:26
+#: src/Privacy/ExporterRegistrar.php:26
 msgid "Online Invitations"
-msgstr "Online invitationer"
+msgstr ""
 
 #: src/Admin/ProjectsAdminScreen.php:37
 msgid "You do not have permission to view invitation projects."
-msgstr "Du har ikke tilladelse til at se invitationsprojekter."
+msgstr ""
 
 #: src/Admin/ProjectsAdminScreen.php:71
 #: src/MyAccount/ProjectController.php:333
 msgid "This invitation project could not be found."
-msgstr "Dette invitationsprojekt blev ikke fundet."
+msgstr ""
 
 #: src/Admin/ProjectsAdminScreen.php:72
 msgid "Back to all projects"
-msgstr "Tilbage til alle projekter"
+msgstr ""
 
 #: src/Admin/ProjectsAdminScreen.php:82
 msgid "Invitation project details"
-msgstr "Detaljer for invitationsprojekt"
+msgstr ""
 
-#: src/Admin/ProjectsAdminScreen.php:83 templates/admin/project-detail.php:59
+#: src/Admin/ProjectsAdminScreen.php:83
+#: templates/admin/project-detail.php:59
 msgid "Back to list"
-msgstr "Tilbage til listen"
+msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:39
 msgid "You do not have permission to perform this action."
-msgstr "Du har ikke tilladelse til at udføre denne handling."
+msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:50
 msgid "Project not found."
-msgstr "Projekt ikke fundet."
+msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:67
 msgid "Support action completed."
-msgstr "Supporthandling gennemført."
+msgstr ""
 
 #: src/Admin/ProjectSupportActions.php:70
 msgid "Support action could not be completed."
-msgstr "Supporthandling kunne ikke gennemføres."
+msgstr ""
 
 #: src/Admin/ProjectSupportScreen.php:26
 msgid "Invitation project support"
-msgstr "Support for invitationsprojekt"
+msgstr ""
 
 #. translators: %s: minimum PHP version
 #: src/Bootstrap/Requirements.php:24
 #, php-format
 msgid "Prikogstreg Online Invitations requires PHP %s or newer."
-msgstr "Prikogstreg Online Invitations kræver PHP %s eller nyere."
+msgstr ""
 
 #. translators: %s: minimum WordPress version
 #: src/Bootstrap/Requirements.php:41
 #, php-format
 msgid "Prikogstreg Online Invitations requires WordPress %s or newer."
-msgstr "Prikogstreg Online Invitations kræver WordPress %s eller nyere."
+msgstr ""
 
 #: src/Bootstrap/Requirements.php:51
-msgid ""
-"Prikogstreg Online Invitations requires WooCommerce to be installed and "
-"active."
+msgid "Prikogstreg Online Invitations requires WooCommerce to be installed and active."
 msgstr ""
-"Prikogstreg Online Invitations kræver, at WooCommerce er installeret og "
-"aktivt."
 
 #. translators: %s: minimum WooCommerce version
 #: src/Bootstrap/Requirements.php:61
 #, php-format
 msgid "Prikogstreg Online Invitations requires WooCommerce %s or newer."
-msgstr "Prikogstreg Online Invitations kræver WooCommerce %s eller nyere."
+msgstr ""
 
 #: src/Bootstrap/Requirements.php:71
-msgid ""
-"Prikogstreg Online Invitations requires WooCommerce High-Performance Order "
-"Storage (HPOS). Enable it under WooCommerce → Settings → Advanced → "
-"Features."
+msgid "Prikogstreg Online Invitations requires WooCommerce High-Performance Order Storage (HPOS). Enable it under WooCommerce → Settings → Advanced → Features."
 msgstr ""
-"Prikogstreg Online Invitations kræver WooCommerce High-Performance Order "
-"Storage (HPOS). Aktivér det under WooCommerce → Indstillinger → Avanceret → "
-"Funktioner."
 
 #: src/Domain/AddressBook/AddressBookService.php:154
 msgid "A matching e-mail already exists in your address book."
-msgstr "En matchende e-mail findes allerede i din adressebog."
+msgstr ""
 
 #: src/Domain/AddressBook/AddressBookService.php:266
 msgid "Another address-book contact already uses this e-mail."
-msgstr "En anden kontakt i adressebogen bruger allerede denne e-mail."
+msgstr ""
 
 #. translators: %s: delivery type
 #: src/Domain/Delivery/DeliverySendService.php:130
 #, php-format
 msgid "Invitation update (%s)"
-msgstr "Invitationsopdatering (%s)"
+msgstr ""
 
 #: src/Domain/Guest/GuestService.php:235
 msgid "Another guest on this project already uses this e-mail address."
-msgstr "En anden gæst på dette projekt bruger allerede denne e-mailadresse."
+msgstr ""
 
 #. translators: 1: order ID, 2: product name, 3: customer name
 #: src/Domain/Project/ProjectFactory.php:29
 #, php-format
 msgid "Invitation #%1$d — %2$s — %3$s"
-msgstr "Invitation #%1$d — %2$s — %3$s"
+msgstr ""
 
 #: src/Domain/Project/ProjectService.php:535
 msgid "Customer"
-msgstr "Kunde"
+msgstr ""
 
 #: src/Domain/Rsvp/RsvpService.php:442
 msgid "Thank you — your response has been recorded."
-msgstr "Tak — dit svar er registreret."
+msgstr ""
 
 #: src/Domain/Rsvp/RsvpService.php:445
 msgid "Thank you — we have recorded that you cannot attend."
-msgstr "Tak — vi har registreret, at du desværre ikke kan deltage."
+msgstr ""
 
-#: src/MyAccount/Endpoints.php:33 src/Privacy/Policy.php:21
+#: src/MyAccount/Endpoints.php:33
+#: src/Privacy/Policy.php:21
 #: templates/myaccount/project-list.php:23
 msgid "Online invitations"
-msgstr "Online invitationer"
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:199
 msgid "Saving…"
-msgstr "Gemmer…"
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:200
 msgid "Saved."
-msgstr "Gemt."
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:201
 msgid "Save failed. Check your connection and try again."
-msgstr "Kunne ikke gemme. Tjek din forbindelse og prøv igen."
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:202
 msgid "Your design was changed elsewhere. Reload the page and try again."
-msgstr "Dit design blev ændret et andet sted. Genindlæs siden og prøv igen."
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:203
 msgid "Save endpoint unavailable."
-msgstr "Gem-endepunkt utilgængeligt."
+msgstr ""
 
 #: src/MyAccount/MyAccountRegistrar.php:204
 msgid "Invalid save payload from editor."
-msgstr "Ugyldige gemmedata fra editoren."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:245
 msgid "Design editing is not available for this project."
-msgstr "Designredigering er ikke tilgængelig for dette projekt."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:308
 #: src/MyAccount/ProjectSections.php:87
@@ -310,15 +279,16 @@ msgstr "Designredigering er ikke tilgængelig for dette projekt."
 #: templates/myaccount/project-guests.php:170
 #: templates/myaccount/project-responses.php:56
 msgid "Guests"
-msgstr "Gæster"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:313
 #: templates/myaccount/project-guests.php:35
 #: templates/myaccount/project-responses.php:35
 #: templates/myaccount/project-responses.php:57
-#: templates/myaccount/_section-ui.php:90 templates/public/rsvp-form.php:47
+#: templates/myaccount/_section-ui.php:90
+#: templates/public/rsvp-form.php:47
 msgid "Attending"
-msgstr "Deltager"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:318
 #: templates/myaccount/project-guests.php:36
@@ -326,414 +296,371 @@ msgstr "Deltager"
 #: templates/myaccount/project-responses.php:99
 #: templates/myaccount/_section-ui.php:104
 msgid "Opened"
-msgstr "Åbnet"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:386
 msgid "Design imported"
-msgstr "Design importeret"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:389
 msgid "Your customised design is ready to edit."
-msgstr "Dit tilpassede design er klar til redigering."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:390
 msgid "Import is pending or failed — contact support if this persists."
 msgstr ""
-"Import afventer eller mislykkedes — kontakt support, hvis det fortsætter."
 
 #: src/MyAccount/ProjectController.php:394
 #: templates/myaccount/project-event.php:28
 msgid "Event details"
-msgstr "Begivenhedsdetaljer"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:397
 msgid "Event title and date are set."
-msgstr "Begivenhedstitel og dato er angivet."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:398
 msgid "Add your event title and date before publishing."
-msgstr "Tilføj begivenhedstitel og dato, før du publicerer."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:402
 msgid "Guest list"
-msgstr "Gæsteliste"
+msgstr ""
 
 #. translators: %d: guest count
 #: src/MyAccount/ProjectController.php:407
 #, php-format
 msgid "%d guest added to this project."
 msgid_plural "%d guests added to this project."
-msgstr[0] "%d gæst tilføjet til dette projekt."
-msgstr[1] "%d gæster tilføjet til dette projekt."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/MyAccount/ProjectController.php:410
 msgid "Add guests to send personal invitation links."
-msgstr "Tilføj gæster for at sende personlige invitationslinks."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:414
 #: src/MyAccount/SectionNavBuilder.php:192
 #: templates/myaccount/_section-ui.php:80
 msgid "Published"
-msgstr "Publiceret"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:417
 #: templates/myaccount/project-publish.php:27
 msgid "Your invitation is published."
-msgstr "Din invitation er publiceret."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:418
 msgid "Publish when your project is ready to share."
-msgstr "Publicér, når dit projekt er klar til at deles."
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:430
 msgid "Import needs attention"
-msgstr "Import kræver opmærksomhed"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:437
 msgid "Finish setup"
-msgstr "Afslut opsætning"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:444
 msgid "Continue setup"
-msgstr "Fortsæt opsætning"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:450
 msgid "View project"
-msgstr "Se projekt"
+msgstr ""
 
 #: src/MyAccount/ProjectController.php:465
-msgid ""
-"A database update is in progress. Some invitation features may be "
-"temporarily unavailable."
+msgid "A database update is in progress. Some invitation features may be temporarily unavailable."
 msgstr ""
-"En databaseopdatering er i gang. Nogle invitationsfunktioner kan være "
-"midlertidigt utilgængelige."
 
 #: src/MyAccount/ProjectController.php:472
-msgid ""
-"The PDF Builder integration is unavailable. Design editing is disabled until"
-" the adapter is active."
+msgid "The PDF Builder integration is unavailable. Design editing is disabled until the adapter is active."
 msgstr ""
-"PDF Builder-integrationen er utilgængelig. Designredigering er deaktiveret, "
-"indtil adapteren er aktiv."
 
 #: src/MyAccount/ProjectController.php:479
-msgid ""
-"This project import failed and needs support attention before you can "
-"continue."
+msgid "This project import failed and needs support attention before you can continue."
 msgstr ""
-"Import af dette projekt mislykkedes og kræver support, før du kan fortsætte."
 
 #: src/MyAccount/ProjectSections.php:84
 #: templates/myaccount/project-overview.php:36
 msgid "Overview"
-msgstr "Overblik"
+msgstr ""
 
 #: src/MyAccount/ProjectSections.php:85
 #: templates/myaccount/project-design.php:23
 msgid "Design"
-msgstr "Design"
+msgstr ""
 
-#: src/MyAccount/ProjectSections.php:86 templates/admin/project-detail.php:41
+#: src/MyAccount/ProjectSections.php:86
+#: templates/admin/project-detail.php:41
 #: templates/admin/support.php:43
 msgid "Event"
-msgstr "Begivenhed"
+msgstr ""
 
 #: src/MyAccount/ProjectSections.php:88
 #: templates/myaccount/project-address-book.php:29
 msgid "Address book"
-msgstr "Adressebog"
+msgstr ""
 
 #: src/MyAccount/ProjectSections.php:89
 #: templates/myaccount/project-preview.php:26
 msgid "Preview"
-msgstr "Forhåndsvisning"
+msgstr ""
 
-#: src/MyAccount/ProjectSections.php:90 templates/admin/support.php:76
+#: src/MyAccount/ProjectSections.php:90
+#: templates/admin/support.php:76
 #: templates/myaccount/project-publish.php:41
 msgid "Publish"
-msgstr "Publicér"
+msgstr ""
 
 #: src/MyAccount/ProjectSections.php:91
 #: templates/myaccount/project-responses.php:48
 msgid "Responses"
-msgstr "Svar"
+msgstr ""
 
-#: src/MyAccount/ProjectSections.php:92 src/Public/EnvelopeViewModel.php:67
+#: src/MyAccount/ProjectSections.php:92
+#: src/Public/EnvelopeViewModel.php:67
 #: templates/myaccount/project-wishlist.php:26
 msgid "Wishlist"
-msgstr "Ønskeliste"
+msgstr ""
 
-#: src/MyAccount/ProjectSections.php:93 src/Public/EnvelopeViewModel.php:75
+#: src/MyAccount/ProjectSections.php:93
+#: src/Public/EnvelopeViewModel.php:75
 msgid "Photos"
-msgstr "Fotos"
+msgstr ""
 
 #: src/MyAccount/ProjectSections.php:94
 msgid "Settings"
-msgstr "Indstillinger"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:193
 msgid "In progress"
-msgstr "I gang"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:200
 #: templates/myaccount/_helpers.php:164
 msgid "Needs attention"
-msgstr "Kræver opmærksomhed"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:207
 msgid "Ready to edit"
-msgstr "Klar til redigering"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:208
 msgid "Import pending"
-msgstr "Import afventer"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:216
 msgid "Add title and date"
-msgstr "Tilføj titel og dato"
+msgstr ""
 
 #. translators: %d: guest count
 #: src/MyAccount/SectionNavBuilder.php:227
 #, php-format
 msgid "%d guest"
 msgid_plural "%d guests"
-msgstr[0] "%d gæst"
-msgstr[1] "%d gæster"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/MyAccount/SectionNavBuilder.php:230
 msgid "Add guests"
-msgstr "Tilføj gæster"
+msgstr ""
 
 #. translators: %d: contact count
 #: src/MyAccount/SectionNavBuilder.php:241
 #, php-format
 msgid "%d contact"
 msgid_plural "%d contacts"
-msgstr[0] "%d kontakt"
-msgstr[1] "%d kontakter"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/MyAccount/SectionNavBuilder.php:244
 #: src/MyAccount/SectionNavBuilder.php:296
 #: src/MyAccount/SectionNavBuilder.php:306
 #: templates/myaccount/_helpers.php:165
 msgid "Optional"
-msgstr "Valgfrit"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:251
 msgid "Preview available"
-msgstr "Forhåndsvisning tilgængelig"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:252
 msgid "Complete design first"
-msgstr "Fuldfør design først"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:259
 msgid "Live"
-msgstr "Live"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:260
 #: templates/myaccount/_section-ui.php:83
 msgid "Not published"
-msgstr "Ikke publiceret"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:271
 #: templates/myaccount/project-responses.php:72
 msgid "No responses yet"
-msgstr "Ingen svar endnu"
+msgstr ""
 
 #. translators: 1: attending count, 2: declined count
 #: src/MyAccount/SectionNavBuilder.php:279
 #, php-format
 msgid "%1$d yes · %2$d no"
-msgstr "%1$d ja · %2$d nej"
+msgstr ""
 
 #. translators: %d: wishlist item count
 #: src/MyAccount/SectionNavBuilder.php:293
 #, php-format
 msgid "%d gift"
 msgid_plural "%d gifts"
-msgstr[0] "%d gave"
-msgstr[1] "%d gaver"
+msgstr[0] ""
+msgstr[1] ""
 
 #. translators: 1: photo count, 2: pending moderation count
 #: src/MyAccount/SectionNavBuilder.php:315
 #, php-format
 msgid "%1$d photos · %2$d pending"
-msgstr "%1$d fotos · %2$d afventer"
+msgstr ""
 
 #. translators: %d: photo count
 #: src/MyAccount/SectionNavBuilder.php:326
 #, php-format
 msgid "%d photo"
 msgid_plural "%d photos"
-msgstr[0] "%d foto"
-msgstr[1] "%d fotos"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/MyAccount/SectionNavBuilder.php:377
 #: src/MyAccount/SectionNavBuilder.php:382
 msgid "Details saved"
-msgstr "Detaljer gemt"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:398
 msgid "Setup"
-msgstr "Opsætning"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:399
 msgid "Launch"
-msgstr "Lancering"
+msgstr ""
 
 #: src/MyAccount/SectionNavBuilder.php:400
 msgid "Manage"
-msgstr "Administrér"
+msgstr ""
 
 #: src/Privacy/PersonalDataEraser.php:31
 msgid "No e-mail address provided."
-msgstr "Ingen e-mailadresse angivet."
+msgstr ""
 
 #. translators: %d: number of contacts
 #: src/Privacy/PersonalDataEraser.php:46
 #, php-format
 msgid "Removed %d address book contacts."
-msgstr "Fjernede %d adressebogskontakter."
+msgstr ""
 
 #. translators: %d: project ID
 #: src/Privacy/PersonalDataEraser.php:62
 #, php-format
 msgid "Deleted invitation project #%d."
-msgstr "Slettede invitationsprojekt #%d."
+msgstr ""
 
 #. translators: 1: project ID, 2: error code
 #: src/Privacy/PersonalDataEraser.php:69
 #, php-format
 msgid "Project #%1$d partial cleanup: %2$s"
-msgstr "Projekt #%1$d delvis oprydning: %2$s"
+msgstr ""
 
 #: src/Privacy/PersonalDataEraser.php:77
-msgid ""
-"WooCommerce order records may be retained for legal and accounting purposes."
+msgid "WooCommerce order records may be retained for legal and accounting purposes."
 msgstr ""
-"WooCommerce-ordrer kan opbevares af juridiske og regnskabsmæssige årsager."
 
 #. translators: %d: guest ID
 #: src/Privacy/PersonalDataEraser.php:100
 #, php-format
 msgid "Anonymized guest record #%d."
-msgstr "Anonymiserede gæsteregistrering #%d."
+msgstr ""
 
 #: src/Privacy/PersonalDataEraser.php:107
 msgid "No matching invitation data found for this e-mail."
-msgstr "Ingen matchende invitationsdata fundet for denne e-mail."
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:64
 msgid "Online invitation projects"
-msgstr "Online invitationsprojekter"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:73
 msgid "Invitation address book"
-msgstr "Invitationsadressebog"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:84
 msgid "Project guests (owner export)"
-msgstr "Projektgæster (ejerexport)"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:93
 msgid "Wishlist items"
-msgstr "Ønskelistevarer"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:102
 msgid "Guest photo metadata"
-msgstr "Metadata for gæstefotos"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:111
 msgid "Invitation delivery history"
-msgstr "Invitationsleveringshistorik"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:120
 msgid "Project activity log"
-msgstr "Projektaktivitetslog"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:149
 msgid "Your guest invitation data"
-msgstr "Dine gæsteinvitationsdata"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:157
 msgid "Your wishlist reservations"
-msgstr "Dine ønskelistereservationer"
+msgstr ""
 
 #: src/Privacy/PersonalDataExporter.php:169
 msgid "Your uploaded photos"
-msgstr "Dine uploadede fotos"
+msgstr ""
 
 #: src/Privacy/Policy.php:22
-msgid ""
-"When you purchase or manage an online invitation, we store event details, "
-"guest lists, RSVP responses, optional wishlist reservations, and guest photo"
-" uploads you or your guests submit."
+msgid "When you purchase or manage an online invitation, we store event details, guest lists, RSVP responses, optional wishlist reservations, and guest photo uploads you or your guests submit."
 msgstr ""
-"Når du køber eller administrerer en online invitation, gemmer vi "
-"begivenhedsdetaljer, gæstelister, RSVP-svar, valgfrie "
-"ønskelistereservationer og gæstefotos, som du eller dine gæster uploader."
 
 #: src/Privacy/Policy.php:23
-msgid ""
-"Guest personal links are sent by e-mail. We store only hashed tokens, not "
-"raw invitation URLs, in our database."
+msgid "Guest personal links are sent by e-mail. We store only hashed tokens, not raw invitation URLs, in our database."
 msgstr ""
-"Personlige gæstelinks sendes via e-mail. Vi gemmer kun hashede tokens, ikke "
-"rå invitations-URL'er, i databasen."
 
 #: src/Privacy/Policy.php:24
-msgid ""
-"Guest photo uploads are moderated by the project owner before download. "
-"Photos are not published in a public gallery by default."
+msgid "Guest photo uploads are moderated by the project owner before download. Photos are not published in a public gallery by default."
 msgstr ""
-"Gæstefotos modereres af projektets ejer, før de kan downloades. Fotos "
-"publiceres som standard ikke i et offentligt galleri."
 
 #: src/Privacy/Policy.php:25
-msgid ""
-"Projects remain available to the owner after the event for a limited period,"
-" then may be marked expired. Expiry does not automatically delete your data."
+msgid "Projects remain available to the owner after the event for a limited period, then may be marked expired. Expiry does not automatically delete your data."
 msgstr ""
-"Projekter forbliver tilgængelige for ejeren i en begrænset periode efter "
-"begivenheden og kan derefter markeres som udløbet. Udløb sletter ikke "
-"automatisk dine data."
 
 #: src/Privacy/Policy.php:26
-msgid ""
-"You may archive or permanently delete a project from My Account settings. "
-"WooCommerce order records may be retained separately for legal and "
-"accounting purposes."
+msgid "You may archive or permanently delete a project from My Account settings. WooCommerce order records may be retained separately for legal and accounting purposes."
 msgstr ""
-"Du kan arkivere eller permanent slette et projekt fra Min konto-"
-"indstillinger. WooCommerce-ordrer kan opbevares separat af juridiske og "
-"regnskabsmæssige årsager."
 
 #: src/Privacy/Policy.php:27
-msgid ""
-"Optional external wishlist links (for example Ønskeskyen) open third-party "
-"websites. We do not synchronize data with those services."
+msgid "Optional external wishlist links (for example Ønskeskyen) open third-party websites. We do not synchronize data with those services."
 msgstr ""
-"Valgfrie eksterne ønskeliste-links (for eksempel Ønskeskyen) åbner "
-"tredjepartswebsteder. Vi synkroniserer ikke data med disse tjenester."
 
 #: src/Privacy/Policy.php:28
-msgid ""
-"Rate-limiting identifiers are stored briefly using hashed values and expire "
-"automatically."
+msgid "Rate-limiting identifiers are stored briefly using hashed values and expire automatically."
 msgstr ""
-"Ratebegrænsnings-id'er gemmes kortvarigt som hashede værdier og udløber "
-"automatisk."
 
 #: src/Public/EnvelopeViewModel.php:51
 msgid "Dear guest"
-msgstr "Kære gæst"
+msgstr ""
 
 #: src/Public/EnvelopeViewModel.php:54
 #: src/WooCommerce/Emails/GuestInvitationEmail.php:16
 msgid "You are invited"
-msgstr "Du er inviteret"
+msgstr ""
 
 #: src/Public/EnvelopeViewModel.php:60
 #: templates/myaccount/project-guests.php:152
@@ -741,651 +668,648 @@ msgstr "Du er inviteret"
 #: templates/myaccount/project-responses.php:82
 #: templates/myaccount/project-responses.php:97
 msgid "RSVP"
-msgstr "RSVP"
+msgstr ""
 
 #: src/Public/PhotoController.php:185
 msgid "Please enter your name before uploading photos."
-msgstr "Angiv venligst dit navn, før du uploader fotos."
+msgstr ""
 
-#: src/Public/PhotoController.php:186 src/Public/RsvpController.php:132
+#: src/Public/PhotoController.php:186
+#: src/Public/RsvpController.php:132
 #: src/Public/WishlistController.php:211
 msgid "Too many requests. Please wait a moment and try again."
-msgstr "For mange forespørgsler. Vent et øjeblik og prøv igen."
+msgstr ""
 
 #: src/Public/PhotoController.php:187
 msgid "Photo uploads are not available for this invitation."
-msgstr "Fotoupload er ikke tilgængelig for denne invitation."
+msgstr ""
 
 #: src/Public/PhotoController.php:188
 msgid "Your upload session expired. Please try again."
-msgstr "Din uploadsession er udløbet. Prøv igen."
+msgstr ""
 
-#: src/Public/PhotoController.php:189 src/Public/PublicController.php:137
+#: src/Public/PhotoController.php:189
+#: src/Public/PublicController.php:137
 msgid "We could not upload your photos. Please try again."
-msgstr "Vi kunne ikke uploade dine fotos. Prøv igen."
+msgstr ""
 
-#: src/Public/PhotoController.php:196 src/Public/PublicController.php:90
-#: src/Public/RsvpController.php:131 src/Public/RsvpController.php:143
+#: src/Public/PhotoController.php:196
+#: src/Public/PublicController.php:90
+#: src/Public/RsvpController.php:131
+#: src/Public/RsvpController.php:143
 #: src/Public/WishlistController.php:219
 msgid "This invitation is not available."
-msgstr "Denne invitation er ikke tilgængelig."
+msgstr ""
 
 #: src/Public/PublicController.php:130
 msgid "Saving your response…"
-msgstr "Gemmer dit svar…"
+msgstr ""
 
 #: src/Public/PublicController.php:131
 msgid "Your response has been saved."
-msgstr "Dit svar er gemt."
+msgstr ""
 
-#: src/Public/PublicController.php:132 src/Public/RsvpController.php:135
+#: src/Public/PublicController.php:132
+#: src/Public/RsvpController.php:135
 msgid "We could not save your response. Please try again."
-msgstr "Vi kunne ikke gemme dit svar. Prøv igen."
+msgstr ""
 
 #: src/Public/PublicController.php:133
 msgid "Wishlist updated."
-msgstr "Ønskeliste opdateret."
+msgstr ""
 
-#: src/Public/PublicController.php:134 src/Public/WishlistController.php:212
+#: src/Public/PublicController.php:134
+#: src/Public/WishlistController.php:212
 msgid "We could not update the wishlist. Please try again."
-msgstr "Vi kunne ikke opdatere ønskelisten. Prøv igen."
+msgstr ""
 
 #: src/Public/PublicController.php:135
 msgid "Photos uploaded. They will appear after organiser approval."
-msgstr "Fotos uploadet. De vises, når arrangøren har godkendt dem."
+msgstr ""
 
 #: src/Public/PublicController.php:136
 msgid "Uploading photos…"
-msgstr "Uploader fotos…"
+msgstr ""
 
 #: src/Public/PublicController.php:138
 msgid "Personal link (save for later):"
-msgstr "Personligt link (gem til senere):"
+msgstr ""
 
 #: src/Public/RsvpController.php:125
 msgid "Please choose whether you are attending."
-msgstr "Vælg venligst, om du deltager."
+msgstr ""
 
 #: src/Public/RsvpController.php:126
 msgid "Please enter how many people are attending."
-msgstr "Angiv venligst, hvor mange der deltager."
+msgstr ""
 
 #: src/Public/RsvpController.php:127
 msgid "The attendee count is not valid."
-msgstr "Antallet af deltagere er ikke gyldigt."
+msgstr ""
 
 #: src/Public/RsvpController.php:128
 msgid "Please enter your name."
-msgstr "Angiv venligst dit navn."
+msgstr ""
 
 #: src/Public/RsvpController.php:129
 msgid "The e-mail address is not valid."
-msgstr "E-mailadressen er ikke gyldig."
+msgstr ""
 
 #: src/Public/RsvpController.php:130
 msgid "The RSVP deadline has passed. Your response can no longer be changed."
-msgstr "RSVP-fristen er overskredet. Dit svar kan ikke længere ændres."
+msgstr ""
 
 #: src/Public/WishlistController.php:208
 msgid "Please enter your name before reserving a gift."
-msgstr "Angiv venligst dit navn, før du reserverer en gave."
+msgstr ""
 
 #: src/Public/WishlistController.php:209
 msgid "That gift is no longer available in the requested quantity."
-msgstr "Den gave er ikke længere tilgængelig i det ønskede antal."
+msgstr ""
 
 #: src/Public/WishlistController.php:210
 msgid "The wishlist is not available for this invitation."
-msgstr "Ønskelisten er ikke tilgængelig for denne invitation."
+msgstr ""
 
 #: src/WooCommerce/Cart/InvitationCart.php:40
-msgid ""
-"Please customise the invitation in the PDF Builder before adding it to your "
-"cart."
+msgid "Please customise the invitation in the PDF Builder before adding it to your cart."
 msgstr ""
-"Tilpas venligst invitationen i PDF Builder, før du lægger den i kurven."
 
 #: src/WooCommerce/Checkout/AccountRequirement.php:58
-msgid ""
-"An account is required to purchase an online invitation. Please create an "
-"account or log in to continue."
+msgid "An account is required to purchase an online invitation. Please create an account or log in to continue."
 msgstr ""
-"Der kræves en konto for at købe en online invitation. Opret en konto eller "
-"log ind for at fortsætte."
 
 #: src/WooCommerce/Checkout/AccountRequirement.php:69
-msgid ""
-"Online invitations require a customer account. You will receive a secure "
-"link to set your password after checkout — we never send passwords by "
-"e-mail."
+msgid "Online invitations require a customer account. You will receive a secure link to set your password after checkout — we never send passwords by e-mail."
 msgstr ""
-"Online invitationer kræver en kundekonto. Du modtager et sikkert link til at"
-" oprette din adgangskode efter checkout — vi sender aldrig adgangskoder via "
-"e-mail."
 
 #: src/WooCommerce/Checkout/CheckoutBlockGuard.php:33
-msgid ""
-"Online invitations cannot be purchased through the block-based checkout yet."
-" Please use the classic checkout page or contact support."
+msgid "Online invitations cannot be purchased through the block-based checkout yet. Please use the classic checkout page or contact support."
 msgstr ""
-"Online invitationer kan endnu ikke købes via den blokbaserede checkout. Brug"
-" den klassiske checkout-side eller kontakt support."
 
 #: src/WooCommerce/Checkout/CheckoutBlockGuard.php:51
-msgid ""
-"Online invitations are not supported via the Checkout Block in this release."
+msgid "Online invitations are not supported via the Checkout Block in this release."
 msgstr ""
-"Online invitationer understøttes ikke via Checkout Block i denne udgivelse."
 
 #: src/WooCommerce/Checkout/OrderItemPayload.php:40
-msgid ""
-"Invitation builder data is missing or invalid. Please return to the cart and"
-" customise the product again."
+msgid "Invitation builder data is missing or invalid. Please return to the cart and customise the product again."
 msgstr ""
-"Invitationsbuilder-data mangler eller er ugyldige. Gå tilbage til kurven og "
-"tilpas produktet igen."
 
 #: src/WooCommerce/Emails/AbstractOiEmail.php:108
 #: templates/emails/partials/html-body.php:9
 msgid "Your invitation"
-msgstr "Din invitation"
+msgstr ""
 
 #: src/WooCommerce/Emails/DemoInvitationEmail.php:13
 #: src/WooCommerce/Emails/DemoInvitationEmail.php:16
 msgid "Demo invitation"
-msgstr "Demo-invitation"
+msgstr ""
 
 #: src/WooCommerce/Emails/DemoInvitationEmail.php:14
 msgid "Owner demo-to-self preview link."
-msgstr "Ejerens demo-forhåndsvisningslink til sig selv."
+msgstr ""
 
 #: src/WooCommerce/Emails/DemoInvitationEmail.php:15
 msgid "Your demo invitation preview"
-msgstr "Din demo-invitationsforhåndsvisning"
+msgstr ""
 
 #: src/WooCommerce/Emails/GuestInvitationEmail.php:13
 msgid "Guest invitation"
-msgstr "Gæsteinvitation"
+msgstr ""
 
 #: src/WooCommerce/Emails/GuestInvitationEmail.php:14
 msgid "Personal invitation link for a guest."
-msgstr "Personligt invitationslink til en gæst."
+msgstr ""
 
 #: src/WooCommerce/Emails/GuestInvitationEmail.php:15
 msgid "You are invited to {event_title}"
-msgstr "Du er inviteret til {event_title}"
+msgstr ""
 
 #: src/WooCommerce/Emails/OrganizerRsvpEmail.php:13
 msgid "Organizer RSVP notification"
-msgstr "Arrangørnotifikation om RSVP"
+msgstr ""
 
 #: src/WooCommerce/Emails/OrganizerRsvpEmail.php:14
 msgid "Notifies the organiser when a guest responds."
-msgstr "Underretter arrangøren, når en gæst svarer."
+msgstr ""
 
 #: src/WooCommerce/Emails/OrganizerRsvpEmail.php:15
 msgid "New RSVP for {event_title}"
-msgstr "Nyt RSVP for {event_title}"
+msgstr ""
 
 #: src/WooCommerce/Emails/OrganizerRsvpEmail.php:16
 msgid "Guest response received"
-msgstr "Gæstesvar modtaget"
+msgstr ""
 
 #: src/WooCommerce/Emails/PhotoNotificationEmail.php:13
 msgid "Photo upload notification"
-msgstr "Notifikation om fotoupload"
+msgstr ""
 
 #: src/WooCommerce/Emails/PhotoNotificationEmail.php:14
 msgid "Notifies the organiser when a guest uploads a photo."
-msgstr "Underretter arrangøren, når en gæst uploader et foto."
+msgstr ""
 
 #: src/WooCommerce/Emails/PhotoNotificationEmail.php:15
 msgid "New guest photo for {event_title}"
-msgstr "Nyt gæstefoto for {event_title}"
+msgstr ""
 
 #: src/WooCommerce/Emails/PhotoNotificationEmail.php:16
 msgid "New guest photo"
-msgstr "Nyt gæstefoto"
+msgstr ""
 
 #: src/WooCommerce/Emails/ProjectWelcomeEmail.php:13
 msgid "Project welcome"
-msgstr "Projektvelkomst"
+msgstr ""
 
 #: src/WooCommerce/Emails/ProjectWelcomeEmail.php:14
 msgid "Sent once when an invitation project is ready in My Account."
-msgstr "Sendes én gang, når et invitationsprojekt er klar i Min konto."
+msgstr ""
 
 #: src/WooCommerce/Emails/ProjectWelcomeEmail.php:15
 msgid "Your invitation project is ready"
-msgstr "Dit invitationsprojekt er klar"
+msgstr ""
 
 #: src/WooCommerce/Emails/ProjectWelcomeEmail.php:16
 msgid "Welcome to your invitation project"
-msgstr "Velkommen til dit invitationsprojekt"
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpConfirmationEmail.php:13
 msgid "RSVP confirmation"
-msgstr "RSVP-bekræftelse"
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpConfirmationEmail.php:14
 msgid "Confirmation after a guest submits or changes an RSVP."
-msgstr "Bekræftelse efter en gæst afgiver eller ændrer et RSVP."
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpConfirmationEmail.php:15
 msgid "Your RSVP for {event_title}"
-msgstr "Dit RSVP for {event_title}"
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpConfirmationEmail.php:16
 msgid "RSVP received"
-msgstr "RSVP modtaget"
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpReminderEmail.php:13
 #: src/WooCommerce/Emails/RsvpReminderEmail.php:16
 msgid "RSVP reminder"
-msgstr "RSVP-påmindelse"
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpReminderEmail.php:14
 msgid "Reminder before the RSVP deadline."
-msgstr "Påmindelse før RSVP-fristen."
+msgstr ""
 
 #: src/WooCommerce/Emails/RsvpReminderEmail.php:15
 msgid "Reminder: please respond to {event_title}"
-msgstr "Påmindelse: svar venligst på {event_title}"
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:62
 msgid "Testing without PDF Builder"
-msgstr "Test uden PDF Builder"
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:63
-msgid ""
-"PDF Builder is optional. The storefront shows a placeholder preview until a "
-"template is connected."
+msgid "PDF Builder is optional. The storefront shows a placeholder preview until a template is connected."
 msgstr ""
-"PDF Builder er valgfrit. Butikken viser en pladsholderforhåndsvisning, "
-"indtil en skabelon er tilkoblet."
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:69
 msgid "Ready for purchase"
-msgstr "Klar til køb"
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:70
 msgid "Builder template and invitation presets are configured."
-msgstr "Builder-skabelon og invitationsforudindstillinger er konfigureret."
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:79
 msgid "Configuration incomplete"
-msgstr "Konfiguration ufuldstændig"
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:86
 msgid "Activate and save a PDF Builder template for this product."
-msgstr "Aktivér og gem en PDF Builder-skabelon for dette produkt."
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:87
 msgid "Select a valid envelope preset."
-msgstr "Vælg en gyldig konvolutforudindstilling."
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:88
 msgid "Select a valid background preset."
-msgstr "Vælg en gyldig baggrundsforudindstilling."
+msgstr ""
 
 #: src/WooCommerce/ProductType/BuilderValidity.php:89
 msgid "Invitation configuration is incomplete."
-msgstr "Invitationskonfigurationen er ufuldstændig."
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:27
 msgid "Online Invitation"
-msgstr "Online invitation"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:50
 msgid "Builder integration status"
-msgstr "Builder-integrationsstatus"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:56
 msgid "Open PDF Builder customizer"
-msgstr "Åbn PDF Builder-tilpasning"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:64
 msgid "PDF Builder optional (testing)"
-msgstr "PDF Builder valgfrit (test)"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:66
-msgid ""
-"Allow purchase without a connected PDF Builder template. The product page "
-"shows a placeholder preview during testing."
+msgid "Allow purchase without a connected PDF Builder template. The product page shows a placeholder preview during testing."
 msgstr ""
-"Tillad køb uden tilkoblet PDF Builder-skabelon. Produktsiden viser en "
-"pladsholderforhåndsvisning under test."
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:75
 msgid "Envelope preset"
-msgstr "Konvolutforudindstilling"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:76
 #: src/WooCommerce/ProductType/ProductDataPanel.php:97
 msgid "Select a preset…"
-msgstr "Vælg en forudindstilling…"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:79
 msgid "Controls the animated envelope style on the public invitation."
-msgstr "Styrer den animerede konvolutstil på den offentlige invitation."
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:86
 msgid "Envelope preview reference"
-msgstr "Reference til konvolutforhåndsvisning"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:89
-msgid ""
-"Optional admin reference for preview assets (slug, note, or internal asset "
-"key)."
+msgid "Optional admin reference for preview assets (slug, note, or internal asset key)."
 msgstr ""
-"Valgfri admin-reference til forhåndsvisningsaktiver (slug, note eller "
-"internt aktivnøgle)."
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:96
 msgid "Generic background preset"
-msgstr "Generel baggrundsforudindstilling"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:105
 msgid "Default locale"
-msgstr "Standard landestandard"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:113
 msgid "RSVP reminder offset (days)"
-msgstr "RSVP-påmindelse (dage før)"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:127
 msgid "Guest photo uploads enabled by default"
-msgstr "Gæstefotoupload aktiveret som standard"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:135
 msgid "Internal wishlist enabled by default"
-msgstr "Intern ønskeliste aktiveret som standard"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductDataPanel.php:188
 msgid "Online Invitation product is incomplete:"
-msgstr "Online Invitation-produktet er ufuldstændigt:"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:35
 msgid "Classic envelope"
-msgstr "Klassisk konvolut"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:36
 msgid "Modern envelope"
-msgstr "Moderne konvolut"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:37
 msgid "Minimal envelope"
-msgstr "Minimal konvolut"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:46
 msgid "Neutral background"
-msgstr "Neutral baggrund"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:47
 msgid "Floral background"
-msgstr "Blomstret baggrund"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductMeta.php:48
 msgid "Geometric background"
-msgstr "Geometrisk baggrund"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductPagePlaceholder.php:40
 msgid "PDF / Online invitation will show here"
-msgstr "PDF / online invitation vises her"
+msgstr ""
 
 #: src/WooCommerce/ProductType/ProductTypeRegistrar.php:32
 msgid "Online invitation"
-msgstr "Online invitation"
+msgstr ""
 
 #: src/WooCommerce/ProductType/QuantityGuard.php:45
 msgid "Online invitations can only be purchased one at a time."
-msgstr "Online invitationer kan kun købes én ad gangen."
+msgstr ""
 
 #: src/WooCommerce/ProductType/QuantityGuard.php:54
 msgid "This online invitation product is not ready for purchase yet."
-msgstr "Dette online invitationsprodukt er endnu ikke klar til køb."
+msgstr ""
 
 #: src/WooCommerce/ProductType/QuantityGuard.php:72
 msgid "Online invitation quantity cannot be changed."
-msgstr "Antal online invitationer kan ikke ændres."
+msgstr ""
 
 #: templates/admin/project-detail.php:36
 #: templates/myaccount/project-settings.php:42
 msgid "Project ID"
-msgstr "Projekt-ID"
+msgstr ""
 
-#: templates/admin/project-detail.php:37 templates/admin/projects-list.php:57
-#: templates/admin/projects-list.php:80 templates/admin/support.php:39
+#: templates/admin/project-detail.php:37
+#: templates/admin/projects-list.php:57
+#: templates/admin/projects-list.php:80
+#: templates/admin/support.php:39
 msgid "Owner"
-msgstr "Ejer"
+msgstr ""
 
-#: templates/admin/project-detail.php:38 templates/admin/projects-list.php:58
-#: templates/admin/projects-list.php:88 templates/admin/support.php:40
+#: templates/admin/project-detail.php:38
+#: templates/admin/projects-list.php:58
+#: templates/admin/projects-list.php:88
+#: templates/admin/support.php:40
 #: templates/myaccount/project-overview.php:58
 msgid "Order"
-msgstr "Ordre"
+msgstr ""
 
-#: templates/admin/project-detail.php:38 templates/admin/support.php:40
+#: templates/admin/project-detail.php:38
+#: templates/admin/support.php:40
 msgid "item"
-msgstr "vare"
+msgstr ""
 
-#: templates/admin/project-detail.php:39 templates/admin/projects-list.php:59
-#: templates/admin/projects-list.php:95 templates/admin/support.php:41
+#: templates/admin/project-detail.php:39
+#: templates/admin/projects-list.php:59
+#: templates/admin/projects-list.php:95
+#: templates/admin/support.php:41
 msgid "Product"
-msgstr "Produkt"
+msgstr ""
 
-#: templates/admin/project-detail.php:40 templates/admin/projects-list.php:60
-#: templates/admin/projects-list.php:101 templates/admin/support.php:42
+#: templates/admin/project-detail.php:40
+#: templates/admin/projects-list.php:60
+#: templates/admin/projects-list.php:101
+#: templates/admin/support.php:42
 #: templates/myaccount/project-list.php:44
 #: templates/myaccount/project-settings.php:46
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
-#: templates/admin/project-detail.php:42 templates/admin/support.php:44
+#: templates/admin/project-detail.php:42
+#: templates/admin/support.php:44
 msgid "Effective expiry"
-msgstr "Effektiv udløbsdato"
+msgstr ""
 
-#: templates/admin/project-detail.php:42 templates/admin/support.php:44
+#: templates/admin/project-detail.php:42
+#: templates/admin/support.php:44
 msgid "override"
-msgstr "tilsidesættelse"
+msgstr ""
 
-#: templates/admin/project-detail.php:43 templates/admin/support.php:45
+#: templates/admin/project-detail.php:43
+#: templates/admin/support.php:45
 msgid "Builder"
-msgstr "Builder"
+msgstr ""
 
-#: templates/admin/project-detail.php:43 templates/admin/support.php:45
+#: templates/admin/project-detail.php:43
+#: templates/admin/support.php:45
 msgid "Schema"
-msgstr "Skema"
+msgstr ""
 
-#: templates/admin/project-detail.php:43 templates/admin/support.php:45
+#: templates/admin/project-detail.php:43
+#: templates/admin/support.php:45
 msgid "state"
-msgstr "tilstand"
+msgstr ""
 
-#: templates/admin/project-detail.php:43 templates/admin/support.php:45
+#: templates/admin/project-detail.php:43
+#: templates/admin/support.php:45
 msgid "published"
-msgstr "publiceret"
+msgstr ""
 
-#: templates/admin/project-detail.php:44 templates/admin/support.php:46
+#: templates/admin/project-detail.php:44
+#: templates/admin/support.php:46
 msgid "Last error"
-msgstr "Seneste fejl"
+msgstr ""
 
-#: templates/admin/project-detail.php:45 templates/admin/support.php:47
+#: templates/admin/project-detail.php:45
+#: templates/admin/support.php:47
 msgid "Counts"
-msgstr "Antal"
+msgstr ""
 
-#: templates/admin/project-detail.php:45 templates/admin/support.php:47
+#: templates/admin/project-detail.php:45
+#: templates/admin/support.php:47
 #, php-format
 msgid "Guests: %1$d · Wishlist: %2$d · Photos: %3$d · Deliveries: %4$d"
-msgstr "Gæster: %1$d · Ønskeliste: %2$d · Fotos: %3$d · Leveringer: %4$d"
+msgstr ""
 
 #: templates/admin/project-detail.php:46
 msgid "Created"
-msgstr "Oprettet"
+msgstr ""
 
-#: templates/admin/project-detail.php:47 templates/admin/projects-list.php:61
+#: templates/admin/project-detail.php:47
+#: templates/admin/projects-list.php:61
 #: templates/admin/projects-list.php:110
 msgid "Updated"
-msgstr "Opdateret"
+msgstr ""
 
-#: templates/admin/project-detail.php:51 templates/admin/support.php:51
+#: templates/admin/project-detail.php:51
+#: templates/admin/support.php:51
 msgid "Storage health"
-msgstr "Lagringstilstand"
+msgstr ""
 
-#: templates/admin/project-detail.php:52 templates/admin/support.php:52
+#: templates/admin/project-detail.php:52
+#: templates/admin/support.php:52
 msgid "Healthy"
-msgstr "Sund"
+msgstr ""
 
-#: templates/admin/project-detail.php:52 templates/admin/support.php:52
+#: templates/admin/project-detail.php:52
+#: templates/admin/support.php:52
 msgid "Issues detected"
-msgstr "Problemer registreret"
+msgstr ""
 
 #: templates/admin/project-detail.php:58
 msgid "Open in My Account"
-msgstr "Åbn i Min konto"
+msgstr ""
 
-#: templates/admin/project-detail.php:68 templates/admin/support.php:92
+#: templates/admin/project-detail.php:68
+#: templates/admin/support.php:92
 msgid "Recent events"
-msgstr "Seneste hændelser"
+msgstr ""
 
-#: templates/admin/project-detail.php:69 templates/admin/support.php:93
+#: templates/admin/project-detail.php:69
+#: templates/admin/support.php:93
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
-#: templates/admin/project-detail.php:69 templates/admin/support.php:93
+#: templates/admin/project-detail.php:69
+#: templates/admin/support.php:93
 #: templates/myaccount/project-event.php:77
 msgid "When"
-msgstr "Hvornår"
+msgstr ""
 
-#: templates/admin/project-detail.php:69 templates/admin/support.php:93
+#: templates/admin/project-detail.php:69
+#: templates/admin/support.php:93
 msgid "Actor"
-msgstr "Aktør"
+msgstr ""
 
 #: templates/admin/projects-list.php:51
 msgid "No invitation projects match this filter."
-msgstr "Ingen invitationsprojekter matcher dette filter."
+msgstr ""
 
-#: templates/admin/projects-list.php:56 templates/admin/projects-list.php:67
+#: templates/admin/projects-list.php:56
+#: templates/admin/projects-list.php:67
 msgid "Project"
-msgstr "Projekt"
+msgstr ""
 
 #: templates/admin/projects-list.php:75
 msgid "View details"
-msgstr "Se detaljer"
+msgstr ""
 
 #: templates/admin/projects-list.php:78
 msgid "Show more details"
-msgstr "Vis flere detaljer"
+msgstr ""
 
 #. translators: %d: number of projects
 #: templates/admin/projects-list.php:125
 #, php-format
 msgid "%d project"
 msgid_plural "%d projects"
-msgstr[0] "%d projekt"
-msgstr[1] "%d projekter"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/admin/support.php:57
 msgid "Open support view in My Account"
-msgstr "Åbn supportvisning i Min konto"
+msgstr ""
 
 #: templates/admin/support.php:58
 msgid "Retry import"
-msgstr "Prøv import igen"
+msgstr ""
 
 #: templates/admin/support.php:60
 msgid "Support actions"
-msgstr "Supporthandlinger"
+msgstr ""
 
 #: templates/admin/support.php:66
 msgid "Audit reason (optional)"
-msgstr "Revisionsårsag (valgfrit)"
+msgstr ""
 
 #: templates/admin/support.php:70
 msgid "Expiry override (UTC Y-m-d H:i:s)"
-msgstr "Tilsidesættelse af udløb (UTC Y-m-d H:i:s)"
+msgstr ""
 
 #: templates/admin/support.php:74
 msgid "Restrict"
-msgstr "Begræns"
+msgstr ""
 
 #: templates/admin/support.php:75
 msgid "Restore"
-msgstr "Gendan"
+msgstr ""
 
-#: templates/admin/support.php:77 templates/myaccount/project-publish.php:80
+#: templates/admin/support.php:77
+#: templates/myaccount/project-publish.php:80
 msgid "Unpublish"
-msgstr "Afpublicér"
+msgstr ""
 
 #: templates/admin/support.php:78
 msgid "Set expiry override"
-msgstr "Angiv tilsidesættelse af udløb"
+msgstr ""
 
 #: templates/admin/support.php:79
 msgid "Clear expiry override"
-msgstr "Ryd tilsidesættelse af udløb"
+msgstr ""
 
 #: templates/admin/support.php:80
 msgid "Rotate generic token"
-msgstr "Rotér generisk token"
+msgstr ""
 
 #: templates/admin/support.php:81
 msgid "Resend welcome"
-msgstr "Gensend velkomst"
+msgstr ""
 
 #: templates/admin/support.php:82
 msgid "Permanently delete this project and all data?"
-msgstr "Permanent slet dette projekt og alle data?"
+msgstr ""
 
 #: templates/admin/support.php:82
 msgid "Hard delete"
-msgstr "Permanent sletning"
+msgstr ""
 
 #: templates/myaccount/dashboard.php:14
 msgid "Online invitations dashboard (coming soon)."
-msgstr "Online invitations-dashboard (kommer snart)."
+msgstr ""
 
 #: templates/myaccount/not-found.php:18
 msgid "Back to online invitations"
-msgstr "Tilbage til online invitationer"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:22
 msgid "Support view — address book access has been logged."
-msgstr "Supportvisning — adgang til adressebog er logget."
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:30
 msgid "Optional — save private contacts you can reuse across invitations."
 msgstr ""
-"Valgfrit — gem private kontakter, som du kan genbruge på tværs af "
-"invitationer."
 
 #: templates/myaccount/project-address-book.php:37
 msgid "Contacts"
-msgstr "Kontakter"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:48
 msgid "Search contacts"
-msgstr "Søg kontakter"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:52
 msgid "Name or email"
-msgstr "Navn eller e-mail"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:56
 msgid "Search"
-msgstr "Søg"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:60
 msgid "Edit contact"
-msgstr "Redigér kontakt"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:60
 msgid "Add contact"
-msgstr "Tilføj kontakt"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:67
 #: templates/myaccount/project-guests.php:74
 msgid "Display name"
-msgstr "Visningsnavn"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:68
 #: templates/myaccount/project-address-book.php:94
@@ -1393,870 +1317,824 @@ msgstr "Visningsnavn"
 #: templates/myaccount/project-guests.php:151
 #: templates/myaccount/project-guests.php:167
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:69
 #: templates/myaccount/project-address-book.php:95
 #: templates/myaccount/project-address-book.php:106
 #: templates/myaccount/project-guests.php:76
 msgid "Phone"
-msgstr "Telefon"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:70
 msgid "Notes"
-msgstr "Noter"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:73
 msgid "Save contact"
-msgstr "Gem kontakt"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:81
 msgid "No contacts yet"
-msgstr "Ingen kontakter endnu"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:82
 msgid "Save contacts here to quickly add them to future guest lists."
 msgstr ""
-"Gem kontakter her for hurtigt at tilføje dem til fremtidige gæstelister."
 
 #: templates/myaccount/project-address-book.php:92
 msgid "Select all contacts"
-msgstr "Vælg alle kontakter"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:93
 #: templates/myaccount/project-address-book.php:104
 #: templates/myaccount/project-guests.php:150
 #: templates/myaccount/project-guests.php:166
 msgid "Name"
-msgstr "Navn"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:102
 #: templates/myaccount/project-guests.php:164
 msgid "Select"
-msgstr "Vælg"
+msgstr ""
 
 #: templates/myaccount/project-address-book.php:114
 msgid "Add selected to this project"
-msgstr "Tilføj valgte til dette projekt"
+msgstr ""
 
 #: templates/myaccount/project-design.php:24
-msgid ""
-"Customise your invitation. Changes save automatically when you use the "
-"editor save action."
+msgid "Customise your invitation. Changes save automatically when you use the editor save action."
 msgstr ""
-"Tilpas din invitation. Ændringer gemmes automatisk, når du gemmer i "
-"editoren."
 
 #: templates/myaccount/project-design.php:30
 msgid "Design needs attention"
-msgstr "Design kræver opmærksomhed"
+msgstr ""
 
 #: templates/myaccount/project-design.php:36
 msgid "Design editor unavailable"
-msgstr "Designeditor utilgængelig"
+msgstr ""
 
 #: templates/myaccount/project-design.php:37
-msgid ""
-"The PDF Builder integration is not active for this product. Contact support "
-"if you expected a design editor here."
+msgid "The PDF Builder integration is not active for this product. Contact support if you expected a design editor here."
 msgstr ""
-"PDF Builder-integrationen er ikke aktiv for dette produkt. Kontakt support, "
-"hvis du forventede en designeditor her."
 
 #: templates/myaccount/project-event.php:21
 msgid "Event details saved."
-msgstr "Begivenhedsdetaljer gemt."
+msgstr ""
 
 #: templates/myaccount/project-event.php:29
 msgid "Add the information guests will see on your invitation and RSVP page."
 msgstr ""
-"Tilføj de oplysninger, gæsterne skal se på din invitation og RSVP-side."
 
 #: templates/myaccount/project-event.php:36
 msgid "Editing disabled"
-msgstr "Redigering deaktiveret"
+msgstr ""
 
 #: templates/myaccount/project-event.php:37
 msgid "Event details cannot be edited for this project."
-msgstr "Begivenhedsdetaljer kan ikke redigeres for dette projekt."
+msgstr ""
 
 #: templates/myaccount/project-event.php:45
 msgid "Basics"
-msgstr "Grundlæggende"
+msgstr ""
 
 #: templates/myaccount/project-event.php:45
 msgid "How your event appears to guests."
-msgstr "Sådan vises din begivenhed for gæsterne."
+msgstr ""
 
 #: templates/myaccount/project-event.php:51
 msgid "Event title"
-msgstr "Begivenhedstitel"
+msgstr ""
 
 #: templates/myaccount/project-event.php:61
 msgid "Organiser display name"
-msgstr "Arrangørens visningsnavn"
+msgstr ""
 
 #: templates/myaccount/project-event.php:69
 msgid "Public contact email"
-msgstr "Offentlig kontakt-e-mail"
+msgstr ""
 
 #: templates/myaccount/project-event.php:77
 msgid "Dates are stored in your chosen timezone."
-msgstr "Datoer gemmes i din valgte tidszone."
+msgstr ""
 
 #: templates/myaccount/project-event.php:83
 msgid "Timezone"
-msgstr "Tidszone"
+msgstr ""
 
 #: templates/myaccount/project-event.php:85
 msgid "Example: Europe/Copenhagen"
-msgstr "Eksempel: Europe/Copenhagen"
+msgstr ""
 
 #: templates/myaccount/project-event.php:93
 msgid "Event start (local)"
-msgstr "Begivenhedsstart (lokal tid)"
+msgstr ""
 
 #: templates/myaccount/project-event.php:102
 msgid "Event end (local)"
-msgstr "Begivenhedsslut (lokal tid)"
+msgstr ""
 
 #: templates/myaccount/project-event.php:111
 msgid "RSVP deadline (local)"
-msgstr "RSVP-frist (lokal tid)"
+msgstr ""
 
 #: templates/myaccount/project-event.php:120
 msgid "Where"
-msgstr "Hvor"
+msgstr ""
 
 #: templates/myaccount/project-event.php:126
 msgid "Venue name"
-msgstr "Stednavn"
+msgstr ""
 
 #: templates/myaccount/project-event.php:134
 msgid "Address line 1"
-msgstr "Adresselinje 1"
+msgstr ""
 
 #: templates/myaccount/project-event.php:141
 msgid "Extra information"
-msgstr "Ekstra information"
+msgstr ""
 
 #: templates/myaccount/project-event.php:147
 msgid "Practical information"
-msgstr "Praktisk information"
+msgstr ""
 
 #: templates/myaccount/project-event.php:157
 msgid "Save event details"
-msgstr "Gem begivenhedsdetaljer"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:37
 #: templates/myaccount/_section-ui.php:106
 msgid "Not sent"
-msgstr "Ikke sendt"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:49
 msgid "Add guests, import a CSV list, and send personal invitation links."
 msgstr ""
-"Tilføj gæster, importér en CSV-liste, og send personlige invitationslinks."
 
 #: templates/myaccount/project-guests.php:57
 msgid "Personal invitation link (copy now — shown once):"
-msgstr "Personligt invitationslink (kopiér nu — vises kun én gang):"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:64
 #: templates/myaccount/project-responses.php:66
 msgid "Export CSV"
-msgstr "Eksportér CSV"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:67
 msgid "Add guest"
-msgstr "Tilføj gæst"
+msgstr ""
 
-#: templates/myaccount/project-guests.php:75 templates/public/rsvp-form.php:67
+#: templates/myaccount/project-guests.php:75
+#: templates/public/rsvp-form.php:67
 msgid "E-mail (optional)"
-msgstr "E-mail (valgfrit)"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:77
 msgid "Party label"
-msgstr "Gruppelabel"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:83
 msgid "Number of guests"
-msgstr "Antal gæster"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:86
-msgid ""
-"How many people this invitation is for. The guest confirms the number when "
-"they respond."
+msgid "How many people this invitation is for. The guest confirms the number when they respond."
 msgstr ""
-"Hvor mange personer denne invitation er til. Gæsten bekræfter antallet, når "
-"de svarer."
 
 #: templates/myaccount/project-guests.php:94
 msgid "Save guest"
-msgstr "Gem gæst"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:98
 msgid "Import CSV"
-msgstr "Importér CSV"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:107
 msgid "Guest CSV file"
-msgstr "Gæste-CSV-fil"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:110
 msgid "Columns: display name, email, phone, party label, number of guests."
-msgstr "Kolonner: visningsnavn, e-mail, telefon, gruppelabel, antal gæster."
+msgstr ""
 
 #: templates/myaccount/project-guests.php:111
 msgid "Columns: display name, email, phone, party label."
-msgstr "Kolonner: visningsnavn, e-mail, telefon, gruppelabel."
+msgstr ""
 
 #: templates/myaccount/project-guests.php:117
 msgid "Preview import"
-msgstr "Forhåndsvis import"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:123
 #, php-format
 msgid "Ready to import %d guests."
-msgstr "Klar til at importere %d gæster."
+msgstr ""
 
 #: templates/myaccount/project-guests.php:124
 msgid "Confirm import"
-msgstr "Bekræft import"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:133
 msgid "No guests yet"
-msgstr "Ingen gæster endnu"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:134
 msgid "Add guests manually or import a CSV to start sending invitations."
 msgstr ""
-"Tilføj gæster manuelt, eller importér en CSV for at begynde at sende "
-"invitationer."
 
 #: templates/myaccount/project-guests.php:140
 msgid "selected"
-msgstr "valgt"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:149
 msgid "Select all guests"
-msgstr "Vælg alle gæster"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:156
 #: templates/myaccount/project-guests.php:181
 #: templates/public/invitation.php:22
 msgid "Invitation"
-msgstr "Invitation"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:157
 #: templates/myaccount/project-guests.php:183
 msgid "Actions"
-msgstr "Handlinger"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:185
 #: templates/myaccount/project-wishlist.php:118
 msgid "Edit"
-msgstr "Redigér"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:186
 msgid "Copy link"
-msgstr "Kopiér link"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:198
 msgid "Send invitations to selected"
-msgstr "Send invitationer til valgte"
+msgstr ""
 
 #: templates/myaccount/project-guests.php:199
 msgid "Archive selected"
-msgstr "Arkivér valgte"
+msgstr ""
 
 #: templates/myaccount/project-list.php:24
 msgid "Manage your purchased invitation projects."
-msgstr "Administrér dine købte invitationsprojekter."
+msgstr ""
 
 #: templates/myaccount/project-list.php:30
 msgid "You do not have any invitation projects yet."
-msgstr "Du har endnu ingen invitationsprojekter."
+msgstr ""
 
 #: templates/myaccount/project-list.php:52
 #: templates/myaccount/project-overview.php:49
 msgid "Publication"
-msgstr "Publicering"
+msgstr ""
 
 #: templates/myaccount/project-list.php:61
 msgid "Event date"
-msgstr "Begivenhedsdato"
+msgstr ""
 
 #: templates/myaccount/project-list.php:80
 msgid "Project list pagination"
-msgstr "Sideinddeling for projektliste"
+msgstr ""
 
 #: templates/myaccount/project-list.php:82
 #: templates/myaccount/project-responses.php:114
 msgid "Previous"
-msgstr "Forrige"
+msgstr ""
 
 #: templates/myaccount/project-list.php:84
 #: templates/myaccount/project-responses.php:116
 #, php-format
 msgid "Page %1$d of %2$d"
-msgstr "Side %1$d af %2$d"
+msgstr ""
 
 #: templates/myaccount/project-list.php:86
 #: templates/myaccount/project-responses.php:118
 msgid "Next"
-msgstr "Næste"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:18
 msgid "Pending event date"
-msgstr "Afventer begivenhedsdato"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:27
 msgid "Support view — you are viewing this project as shop staff."
-msgstr "Supportvisning — du ser dette projekt som butikspersonale."
+msgstr ""
 
 #: templates/myaccount/project-overview.php:37
 msgid "Track setup progress and jump to the next step for this invitation."
-msgstr "Følg opsætningsfremskridt og gå til næste trin for denne invitation."
+msgstr ""
 
 #: templates/myaccount/project-overview.php:45
 msgid "Project status"
-msgstr "Projektstatus"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:53
 msgid "Expires"
-msgstr "Udløber"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:59
 #, php-format
 msgid "View order #%d"
-msgstr "Se ordre #%d"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:64
 msgid "Setup checklist"
-msgstr "Opsætnings-tjekliste"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:69
 msgid "Next step"
-msgstr "Næste trin"
+msgstr ""
 
 #: templates/myaccount/project-overview.php:72
 msgid "Continue"
-msgstr "Fortsæt"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:24
 #: templates/myaccount/project-responses.php:37
 #: templates/myaccount/project-responses.php:59
-#: templates/myaccount/_helpers.php:163 templates/myaccount/_section-ui.php:93
+#: templates/myaccount/_helpers.php:163
+#: templates/myaccount/_section-ui.php:93
 #: templates/public/rsvp-form.php:48
 msgid "Pending"
-msgstr "Afventer"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:25
 msgid "Approved"
-msgstr "Godkendt"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:26
 msgid "Rejected"
-msgstr "Afvist"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:41
 msgid "Guest photos"
-msgstr "Gæstefotos"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:42
-msgid ""
-"Optional — review uploads from guests. Approved photos are not shown in a "
-"public gallery."
+msgid "Optional — review uploads from guests. Approved photos are not shown in a public gallery."
 msgstr ""
-"Valgfrit — gennemgå uploads fra gæster. Godkendte fotos vises ikke i et "
-"offentligt galleri."
 
 #: templates/myaccount/project-photos.php:51
 msgid "No photos in this view"
-msgstr "Ingen fotos i denne visning"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:52
 msgid "Guest photo uploads will appear here for moderation."
-msgstr "Gæstefotouploads vises her til moderation."
+msgstr ""
 
 #: templates/myaccount/project-photos.php:59
 msgid "Photo"
-msgstr "Foto"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:84
 msgid "Download"
-msgstr "Download"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:90
 msgid "Approve"
-msgstr "Godkend"
+msgstr ""
 
 #: templates/myaccount/project-photos.php:96
 msgid "Reject"
-msgstr "Afvis"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:27
 msgid "Private draft preview — opens are not tracked."
-msgstr "Privat kladdeforhåndsvisning — åbninger spores ikke."
+msgstr ""
 
 #: templates/myaccount/project-preview.php:32
 msgid "Draft preview"
-msgstr "Kladdeforhåndsvisning"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:34
 #, php-format
 msgid "Envelope: %s"
-msgstr "Konvolut: %s"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:36
 msgid "Edit design"
-msgstr "Redigér design"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:37
 msgid "Go to publish"
-msgstr "Gå til publicering"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:38
 msgid "Toggle full width"
-msgstr "Skift fuld bredde"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:45
 msgid "Preview not ready"
-msgstr "Forhåndsvisning ikke klar"
+msgstr ""
 
 #: templates/myaccount/project-preview.php:46
 msgid "Complete your design and event details to generate a preview."
 msgstr ""
-"Fuldfør dit design og begivenhedsdetaljer for at generere en "
-"forhåndsvisning."
 
 #: templates/myaccount/project-preview.php:47
 msgid "Go to design"
-msgstr "Gå til design"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:30
 msgid "Your invitation is unpublished."
-msgstr "Din invitation er afpubliceret."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:33
 msgid "Demo invitation queued for your email."
-msgstr "Demo-invitation sat i kø til din e-mail."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:42
 msgid "Make your invitation live when design and event details are ready."
-msgstr "Gør din invitation live, når design og begivenhedsdetaljer er klar."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:47
 msgid "Your invitation is live"
-msgstr "Din invitation er live"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:48
 msgid "Guests can view and respond to your published invitation."
-msgstr "Gæster kan se og svare på din publicerede invitation."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:52
 msgid "Ready to publish?"
-msgstr "Klar til at publicere?"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:60
 msgid "Publishing unavailable"
-msgstr "Publicering utilgængelig"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:61
 msgid "Publishing is not available for this project."
-msgstr "Publicering er ikke tilgængelig for dette projekt."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:67
 #: templates/myaccount/project-publish.php:74
 msgid "Publish invitation"
-msgstr "Publicér invitation"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:69
 msgid "Complete your design and event details before publishing."
-msgstr "Fuldfør dit design og begivenhedsdetaljer, før du publicerer."
+msgstr ""
 
 #: templates/myaccount/project-publish.php:85
 msgid "Send demo to yourself"
-msgstr "Send demo til dig selv"
+msgstr ""
 
 #: templates/myaccount/project-publish.php:89
-msgid ""
-"Sends a private preview link to your email. No guest RSVP or open tracking."
+msgid "Sends a private preview link to your email. No guest RSVP or open tracking."
 msgstr ""
-"Sender et privat forhåndsvisningslink til din e-mail. Ingen gæste-RSVP eller"
-" åbningssporing."
 
 #: templates/myaccount/project-publish.php:90
 msgid "Send demo to myself"
-msgstr "Send demo til mig selv"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:36
-#: templates/myaccount/_section-ui.php:91 templates/public/rsvp-form.php:48
+#: templates/myaccount/_section-ui.php:91
+#: templates/public/rsvp-form.php:48
 msgid "Not attending"
-msgstr "Deltager ikke"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:49
 msgid "Track RSVPs and export guest responses."
-msgstr "Følg RSVP'er og eksportér gæstesvar."
+msgstr ""
 
 #: templates/myaccount/project-responses.php:58
 msgid "Declined"
-msgstr "Afvist"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:73
 msgid "Responses appear here when guests RSVP to your invitation."
-msgstr "Svar vises her, når gæster RSVP'er til din invitation."
+msgstr ""
 
 #: templates/myaccount/project-responses.php:81
 #: templates/myaccount/project-responses.php:91
 msgid "Guest"
-msgstr "Gæst"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:83
 #: templates/myaccount/project-responses.php:98
 #: templates/public/rsvp-form.php:53
 msgid "Attendees"
-msgstr "Deltagere"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:85
 #: templates/myaccount/project-responses.php:100
 msgid "Responded"
-msgstr "Har svaret"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:94
 msgid "Generic link"
-msgstr "Generisk link"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:99
 #: templates/public/rsvp-form.php:76
 msgid "Yes"
-msgstr "Ja"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:99
 #: templates/public/rsvp-form.php:80
 msgid "No"
-msgstr "Nej"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:108
 msgid "Responses pagination"
-msgstr "Sideinddeling for svar"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:125
 msgid "Recent changes"
-msgstr "Seneste ændringer"
+msgstr ""
 
 #: templates/myaccount/project-responses.php:133
 #, php-format
 msgid "Guest #%d"
-msgstr "Gæst #%d"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:25
 msgid "Privacy and project lifecycle"
-msgstr "Privatliv og projektlivscyklus"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:26
 msgid "Archive, restore, or permanently delete this invitation project."
-msgstr "Arkivér, gendan eller permanent slet dette invitationsprojekt."
+msgstr ""
 
 #: templates/myaccount/project-settings.php:31
-msgid ""
-"This project has been archived. Public access and scheduled sends are "
-"stopped."
+msgid "This project has been archived. Public access and scheduled sends are stopped."
 msgstr ""
-"Dette projekt er arkiveret. Offentlig adgang og planlagte udsendelser er "
-"stoppet."
 
 #: templates/myaccount/project-settings.php:34
 msgid "This project has been restored from archive."
-msgstr "Dette projekt er gendannet fra arkiv."
+msgstr ""
 
 #: templates/myaccount/project-settings.php:52
 #: templates/myaccount/project-settings.php:58
 msgid "Archive project"
-msgstr "Arkivér projekt"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:53
-msgid ""
-"Archiving stops public access and pending deliveries. Your data is kept "
-"until you delete the project."
+msgid "Archiving stops public access and pending deliveries. Your data is kept until you delete the project."
 msgstr ""
-"Arkivering stopper offentlig adgang og afventende leveringer. Dine data "
-"bevares, indtil du sletter projektet."
 
 #: templates/myaccount/project-settings.php:62
 msgid "Restore project"
-msgstr "Gendan projekt"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:67
 msgid "Restore from archive"
-msgstr "Gendan fra arkiv"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:73
 msgid "Delete project permanently"
-msgstr "Slet projekt permanent"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:74
-msgid ""
-"Permanent deletion removes invitation files, guests, photos, and related "
-"records. Your WooCommerce order may still be retained for legal purposes."
+msgid "Permanent deletion removes invitation files, guests, photos, and related records. Your WooCommerce order may still be retained for legal purposes."
 msgstr ""
-"Permanent sletning fjerner invitationsfiler, gæster, fotos og relaterede "
-"registreringer. Din WooCommerce-ordre kan stadig opbevares af juridiske "
-"årsager."
 
 #. translators: %s: confirmation word
 #: templates/myaccount/project-settings.php:85
 #, php-format
 msgid "Type %s to confirm permanent deletion"
-msgstr "Skriv %s for at bekræfte permanent sletning"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:95
 msgid "This cannot be undone. Delete this project and all related data?"
-msgstr "Dette kan ikke fortrydes. Slet dette projekt og alle relaterede data?"
+msgstr ""
 
 #: templates/myaccount/project-settings.php:95
 msgid "Delete permanently"
-msgstr "Slet permanent"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:27
 msgid "Optional — let guests reserve gifts or link to an external wishlist."
 msgstr ""
-"Valgfrit — lad gæster reservere gaver eller link til en ekstern ønskeliste."
 
 #: templates/myaccount/project-wishlist.php:32
 msgid "Wishlist settings"
-msgstr "Indstillinger for ønskeliste"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:41
 msgid "External Ønskeskyen URL (optional)"
-msgstr "Ekstern Ønskeskyen-URL (valgfrit)"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:52
 msgid "Enable internal wishlist"
-msgstr "Aktivér intern ønskeliste"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:61
 msgid "Show who reserved each gift (off preserves surprise)"
-msgstr "Vis hvem der har reserveret hver gave (fra bevarer overraskelsen)"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:67
 msgid "Save wishlist settings"
-msgstr "Gem indstillinger for ønskeliste"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:71
 msgid "Edit gift"
-msgstr "Redigér gave"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:71
 msgid "Add gift"
-msgstr "Tilføj gave"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:78
 msgid "Title"
-msgstr "Titel"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:79
 msgid "Description"
-msgstr "Beskrivelse"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:80
 msgid "Product URL (optional)"
-msgstr "Produkt-URL (valgfrit)"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:81
 msgid "Image URL (optional)"
-msgstr "Billede-URL (valgfrit)"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:82
 msgid "Quantity requested"
-msgstr "Ønsket antal"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:86
 msgid "Visibility"
-msgstr "Synlighed"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:89
 msgid "Hidden"
-msgstr "Skjult"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:92
 msgid "Save item"
-msgstr "Gem vare"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:100
 msgid "No gifts yet"
-msgstr "Ingen gaver endnu"
+msgstr ""
 
 #: templates/myaccount/project-wishlist.php:101
 msgid "Add gifts to your wishlist or link an external Ønskeskyen list."
 msgstr ""
-"Tilføj gaver til din ønskeliste, eller link til en ekstern Ønskeskyen-liste."
 
 #: templates/myaccount/project-wishlist.php:114
 #: templates/public/wishlist.php:52
 #, php-format
 msgid "%1$d of %2$d reserved"
-msgstr "%1$d af %2$d reserveret"
+msgstr ""
 
 #: templates/myaccount/section-placeholder.php:22
 msgid "Coming soon"
-msgstr "Kommer snart"
+msgstr ""
 
 #: templates/myaccount/section-placeholder.php:23
-msgid ""
-"This section is not available yet. It will be added in an upcoming release."
+msgid "This section is not available yet. It will be added in an upcoming release."
 msgstr ""
-"Dette afsnit er endnu ikke tilgængeligt. Det tilføjes i en kommende "
-"udgivelse."
 
 #: templates/myaccount/sidebar-nav.php:31
 msgid "All invitations"
-msgstr "Alle invitationer"
+msgstr ""
 
 #: templates/myaccount/sidebar-nav.php:46
 msgid "Setup progress"
-msgstr "Opsætningsfremskridt"
+msgstr ""
 
 #. translators: 1: completed steps, 2: total steps
 #: templates/myaccount/sidebar-nav.php:52
 #, php-format
 msgid "%1$d of %2$d ready"
-msgstr "%1$d af %2$d klar"
+msgstr ""
 
 #: templates/myaccount/_helpers.php:86
 msgid "Project sections"
-msgstr "Projektafsnit"
+msgstr ""
 
 #: templates/myaccount/_helpers.php:162
 msgid "Complete"
-msgstr "Fuldført"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:67
 msgid "Draft"
-msgstr "Kladde"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:68
 msgid "Restricted"
-msgstr "Begrænset"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:69
 msgid "Expired"
-msgstr "Udløbet"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:70
 msgid "Archived"
-msgstr "Arkiveret"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:92
 msgid "Maybe"
-msgstr "Måske"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:103
 msgid "Sent"
-msgstr "Sendt"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:105
 msgid "Bounced"
-msgstr "Returneret"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:152
 msgid "Get started"
-msgstr "Kom i gang"
+msgstr ""
 
 #: templates/myaccount/_section-ui.php:277
 msgid "Filter"
-msgstr "Filtrér"
+msgstr ""
 
-#: templates/public/envelope.php:36 templates/public/envelope.php:38
+#: templates/public/envelope.php:36
+#: templates/public/envelope.php:38
 msgid "Open invitation"
-msgstr "Åbn invitation"
+msgstr ""
 
 #: templates/public/envelope.php:74
 msgid "This section will be available in a later update."
-msgstr "Dette afsnit bliver tilgængeligt i en senere opdatering."
+msgstr ""
 
 #: templates/public/photos.php:31
-msgid ""
-"Share photos from the event. Uploads are private until the organiser "
-"approves them."
+msgid "Share photos from the event. Uploads are private until the organiser approves them."
 msgstr ""
-"Del fotos fra begivenheden. Uploads er private, indtil arrangøren godkender "
-"dem."
 
-#: templates/public/photos.php:35 templates/public/rsvp-form.php:63
+#: templates/public/photos.php:35
+#: templates/public/rsvp-form.php:63
 #: templates/public/wishlist.php:37
 msgid "Your name"
-msgstr "Dit navn"
+msgstr ""
 
 #: templates/public/photos.php:41
 msgid "Choose photos (JPEG, PNG, or WebP)"
-msgstr "Vælg fotos (JPEG, PNG eller WebP)"
+msgstr ""
 
 #: templates/public/photos.php:51
 msgid "Upload photos"
-msgstr "Upload fotos"
+msgstr ""
 
 #: templates/public/rsvp-form.php:30
 #, php-format
 msgid "Please respond by %s."
-msgstr "Svar venligst senest %s."
+msgstr ""
 
 #: templates/public/rsvp-form.php:39
 msgid "The RSVP deadline has passed. Your recorded response is shown below."
-msgstr "RSVP-fristen er overskredet. Dit registrerede svar vises nedenfor."
+msgstr ""
 
 #: templates/public/rsvp-form.php:42
 msgid "Response"
-msgstr "Svar"
+msgstr ""
 
 #: templates/public/rsvp-form.php:73
 msgid "Will you attend?"
-msgstr "Deltager du?"
+msgstr ""
 
 #: templates/public/rsvp-form.php:91
 #, php-format
 msgid "This invitation is for %d guest. Please confirm how many will attend."
-msgid_plural ""
-"This invitation is for %d guests. Please confirm how many will attend."
+msgid_plural "This invitation is for %d guests. Please confirm how many will attend."
 msgstr[0] ""
-"Denne invitation er til %d gæst. Bekræft venligst, hvor mange der deltager."
 msgstr[1] ""
-"Denne invitation er til %d gæster. Bekræft venligst, hvor mange der "
-"deltager."
 
 #: templates/public/rsvp-form.php:103
 msgid "Number attending"
-msgstr "Antal deltagere"
+msgstr ""
 
 #: templates/public/rsvp-form.php:117
 msgid "Comment (optional)"
-msgstr "Kommentar (valgfrit)"
+msgstr ""
 
 #: templates/public/rsvp-form.php:124
 msgid "Dietary notes (optional)"
-msgstr "Kostnoter (valgfrit)"
+msgstr ""
 
 #: templates/public/rsvp-form.php:130
 msgid "Send response"
-msgstr "Send svar"
+msgstr ""
 
-#: templates/public/unavailable.php:22 templates/public/unavailable.php:27
+#: templates/public/unavailable.php:22
+#: templates/public/unavailable.php:27
 msgid "Invitation unavailable"
-msgstr "Invitation utilgængelig"
+msgstr ""
 
 #: templates/public/wishlist.php:31
 msgid "View external wishlist"
-msgstr "Se ekstern ønskeliste"
+msgstr ""
 
 #: templates/public/wishlist.php:50
 msgid "View product"
-msgstr "Se produkt"
+msgstr ""
 
 #: templates/public/wishlist.php:54
 msgid "Reserve"
-msgstr "Reservér"
+msgstr ""
 
 #: templates/public/wishlist.php:57
 msgid "Release my reservation"
-msgstr "Frigiv min reservation"
+msgstr ""
